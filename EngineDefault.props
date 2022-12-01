@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <TempDir>$(SolutionDir)Temp\$(PlatformShortName)\$(Configuration)\</TempDir>
+    <OutputDir>$(TempDir)Output\</OutputDir>
+    <IntermediateDir>$(TempDir)Intermediates\$(ProjectName)\</IntermediateDir>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutDir>$(OutputDir)</OutDir>
+    <IntDir>$(IntermediateDir)</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <QtRcc>
+      <OverrideClCompile>false</OverrideClCompile>
+    </QtRcc>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="TempDir">
+      <Value>$(TempDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="OutputDir">
+      <Value>$(OutputDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="IntermediateDir">
+      <Value>$(IntermediateDir)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>
