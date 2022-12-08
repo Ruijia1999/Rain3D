@@ -47,7 +47,7 @@ void Rain::Render::Graphics::Initialize(HWND hWnd) {
 	InitData.SysMemSlicePitch = 0;
 
 	if (FAILED( pDevice->CreateBuffer(&constDesc, &InitData, &pVSConstantBuffer))) {
-		int j;
+		
 	}
 
 	pContext->VSSetConstantBuffers(0, 1, &pVSConstantBuffer);

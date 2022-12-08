@@ -19,23 +19,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TransformSystem.h" />
-    <ClInclude Include="TransformComponent.h" />
+    <ClInclude Include="ComponentBase.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="SystemBase.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="TransformSystem.cpp" />
-    <ClCompile Include="TransformComponent.cpp" />
+    <ClCompile Include="ComponentBase.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="SystemBase.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Math\Math.vcxproj">
-      <Project>{026e63e4-4685-487c-a2af-cabde1858bf8}</Project>
+    <ProjectReference Include="..\Render\Render.vcxproj">
+      <Project>{d3a01780-35f7-4b01-b2ac-241d5245687e}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{f8dfc15e-11b6-4423-befb-bc41546e5598}</ProjectGuid>
-    <RootNamespace>Transform</RootNamespace>
+    <ProjectGuid>{43ad0a70-e908-4b94-8167-a1a14e9f23c6}</ProjectGuid>
+    <RootNamespace>ECS</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

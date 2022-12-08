@@ -5,13 +5,12 @@
 #include <Windows.h>
 #include "Mesh.h"
 #include "Effect.h"
-
+#include "ECS/ComponentBase.h"
 namespace Rain {
 	namespace Render {
-		class RenderComponent
+		class RenderComponent: ECS::ComponentBase
 		{
 		public:
-			int id;
 			Mesh* s_mesh = nullptr;
 			Effect* s_effect = nullptr;
 		};
