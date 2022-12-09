@@ -9,7 +9,7 @@ Rain::GameObject::GameObjectComponent::GameObjectComponent():ComponentBase(0) {
 void Rain::GameObject::GameObjectComponent::Initialize() {
 
 }
-void Rain::GameObject::GameObjectComponent::Update() {
+void Rain::GameObject::GameObjectComponent::Update(uint64_t i_timeSinceLastFrame) {
 
 }
 void Rain::GameObject::GameObjectComponent::Destroy() {

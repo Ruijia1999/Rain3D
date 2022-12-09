@@ -9,7 +9,7 @@ namespace Rain {
 		public:
 			GameObjectComponent();
 			void Initialize();
-			void Update();
+			void Update(uint64_t i_timeSinceLastFrame);
 			void Destroy();
 		private:
 			bool m_isActive;

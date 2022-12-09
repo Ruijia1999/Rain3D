@@ -61,11 +61,16 @@ Rain::Math::Matrix::Matrix(const Quaternion& i_rotation, const Vector3& i_transl
 	m22 = 1.0f - _2xx - _2yy;
 }
 
-void Rain::Math::Matrix::operator=(const Matrix& i_matrix4) {
-	m00 = i_matrix4.m00; m01 = i_matrix4.m01; m02 = i_matrix4.m02; m03 = i_matrix4.m03;
-	m10 = i_matrix4.m10; m11 = i_matrix4.m11; m12 = i_matrix4.m12; m13 = i_matrix4.m13;
-	m20 = i_matrix4.m20; m21 = i_matrix4.m21; m22 = i_matrix4.m22; m23 = i_matrix4.m23;
-	m30 = i_matrix4.m30; m31 = i_matrix4.m31; m32 = i_matrix4.m32; m33 = i_matrix4.m33;
+Rain::Math::Matrix& Rain::Math::Matrix::operator=(const Matrix& i_matrix4) {
+
+	if (this != &i_matrix4) {
+		m00 = i_matrix4.m00; m01 = i_matrix4.m01; m02 = i_matrix4.m02; m03 = i_matrix4.m03;
+		m10 = i_matrix4.m10; m11 = i_matrix4.m11; m12 = i_matrix4.m12; m13 = i_matrix4.m13;
+		m20 = i_matrix4.m20; m21 = i_matrix4.m21; m22 = i_matrix4.m22; m23 = i_matrix4.m23;
+		m30 = i_matrix4.m30; m31 = i_matrix4.m31; m32 = i_matrix4.m32; m33 = i_matrix4.m33;
+	}
+
+	return *this;
 }
 
 void Rain::Math::Matrix::Inverse() {

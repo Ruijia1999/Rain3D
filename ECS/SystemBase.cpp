@@ -1,5 +1,6 @@
 #include "SystemBase.h"
 
+Rain::ECS::SystemBase* Rain::ECS::SystemBase::Instance;
 Rain::ECS::SystemBase* Rain::ECS::SystemBase::GetInstance() {
 	if (Instance == nullptr) {
 		Instance = new SystemBase();
@@ -19,9 +20,9 @@ void Rain::ECS::SystemBase::Initialize() {
 	}
 }
 
-void Rain::ECS::SystemBase::Update() {
+void Rain::ECS::SystemBase::Update(uint64_t i_timeSinceLastFrame) {
 	for (auto component : m_componnets) {
-		component->Update();
+		component->Update(i_timeSinceLastFrame);
 	}
 }
 
@@ -32,10 +33,11 @@ void Rain::ECS::SystemBase::Destroy() {
 void Rain::ECS::SystemBase::AddComponent(ComponentBase* component) {
 	m_componnets.push_back(component);
 }
-void Rain::ECS::SystemBase::RemoveComponent(ComponentBase* component) {
-	
+
+void Rain::ECS::SystemBase::RemoveComponent(const int i_id) {
+//TODO
 }
-Rain::ECS::ComponentBase* Rain::ECS::SystemBase::GetComponent(int i_id) {
+Rain::ECS::ComponentBase* Rain::ECS::SystemBase::GetComponent(const int i_id) {
 	for (auto component : m_componnets) {
 		if (component->id == i_id) {
 			return component;

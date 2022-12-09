@@ -25,7 +25,6 @@ namespace Rain {
 			void Draw();
 			void CleanUp();
 
-
 		};
 	}
 }

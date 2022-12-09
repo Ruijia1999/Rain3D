@@ -29,7 +29,7 @@ namespace Rain {
 			Vector4 operator*(const Vector4& i_matrix4) const;
 			Vector4& operator[](int i);
 			Vector4 operator[](int i) const;
-			void operator=(const Matrix& i_matrix4);
+			Matrix& operator=(const Matrix& i_matrix4);
 		};
 
 	}

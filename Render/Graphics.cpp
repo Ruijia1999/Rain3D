@@ -4,9 +4,8 @@
 #include "ConstantBuffer.h"
 
 namespace {
-	static Rain::Render::Mesh* s_mesh = nullptr;
-	static Rain::Render::Effect* s_effect = nullptr;
-	static ID3D11Buffer* pVSConstantBuffer = nullptr;
+	ID3D11Buffer* pVSConstantBuffer = nullptr;
+	D3D11_BUFFER_DESC constDesc;
 }
 
 std::vector<Rain::Render::RenderData> Rain::Render::Graphics::NextRenderData;
@@ -20,21 +19,8 @@ ID3D11RasterizerState* Rain::Render::Graphics::pRasterState;
 
 void Rain::Render::Graphics::Initialize(HWND hWnd) {
 	InitializeGraphics(hWnd);
-	s_mesh = new Mesh();
-	s_effect = new Effect();
-	s_mesh->Initialize();
-	s_effect->Initialize("vertexShader", "pixelShader");
 
-	//Init Constant Buffer
-	 
-	ConstantBuffer::VSConstantBuffer vsConstantBuffer;
-	vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1.5708f, 1, 1, 10);
-	vsConstantBuffer.transform_localToWorld = Math::CreateLocalToWorldTransform(Math::Quaternion(), Math::Vector3(4, 0, 5));
-	vsConstantBuffer.transform_localToWorld.Inverse();
-	vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(), Math::Vector3(0,0,10));
-	vsConstantBuffer.transform_worldToCamera.Inverse();
 	
-	D3D11_BUFFER_DESC constDesc;
 	constDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	constDesc.ByteWidth = sizeof(ConstantBuffer::VSConstantBuffer);
 	constDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -42,27 +28,28 @@ void Rain::Render::Graphics::Initialize(HWND hWnd) {
 	constDesc.MiscFlags = 0;
 	constDesc.StructureByteStride = 0;
 
-	// Fill in the subresource data.
-	D3D11_SUBRESOURCE_DATA InitData;
-	InitData.pSysMem = &vsConstantBuffer;
-	InitData.SysMemPitch = 0;
-	InitData.SysMemSlicePitch = 0;
 
-	if (FAILED( pDevice->CreateBuffer(&constDesc, &InitData, &pVSConstantBuffer))) {
-		
-	}
-
-	pContext->VSSetConstantBuffers(0, 1, &pVSConstantBuffer);
 }
 void Rain::Render::Graphics::DoFrame() {
 
+	// Fill in the subresource data.
+	D3D11_SUBRESOURCE_DATA InitData;
+	InitData.pSysMem = &(NextRenderData[0].constantBuffer);
+	InitData.SysMemPitch = 0;
+	InitData.SysMemSlicePitch = 0;
 
+	if (FAILED(pDevice->CreateBuffer(&constDesc, &InitData, &pVSConstantBuffer))) {
+
+	}
+
+	pContext->VSSetConstantBuffers(0, 1, &pVSConstantBuffer);
 	const float bgColor[] = { 0.1f, 0.1f, 0, 0.0f };
 	pContext->ClearRenderTargetView(pTarget, bgColor);
 	pContext->ClearDepthStencilView(pDSV, D3D11_CLEAR_DEPTH, 1.0f, 0u);
-	s_effect->Bind();
-	s_mesh->Draw();
+	NextRenderData[0].effect->Bind();
+	NextRenderData[0].mesh->Draw();
 	pSwapChain->Present(0, 0);
+	pVSConstantBuffer = nullptr;
 }
 void Rain::Render::Graphics::InitializeGraphics(HWND hWnd) {
 	//Set the device and swap chain

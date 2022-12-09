@@ -2,6 +2,7 @@
 #define RAIN_ECS_SYSTEMBASE
 
 #include <vector>
+#include <iostream>
 #include "ComponentBase.h"
 namespace Rain {
 	namespace ECS {
@@ -14,12 +15,12 @@ namespace Rain {
 			static SystemBase* GetInstance();
 			
 			void Initialize();
-			void Update();
+			void Update(uint64_t i_timeSinceLastFrame);
 			void Destroy();
 
 			void AddComponent(ComponentBase* component);
-			void RemoveComponent(ComponentBase* component);
-			ComponentBase* GetComponent(int i_id);
+			void RemoveComponent(const int i_id);
+			ComponentBase* GetComponent(const int i_id);
 
 		private:
 			std::vector<ComponentBase*> m_componnets;
