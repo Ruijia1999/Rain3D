@@ -4,14 +4,15 @@
 
 #include "windows/windows.h"
 #include "ConstantBuffer.h"
+#include "RenderData.h"
 #include <vector>
 namespace Rain {
 	namespace Render{
 		class Graphics
 		{
 		public:
-			static std::vector< ConstantBuffer::VSConstantBuffer> NextRenderData;
-			static std::vector<ConstantBuffer::VSConstantBuffer> CurrentRenderData;
+			static std::vector< RenderData> NextRenderData;
+			static std::vector<RenderData> CurrentRenderData;
 			static ID3D11Device* pDevice;
 			static IDXGISwapChain* pSwapChain;
 			static ID3D11DeviceContext* pContext;

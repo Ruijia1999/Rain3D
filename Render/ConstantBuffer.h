@@ -6,6 +6,9 @@ namespace Rain {
 	namespace Render {
 		namespace ConstantBuffer {
 			struct VSConstantBuffer {
+				VSConstantBuffer();
+				const VSConstantBuffer& operator=(const VSConstantBuffer& i_constantBuffer);
+				VSConstantBuffer(const VSConstantBuffer& i_constantBuffer);
 				Math::Matrix transform_localToWorld;
 				Math::Matrix transform_worldToCamera;
 				Math::Matrix transform_cameraToProjected;

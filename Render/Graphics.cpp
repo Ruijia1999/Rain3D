@@ -9,6 +9,8 @@ namespace {
 	static ID3D11Buffer* pVSConstantBuffer = nullptr;
 }
 
+std::vector<Rain::Render::RenderData> Rain::Render::Graphics::NextRenderData;
+std::vector<Rain::Render::RenderData> Rain::Render::Graphics::CurrentRenderData;
 ID3D11Device* Rain::Render::Graphics::pDevice;
 IDXGISwapChain* Rain::Render::Graphics::pSwapChain;
 ID3D11DeviceContext* Rain::Render::Graphics::pContext;
@@ -26,7 +28,7 @@ void Rain::Render::Graphics::Initialize(HWND hWnd) {
 	//Init Constant Buffer
 	 
 	ConstantBuffer::VSConstantBuffer vsConstantBuffer;
-	vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1.5708, 1, 1, 10);
+	vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1.5708f, 1, 1, 10);
 	vsConstantBuffer.transform_localToWorld = Math::CreateLocalToWorldTransform(Math::Quaternion(), Math::Vector3(4, 0, 5));
 	vsConstantBuffer.transform_localToWorld.Inverse();
 	vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(), Math::Vector3(0,0,10));
