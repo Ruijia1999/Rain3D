@@ -2,9 +2,14 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="Input.h" />
+    <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="MouseEvent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mouse.h" />
+    <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="MouseEvent.h" />
   </ItemGroup>
 </Project>

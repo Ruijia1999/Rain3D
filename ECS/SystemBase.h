@@ -20,7 +20,9 @@ namespace Rain {
 
 			void AddComponent(ComponentBase* component);
 			void RemoveComponent(const int i_id);
-			ComponentBase* GetComponent(const int i_id);
+
+			template<class T>
+			T* GetComponent(const int i_id);
 
 		private:
 			std::vector<ComponentBase*> m_componnets;

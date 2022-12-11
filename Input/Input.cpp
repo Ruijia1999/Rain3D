@@ -1,9 +1,5 @@
-// Input.cpp : Defines the functions for the static library.
-//
+#include "Input.h"
 
-#include "framework.h"
-
-// TODO: This is an example of a library function
-void fnInput()
-{
+void Rain::Input::Initialize() {
+	Mouse::Initialize();
 }

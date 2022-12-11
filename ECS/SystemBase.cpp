@@ -37,7 +37,9 @@ void Rain::ECS::SystemBase::AddComponent(ComponentBase* component) {
 void Rain::ECS::SystemBase::RemoveComponent(const int i_id) {
 //TODO
 }
-Rain::ECS::ComponentBase* Rain::ECS::SystemBase::GetComponent(const int i_id) {
+
+template<class T>
+T* Rain::ECS::SystemBase::GetComponent(const int i_id) {
 	for (auto component : m_componnets) {
 		if (component->id == i_id) {
 			return component;

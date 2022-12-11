@@ -2,6 +2,8 @@
 #define RAIN_TRANSFORM_TRANSFORMSYSTEM
 
 #include "ECS/SystemBase.h"
+#include "TransformComponent.h"
+
 namespace Rain {
 	namespace Transform {
 		class TransformSystem: public ECS::SystemBase
