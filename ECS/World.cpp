@@ -29,7 +29,9 @@ Rain::ECS::World* Rain::ECS::World::GetInstance() {
 void Rain::ECS::World::Initialize() {
 	timeLastFrame = 0;
 	GameObject::GameObjectSystem::GetInstance()->Initialize();
+	GameObject::GameObjectSystem::GetInstance()->AddComponent(new GameObject::GameObjectComponent(0));
 	Transform::TransformSystem::GetInstance()->Initialize();
+	Transform::TransformSystem::GetInstance()->AddComponent(new Transform::TransformComponent());
 }
 void Rain::ECS::World::Update() {
 	uint64_t timeSinceLastFrame;
@@ -53,14 +55,23 @@ void Rain::ECS::World::Update() {
 
 	//Init Constant Buffer
 
-	Render::ConstantBuffer::VSConstantBuffer vsConstantBuffer;
-	vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1.5708f, 1, 1, 10);
-	vsConstantBuffer.transform_localToWorld = Math::CreateLocalToWorldTransform(Math::Quaternion(), Math::Vector3(4, 0, 5));
-	vsConstantBuffer.transform_localToWorld.Inverse();
-	vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(), Math::Vector3(0, 0, 10));
-	vsConstantBuffer.transform_worldToCamera.Inverse();
+
 	RenderData.clear();
-	RenderData.push_back(Render::RenderData(s_mesh, s_effect, vsConstantBuffer));
+	//std::vector<GameObject::GameObjectComponent*> gameobjects = GameObject::GameObjectSystem::GetInstance()->GetAllComponents<GameObject::GameObjectComponent>();
+	//for (auto go : gameobjects) {
+	//	if (go->m_isActive) {
+	//		Render::ConstantBuffer::VSConstantBuffer vsConstantBuffer;
+	//		Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(go->id);
+	//		vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1.5708f, 1, 1, 10);
+	//		vsConstantBuffer.transform_localToWorld = Math::CreateLocalToWorldTransform(Math::Quaternion(), Math::Vector3(4, 0, 5));
+	//		vsConstantBuffer.transform_localToWorld.Inverse();
+	//		vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(), Math::Vector3(0, 0, 7));
+	//		vsConstantBuffer.transform_worldToCamera.Inverse();
+	//		RenderData.push_back(Render::RenderData(s_mesh, s_effect, vsConstantBuffer));
+	//	}
+
+	//}
+
 	SubmitRenderData();
 }
 

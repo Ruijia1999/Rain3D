@@ -1,15 +1,7 @@
 #include "SystemBase.h"
 
-Rain::ECS::SystemBase* Rain::ECS::SystemBase::Instance;
-Rain::ECS::SystemBase* Rain::ECS::SystemBase::GetInstance() {
-	if (Instance == nullptr) {
-		Instance = new SystemBase();
-		return Instance;
-	}
-	else {
-		return Instance;
-	}
-}
+
+
 Rain::ECS::SystemBase::SystemBase() {
 
 }
@@ -38,12 +30,4 @@ void Rain::ECS::SystemBase::RemoveComponent(const int i_id) {
 //TODO
 }
 
-template<class T>
-T* Rain::ECS::SystemBase::GetComponent(const int i_id) {
-	for (auto component : m_componnets) {
-		if (component->id == i_id) {
-			return component;
-		}
-	}
-	return nullptr;
-}
+

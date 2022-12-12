@@ -3,13 +3,5 @@
 #include "Event/EventBase.h"
 #include "Math/Math.h"
 
-
-namespace Rain {
-	namespace Input {
-
-		
-
-	}
-}
 #endif // !RAIN_INPUT_MOUSEEVENT
 

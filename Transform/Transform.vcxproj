@@ -27,6 +27,9 @@
     <ClCompile Include="TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ECS\ECS.vcxproj">
+      <Project>{43ad0a70-e908-4b94-8167-a1a14e9f23c6}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Math\Math.vcxproj">
       <Project>{026e63e4-4685-487c-a2af-cabde1858bf8}</Project>
     </ProjectReference>

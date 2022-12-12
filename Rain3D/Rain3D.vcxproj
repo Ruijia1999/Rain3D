@@ -205,6 +205,9 @@
     <ProjectReference Include="..\Result\Result.vcxproj">
       <Project>{b0854676-4eea-485e-8c6b-16bcfcb9eb18}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Time\Time.vcxproj">
+      <Project>{d2a78e7f-6fcc-4c30-8610-e3868e86c87c}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Transform\Transform.vcxproj">
       <Project>{f8dfc15e-11b6-4423-befb-bc41546e5598}</Project>
     </ProjectReference>

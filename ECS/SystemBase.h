@@ -12,7 +12,7 @@ namespace Rain {
 			
 		public:
 
-			static SystemBase* GetInstance();
+
 			
 			void Initialize();
 			void Update(uint64_t i_timeSinceLastFrame);
@@ -22,13 +22,28 @@ namespace Rain {
 			void RemoveComponent(const int i_id);
 
 			template<class T>
-			T* GetComponent(const int i_id);
-
+			T* GetComponent(const int i_id) {
+				for (auto component : m_componnets) {
+					if (component->id == i_id) {
+						return (T*)component;
+					}
+				}
+				return nullptr;
+			}
+			template<class T>
+			std::vector<T*> GetAllComponents() {
+				std::vector<T*> results;
+				for (auto component : m_componnets) {
+					results.push_back((T*)component);
+				}
+				return results;
+			}
+			SystemBase();
 		private:
 			std::vector<ComponentBase*> m_componnets;
 
-			SystemBase();
-			static SystemBase* Instance;
+	
+
 		};
 	}
 }

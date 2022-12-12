@@ -4,16 +4,19 @@
 #include <vector>
 namespace Rain {
 	namespace GameObject {
-		class GameObjectComponent : ECS::ComponentBase
+		class GameObjectComponent : public ECS::ComponentBase
 		{
 		public:
 			GameObjectComponent();
+			GameObjectComponent(int i_id);
 			void Initialize();
 			void Update(uint64_t i_timeSinceLastFrame);
 			void Destroy();
-		private:
+
 			bool m_isActive;
 			bool m_isVisible;
+		private:
+
 			std::vector<GameObjectComponent*> m_children;
 			GameObjectComponent* m_parent;
 		};

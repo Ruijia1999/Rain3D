@@ -8,7 +8,11 @@ namespace Rain {
 	namespace Transform {
 		class TransformSystem: public ECS::SystemBase
 		{
-
+		public:
+			static TransformSystem* GetInstance();
+		private:
+			static TransformSystem* instance;
+			TransformSystem();
 		};
 	}
 }

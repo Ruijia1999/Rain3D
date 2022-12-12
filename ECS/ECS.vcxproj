@@ -31,9 +31,6 @@
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Render\Render.vcxproj">
-      <Project>{d3a01780-35f7-4b01-b2ac-241d5245687e}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Time\Time.vcxproj">
       <Project>{d2a78e7f-6fcc-4c30-8610-e3868e86c87c}</Project>
     </ProjectReference>

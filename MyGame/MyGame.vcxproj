@@ -152,6 +152,11 @@
   <ItemGroup>
     <ClInclude Include="MyGame.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rain3D\Rain3D.vcxproj">
+      <Project>{97eb783a-72c9-4b59-989b-9e9f5404d387}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

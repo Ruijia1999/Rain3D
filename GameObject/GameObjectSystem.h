@@ -7,7 +7,12 @@ namespace Rain{
 	namespace GameObject {
 		class GameObjectSystem: public ECS::SystemBase
 		{
-			
+		public:
+			static GameObjectSystem* GetInstance();
+
+		private:
+			static GameObjectSystem* instance;
+			GameObjectSystem();
 		};
 	}
 }

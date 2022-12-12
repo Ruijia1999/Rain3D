@@ -32,22 +32,28 @@ void Rain::Render::Graphics::Initialize(HWND hWnd) {
 }
 void Rain::Render::Graphics::DoFrame() {
 
-	// Fill in the subresource data.
 	D3D11_SUBRESOURCE_DATA InitData;
-	InitData.pSysMem = &(NextRenderData[0].constantBuffer);
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
 
-	if (FAILED(pDevice->CreateBuffer(&constDesc, &InitData, &pVSConstantBuffer))) {
-
-	}
-
-	pContext->VSSetConstantBuffers(0, 1, &pVSConstantBuffer);
 	const float bgColor[] = { 0.1f, 0.1f, 0, 0.0f };
 	pContext->ClearRenderTargetView(pTarget, bgColor);
 	pContext->ClearDepthStencilView(pDSV, D3D11_CLEAR_DEPTH, 1.0f, 0u);
-	NextRenderData[0].effect->Bind();
-	NextRenderData[0].mesh->Draw();
+
+	//Render Data
+	for (auto renderData : NextRenderData) {
+		// Fill in the subresource data.
+		
+		InitData.pSysMem = &(renderData.constantBuffer);
+
+		if (FAILED(pDevice->CreateBuffer(&constDesc, &InitData, &pVSConstantBuffer))) {
+		}
+
+		pContext->VSSetConstantBuffers(0, 1, &pVSConstantBuffer);
+		renderData.effect->Bind();
+		renderData.mesh->Draw();
+	}
+
 	pSwapChain->Present(0, 0);
 	pVSConstantBuffer = nullptr;
 }

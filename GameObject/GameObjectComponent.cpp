@@ -6,6 +6,12 @@ Rain::GameObject::GameObjectComponent::GameObjectComponent():ComponentBase(0) {
 	m_parent = nullptr;
 }
 
+Rain::GameObject::GameObjectComponent::GameObjectComponent(int i_id) :ComponentBase(i_id) {
+	m_isActive = true;
+	m_isVisible = true;
+	m_parent = nullptr;
+}
+
 void Rain::GameObject::GameObjectComponent::Initialize() {
 
 }

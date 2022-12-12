@@ -1,13 +1,10 @@
 #include "Mouse.h"
-#include <map>
 #include <iostream>
-namespace {
-	std::map<int, Rain::Input::Mouse::MouseEvent> eventsMap;
-	int leftButtonStat;
-	int rightButtonStat;
-	int midButtonStat;
-	Rain::Math::Vector2 mousePosition;
-}
+
+
+std::map<int, Rain::Input::MouseEvent> Rain::Input::Mouse::eventsMap;
+Rain::Math::Vector2 Rain::Input::Mouse::mousePosition;
+
 void Rain::Input::Mouse::Initialize() {
 
 	eventsMap.insert(std::pair<int, MouseEvent>(MOUSE_LEFT_DOWN,MouseEvent()));
@@ -21,11 +18,6 @@ void Rain::Input::Mouse::Initialize() {
 }
 Rain::Math::Vector2 Rain::Input::Mouse::GetMousePosition() {
 	return mousePosition;
-}
-
-template<class Func>
-void Rain::Input::Mouse::BindEvent(int i_eventType, Func func) {
-	eventsMap.find(i_eventType)->second.Bind();
 }
 
 void Rain::Input::Mouse::OnMouseEvent(int i_eventType, MouseInfo i_mouseInfo) {

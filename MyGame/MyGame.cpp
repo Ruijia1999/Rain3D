@@ -1,9 +1,11 @@
-// MyGame.cpp : Defines the functions for the static library.
-//
+#include "MyGame.h"
 
-#include "framework.h"
-
-// TODO: This is an example of a library function
-void fnMyGame()
-{
+void Game::MyGame::Initialize() {
+	int j = 0;
+}
+void Game::MyGame::Update() {
+	int j = 0;
+}
+void Game::MyGame::ClearUp() {
+	int j = 0;
 }

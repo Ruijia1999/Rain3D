@@ -11,7 +11,19 @@ Rain::Math::Vector3::Vector3(float i_x, float i_y, float i_z) {
 	y = i_y;
 	z = i_z;
 }
-
+Rain::Math::Vector3::Vector3(const Vector3& i_vec) {
+	x = i_vec.x;
+	y = i_vec.y;
+	z = i_vec.z;
+}
+Rain::Math::Vector3& Rain::Math::Vector3::operator=(const Vector3& i_vec) {
+	if (this != &i_vec) {
+		x = i_vec.x;
+		y = i_vec.y;
+		z = i_vec.z;
+	}
+	return *this;
+}
 Rain::Math::Vector3 Rain::Math::Vector3::operator+(const Vector3& i_vec) {
 	Vector3 outcome(x+i_vec.x, y+i_vec.y, z+i_vec.z);
 	return outcome;
