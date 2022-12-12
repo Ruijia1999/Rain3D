@@ -5,7 +5,7 @@ void Rain::Render::Effect::Initialize(const char* i_vertexShaderPath, const char
 	//Create pixelShader
 	ID3DBlob* pPixelBlob = nullptr;
 	
-	if (FAILED(D3DReadFileToBlob(L"C:\\Users\\rjhua\\Desktop\\Rain3D\\Temp\\x64\\Debug\\Output\\PixelShader.cso", &pPixelBlob))) {
+	if (FAILED(D3DReadFileToBlob(L"PixelShader.cso", &pPixelBlob))) {
 		int j = 0;
 	}
 
@@ -16,7 +16,7 @@ void Rain::Render::Effect::Initialize(const char* i_vertexShaderPath, const char
 	//Create vertexShader
 	ID3DBlob* pVertexBlob;
 
-	if (FAILED(D3DReadFileToBlob(L"C:\\Users\\rjhua\\Desktop\\Rain3D\\Temp\\x64\\Debug\\Output\\VertexShader.cso", &pVertexBlob))) {
+	if (FAILED(D3DReadFileToBlob(L"VertexShader.cso", &pVertexBlob))) {
 
 	}
 	if (FAILED(Graphics::pDevice->CreateVertexShader(pVertexBlob->GetBufferPointer(), pVertexBlob->GetBufferSize(), nullptr, &m_VertexShader))) {

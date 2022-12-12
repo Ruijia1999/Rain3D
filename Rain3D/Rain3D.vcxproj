@@ -77,21 +77,25 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(QtMsBuild)\Qt.props" />
     <Import Project="..\EngineDefault.props" />
+    <Import Project="Game.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(QtMsBuild)\Qt.props" />
     <Import Project="..\EngineDefault.props" />
+    <Import Project="Game.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(QtMsBuild)\Qt.props" />
     <Import Project="..\EngineDefault.props" />
+    <Import Project="Game.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(QtMsBuild)\Qt.props" />
     <Import Project="..\EngineDefault.props" />
+    <Import Project="Game.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
@@ -108,21 +112,57 @@
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <CustomBuildStep>
+      <Command>copy "$(TargetPath)" "$(GameInstallDir)$(TargetFileName)" /y</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(GameInstallDir)$(TargetFileName)</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(TargetPath)</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <CustomBuildStep>
+      <Command>copy "$(TargetPath)" "$(GameInstallDir)$(TargetFileName)" /y</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(GameInstallDir)$(TargetFileName)</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(TargetPath)</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <CustomBuildStep>
+      <Command>copy "$(TargetPath)" "$(GameInstallDir)$(TargetFileName)" /y</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(GameInstallDir)$(TargetFileName)</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(TargetPath)</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <CustomBuildStep>
+      <Command>copy "$(TargetPath)" "$(GameInstallDir)$(TargetFileName)" /y</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(GameInstallDir)$(TargetFileName)</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(TargetPath)</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
