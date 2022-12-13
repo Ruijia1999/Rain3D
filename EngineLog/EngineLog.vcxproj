@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{425d1eb0-e6f0-4dc9-bd3d-1863272878ff}</ProjectGuid>
-    <RootNamespace>LUA</RootNamespace>
+    <ProjectGuid>{68092137-2196-453e-ae71-a06861093138}</ProjectGuid>
+    <RootNamespace>EngineLog</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -147,7 +147,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="LUA.h" />
+    <ClInclude Include="EngineLog.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="EngineLog.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

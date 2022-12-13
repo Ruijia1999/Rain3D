@@ -31,15 +31,9 @@ void Rain::Render::Mesh::Initialize() {
 			return vertexBufferDescription;
 		}();
 
-		const auto vertexInitialData = [this, vertexData]
-		{
-			D3D11_SUBRESOURCE_DATA initialData{};
+		D3D11_SUBRESOURCE_DATA vertexInitialData{};
 
-			initialData.pSysMem = vertexData;
-			// (The other data members are ignored for non-texture buffers)
-
-			return initialData;
-		}();
+		vertexInitialData.pSysMem = vertexData;
 
 		ID3D11Device* pContext = Graphics::pDevice;
 
@@ -68,15 +62,10 @@ void Rain::Render::Mesh::Initialize() {
 			return indexBufferDescription;
 		}();
 
-		const auto indexInitialData = [this, indexData]
-		{
-			D3D11_SUBRESOURCE_DATA initialData{};
+		D3D11_SUBRESOURCE_DATA indexInitialData{};
 
-			initialData.pSysMem = indexData;
-			// (The other data members are ignored for non-texture buffers)
+		indexInitialData.pSysMem = indexData;
 
-			return initialData;
-		}();
 		const auto result_create = Graphics::pDevice->CreateBuffer(&indexBufferDescription, &indexInitialData, &m_indexBuffer);
 		if (FAILED(result_create))
 		{
