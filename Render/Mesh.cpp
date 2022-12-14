@@ -1,22 +1,13 @@
 #include "Mesh.h"
 #include "Graphics.h"
+#include "Lua/Lua.h"
+void Rain::Render::Mesh::Initialize(const char* i_filePath) {
+	m_name = i_filePath;
 
-void Rain::Render::Mesh::Initialize() {
-	VertexFormat vertexData[] = {
-		{-0.5,-0.5,0.5},
-		{-0.5,0.5,0.5},
-		{0.5,0.5,0.5},
-		{0.5,-0.5,0.5}
-	};
-
-	IndexFormat indexData[] = {
-		{0,1,2},
-		{0,2,3}
-	};
-
+	Load(vertexCount, indexCount, vertexData, indexData);
 	// Vertex Buffer
 	{
-		const auto bufferSize = sizeof(vertexData[0]) * 4;
+		const auto bufferSize = sizeof(vertexData[0]) * vertexCount;
 		const auto vertexBufferDescription = [bufferSize]
 		{
 			D3D11_BUFFER_DESC vertexBufferDescription{};
@@ -46,7 +37,7 @@ void Rain::Render::Mesh::Initialize() {
 
 	// Index Buffer
 	{
-		const auto bufferSize = sizeof(indexData[0]) * 2;
+		const auto bufferSize = sizeof(indexData[0]) * indexCount;
 
 		const auto indexBufferDescription = [bufferSize]
 		{
@@ -102,6 +93,54 @@ void Rain::Render::Mesh::Initialize() {
 }
 
 void Rain::Render::Mesh::Draw() {
-	Graphics::pContext->DrawIndexed((UINT)6, 0u, 0u);
+	Graphics::pContext->DrawIndexed((UINT)(indexCount*3), 0u, 0u);
 }
 
+void Rain::Render::Mesh::Load(int& i_vertexCount, int& i_indexCount, VertexFormat*& i_vertexData, IndexFormat*& i_indexData) {
+	lua_State* L = luaL_newstate();
+	auto ret = luaL_dofile(L, m_name);
+	lua_getglobal(L, "vertexCount");
+	i_vertexCount = lua_tointeger(L, -1);
+	lua_pop(L, 1);
+	lua_getglobal(L, "indexCount");
+	i_indexCount = lua_tointeger(L, -1);
+	lua_pop(L, 1);
+
+#pragma region vertexData
+	i_vertexData = new VertexFormat[i_vertexCount];
+	lua_getglobal(L, "vertexData");
+	int n = luaL_len(L, -1);
+	for (int i = 1; i <= n; ++i) {
+		lua_rawgeti(L, -1, i);
+		lua_rawgeti(L, -1, 1);
+		i_vertexData[i - 1].x = lua_tonumber(L, -1);
+		lua_pop(L, 1);
+		lua_rawgeti(L, -1, 2);
+		i_vertexData[i - 1].y = lua_tonumber(L, -1);
+		lua_pop(L, 1);
+		lua_rawgeti(L, -1, 3);
+		i_vertexData[i - 1].z = lua_tonumber(L, -1);
+		lua_pop(L, 1);
+		lua_pop(L, 1);
+	}
+#pragma endregion
+
+#pragma region indexData
+	i_indexData = new IndexFormat[i_indexCount];
+	lua_getglobal(L, "indexData");
+	n = luaL_len(L, -1);
+	for (int i = 1; i <= n; ++i) {
+		lua_rawgeti(L, -1, i);
+		lua_rawgeti(L, -1, 1);
+		i_indexData[i - 1].x = lua_tointeger(L, -1);
+		lua_pop(L, 1);
+		lua_rawgeti(L, -1, 2);
+		i_indexData[i - 1].y = lua_tointeger(L, -1);
+		lua_pop(L, 1);
+		lua_rawgeti(L, -1, 3);
+		i_indexData[i - 1].z = lua_tointeger(L, -1);
+		lua_pop(L, 1);
+		lua_pop(L, 1);
+	}
+#pragma endregion
+}

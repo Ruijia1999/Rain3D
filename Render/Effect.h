@@ -13,10 +13,11 @@ namespace Rain {
 			ID3D11VertexShader* m_VertexShader = nullptr;
 			ID3D11InputLayout* m_InputLayout = nullptr;
 		public:
-
 			void Initialize(const char* i_vertexShaderPath, const char* i_pixelShaderPath);
 			void Bind();
 			void CleanUp();
+
+			const char* m_name;
 		};
 	}
 }

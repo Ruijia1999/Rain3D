@@ -50,6 +50,7 @@ Rain3D::~Rain3D()
 
 
 void Rain3D::mousePressEvent(QMouseEvent* event) {
+   
     if (event->button() == Qt::LeftButton) {
         Rain::Input::Mouse::OnMouseLeftDown();
     }
@@ -93,11 +94,11 @@ void Rain3D::Initialize() {
    
     timeLastFrame = 0;
     meshes[0] = new Render::Mesh();
-    meshes[0]->Initialize();
+    meshes[0]->Initialize("cube.lua");
     effects[0] = new Render::Effect();
     effects[0]->Initialize("vertexShader", "pixelShader");
     meshes[1] = new Render::Mesh();
-    meshes[1]->Initialize();
+    meshes[1]->Initialize("cube.lua");
     effects[1] = new Render::Effect();
     effects[1]->Initialize("vertexShader", "pixelShader");
     Input::Mouse::BindEvent(MOUSE_LEFT_DOWN, [](Input::MouseInfo info) {
@@ -129,12 +130,12 @@ void Rain3D::Update() {
            
             Render::ConstantBuffer::VSConstantBuffer vsConstantBuffer;
             Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(go->id);
-            vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1.5708f, 1, 1, 10);
+            vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1.5708f, 1, 1, 12);
             vsConstantBuffer.transform_localToWorld = Math::CreateLocalToWorldTransform(Math::Quaternion(), transform->position);
             vsConstantBuffer.transform_localToWorld.Inverse();
             vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(), Math::Vector3(0, 0, 10));
             vsConstantBuffer.transform_worldToCamera.Inverse();
-            RenderData.push_back(Render::RenderData(meshes[i], effects[i], vsConstantBuffer));
+            RenderData.push_back(Render::RenderData(meshes[0], effects[0], vsConstantBuffer));
         }
     }
     Render::Graphics::NextRenderData.resize(RenderData.size());

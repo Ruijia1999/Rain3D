@@ -73,8 +73,6 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 #pragma endregion
 #pragma region GameObjectComponent
 	RegisterComponentCreator("Transform", [](int i_id, lua_State* i_luaState) {
-
-		
 		Math::Vector3 position;
 		lua_pushstring(i_luaState, "position");
 		lua_gettable(i_luaState, -2);

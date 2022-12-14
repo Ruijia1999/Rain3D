@@ -20,11 +20,20 @@ namespace Rain {
 			ID3D11Buffer* m_indexBuffer = nullptr;
 		
 		public:
-
-			void Initialize();
+			void Initialize(const char* i_filePath);
 			void Draw();
 			void CleanUp();
 
+			const char* m_name;
+
+		private:
+			//helper
+			//--------
+			int vertexCount;
+			int indexCount;
+			VertexFormat* vertexData = nullptr;
+			IndexFormat* indexData = nullptr;
+			void Load(int& i_vertexCount, int& i_indexCount, VertexFormat*& i_vertexData, IndexFormat*& i_indexData);
 		};
 	}
 }

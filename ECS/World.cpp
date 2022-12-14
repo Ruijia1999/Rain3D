@@ -45,12 +45,6 @@ void Rain::ECS::World::Update() {
 	GameObject::GameObjectSystem::GetInstance()->Update(timeSinceLastFrame);
 	Transform::TransformSystem::GetInstance()->Update(timeSinceLastFrame);
 
-	//Graphics Portion
-	Render::Mesh* s_mesh = new Render::Mesh();
-	Render::Effect* s_effect = new Render::Effect();
-	s_mesh->Initialize();
-	s_effect->Initialize("vertexShader", "pixelShader");
-
 	//Init Constant Buffer
 
 

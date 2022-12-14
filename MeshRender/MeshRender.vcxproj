@@ -18,57 +18,11 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ConstantBuffer.h" />
-    <ClInclude Include="Effect.h" />
-    <ClInclude Include="Graphics.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="RenderComponent.h" />
-    <ClInclude Include="RenderData.h" />
-    <ClInclude Include="RenderSystem.h" />
-    <ClInclude Include="windows.h" />
-    <ClInclude Include="windows\windows.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="ConstantBuffer.cpp" />
-    <ClCompile Include="Effect.cpp" />
-    <ClCompile Include="Graphics.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="RenderComponent.cpp" />
-    <ClCompile Include="RenderData.cpp" />
-    <ClCompile Include="RenderSystem.cpp" />
-    <ClCompile Include="RenderSystem.d3d.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="PixelShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="VertexShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Lua\Lua.vcxproj">
-      <Project>{33d7da59-534c-40ee-9f25-59b184db5cef}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Math\Math.vcxproj">
-      <Project>{026e63e4-4685-487c-a2af-cabde1858bf8}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{d3a01780-35f7-4b01-b2ac-241d5245687e}</ProjectGuid>
-    <RootNamespace>Render</RootNamespace>
+    <ProjectGuid>{3dada264-3893-4d8e-846d-0e49c503de89}</ProjectGuid>
+    <RootNamespace>MeshRender</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -192,6 +146,33 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="MeshRender.h" />
+    <ClInclude Include="MeshRenderComponent.h" />
+    <ClInclude Include="MeshRenderSystem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MeshRender.cpp" />
+    <ClCompile Include="MeshRenderComponent.cpp" />
+    <ClCompile Include="MeshRenderSystem.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ECS\ECS.vcxproj">
+      <Project>{43ad0a70-e908-4b94-8167-a1a14e9f23c6}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\EngineLog\EngineLog.vcxproj">
+      <Project>{68092137-2196-453e-ae71-a06861093138}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Math\Math.vcxproj">
+      <Project>{026e63e4-4685-487c-a2af-cabde1858bf8}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Render\Render.vcxproj">
+      <Project>{d3a01780-35f7-4b01-b2ac-241d5245687e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Time\Time.vcxproj">
+      <Project>{d2a78e7f-6fcc-4c30-8610-e3868e86c87c}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
