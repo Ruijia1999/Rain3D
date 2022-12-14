@@ -1,13 +1,14 @@
 #include "TransformComponent.h"
 Rain::Transform::TransformComponent::TransformComponent() {
-	m_Position = Math::Vector3();
-	m_Scale = Math::Vector3(1, 1, 1);
-	m_Rotation = Math::Vector3();
+	position = Math::Vector3();
+	scale = Math::Vector3(1, 1, 1);
+	rotation = Math::Vector3();
 }
-Rain::Transform::TransformComponent::TransformComponent(Math::Vector3 i_Position, Math::Vector3 i_Scale, Math::Vector3 i_Rotation){
-	m_Position = i_Position;
-	m_Scale = i_Scale;
-	m_Rotation = i_Rotation;
+Rain::Transform::TransformComponent::TransformComponent(int i_id, Math::Vector3 i_Position, Math::Vector3 i_Scale, Math::Vector3 i_Rotation){
+	id = i_id;
+	position = i_Position;
+	scale = i_Scale;
+	rotation = i_Rotation;
 }
 void Rain::Transform::TransformComponent::Initialize() {
 

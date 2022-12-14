@@ -1,6 +1,4 @@
 #include "World.h"
-#include "GameObject/GameObjectSystem.h"
-#include "Transform/TransformSystem.h"
 #include "Render/Mesh.h"
 #include "Render/Effect.h"
 #include "Render/RenderData.h"

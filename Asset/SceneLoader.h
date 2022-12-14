@@ -1,13 +1,18 @@
 #ifndef  RAIN_ASSET_SCENELOADER
 #define  RAIN_ASSET_SCENELOADER
 #include <functional>
-#include "LUA/LUA.h"
+#include "Lua/Lua.h"
+#include "ECS/World.h"
 namespace Rain {
 	namespace Asset {
 		namespace SceneLoader {
 			void LoadScene(const char* i_filePath);
 			void RegisterComponentCreators();
-			void RegisterComponentCreator(const char* i_ComponentName, std::function<void> i_ComponentCreator);
+			//help function
+			//----------------
+			void LoadEntity(lua_State* i_luaState);
+			void LoadComponent(int i_id, lua_State* i_luaState);
+			void RegisterComponentCreator(const std::string& i_ComponentName, std::function<void(int, lua_State*)> i_ComponentCreator);
 		}
 	}
 }

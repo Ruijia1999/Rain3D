@@ -8,17 +8,21 @@ namespace Rain {
 		{
 		public:
 			GameObjectComponent();
+			GameObjectComponent(int i_id, bool i_isActive, bool i_isVisible, const char* name, const char* tag);
 			GameObjectComponent(int i_id);
 			void Initialize();
 			void Update(uint64_t i_timeSinceLastFrame);
 			void Destroy();
 
-			bool m_isActive;
-			bool m_isVisible;
+			bool isActive;
+			bool isVisible;
+			const char* name;
+			const char* tag;
+			GameObjectComponent* parent;
 		private:
 
-			std::vector<GameObjectComponent*> m_children;
-			GameObjectComponent* m_parent;
+			std::vector<GameObjectComponent*> children;
+
 		};
 	}
 }

@@ -1,6 +1,7 @@
 #ifndef RAIN_ECS_WORLD
 #define RAIN_ECS_WORLD
-
+#include "GameObject/GameObjectSystem.h"
+#include "Transform/TransformSystem.h"
 namespace Rain {
 	namespace ECS {
 		class World

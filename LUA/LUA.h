@@ -1,6 +1,2 @@
-#ifndef  RAIN_LUA_H
-#define  RAIN_LUA_H
+#pragma once
 #include "src/lua.hpp"
-
-#endif // ! RAIN_LUA_H
-
