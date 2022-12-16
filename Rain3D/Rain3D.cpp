@@ -4,6 +4,8 @@
 #include <QPushButton>
 #include <QMouseEvent>
 #include <functional>
+#include <map>
+#include <string>
 #include "GameObject/GameObjectSystem.h"
 #include "Transform/TransformSystem.h"
 #include "Render/RenderData.h"
@@ -11,23 +13,22 @@
 #include "Time/Time.h"
 #include "Asset/SceneLoader.h"
 #include "EngineLog/EngineLog.h"
+#include "MeshRender/MeshRender.h"
 using namespace std::placeholders;
 using namespace Rain;
 namespace {
     std::vector<Rain::Render::RenderData> RenderData;
     uint64_t timeLastFrame;
 
-    Render::Mesh* meshes[2];
-    Render::Effect* effects[2];
+    //std::map<std::string, Render::Mesh*> meshes;
+    //std::map<std::string, Render::Effect*> effects;
 
 }
 
 Rain3D::Rain3D(QWidget *parent)
     : QMainWindow(parent)
 {
-    Rain::EngineLog::CreateLogFile("ss");
-    Rain::Asset::SceneLoader::RegisterComponentCreators();
-    Rain::Asset::SceneLoader::LoadScene("ss");
+
 
     ui.setupUi(this);
     setFixedSize(QSize(1600, 900));
@@ -89,18 +90,20 @@ void Rain3D::resizeEvent(QResizeEvent* event)
 }
 
 void Rain3D::Initialize() {
+    Rain::EngineLog::CreateLogFile("ss");
+
     Rain::Input::Initialize();
     Rain::Render::RenderSystem::Initialize((HWND)winId());
-   
+
+    GameObject::GameObjectSystem::GetInstance()->Initialize();
+    Transform::TransformSystem::GetInstance()->Initialize();
+    MeshRender::MeshRenderSystem::GetInstance()->Initialize();
+
+    Rain::Asset::SceneLoader::RegisterComponentCreators();
+    Rain::Asset::SceneLoader::LoadScene("ss");
+
     timeLastFrame = 0;
-    meshes[0] = new Render::Mesh();
-    meshes[0]->Initialize("cube.lua");
-    effects[0] = new Render::Effect();
-    effects[0]->Initialize("vertexShader", "pixelShader");
-    meshes[1] = new Render::Mesh();
-    meshes[1]->Initialize("cube.lua");
-    effects[1] = new Render::Effect();
-    effects[1]->Initialize("vertexShader", "pixelShader");
+
     Input::Mouse::BindEvent(MOUSE_LEFT_DOWN, [](Input::MouseInfo info) {
         Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(11);
         transform->position = transform->position + Math::Vector3(0.1f, 0, 0);
@@ -135,7 +138,8 @@ void Rain3D::Update() {
             vsConstantBuffer.transform_localToWorld.Inverse();
             vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(), Math::Vector3(0, 0, 10));
             vsConstantBuffer.transform_worldToCamera.Inverse();
-            RenderData.push_back(Render::RenderData(meshes[0], effects[0], vsConstantBuffer));
+            MeshRender::MeshRenderComponent* meshRender = MeshRender::MeshRenderSystem::GetInstance()->GetComponent<MeshRender::MeshRenderComponent>(go->id);
+            RenderData.push_back(Render::RenderData(meshRender->mesh, meshRender->effect, vsConstantBuffer));
         }
     }
     Render::Graphics::NextRenderData.resize(RenderData.size());

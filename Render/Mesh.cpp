@@ -67,6 +67,11 @@ void Rain::Render::Mesh::Initialize(const char* i_filePath) {
 		
 	}
 
+	
+
+}
+
+void Rain::Render::Mesh::Draw() const {
 	// Bind a specific vertex buffer to the device as a data source
 	{
 
@@ -89,10 +94,6 @@ void Rain::Render::Mesh::Initialize(const char* i_filePath) {
 
 	//Set primitive topology to triangle list
 	Graphics::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-}
-
-void Rain::Render::Mesh::Draw() {
 	Graphics::pContext->DrawIndexed((UINT)(indexCount*3), 0u, 0u);
 }
 

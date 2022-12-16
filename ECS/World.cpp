@@ -30,6 +30,8 @@ void Rain::ECS::World::Initialize() {
 	GameObject::GameObjectSystem::GetInstance()->AddComponent(new GameObject::GameObjectComponent(0));
 	Transform::TransformSystem::GetInstance()->Initialize();
 	Transform::TransformSystem::GetInstance()->AddComponent(new Transform::TransformComponent());
+	Transform::TransformSystem::GetInstance()->Initialize();
+	Transform::TransformSystem::GetInstance()->AddComponent(new Transform::TransformComponent());
 }
 void Rain::ECS::World::Update() {
 	uint64_t timeSinceLastFrame;

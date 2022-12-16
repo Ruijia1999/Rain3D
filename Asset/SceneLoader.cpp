@@ -2,7 +2,9 @@
 #include <map>
 #include <string>
 #include "EngineLog/EngineLog.h"
+#include "MeshRender/MeshRender.h"
 #include "Math/Math.h"
+
 namespace {
 	std::map<std::string, std::function<void(int, lua_State*)>> m_componentCreators;
 }
@@ -71,7 +73,8 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		}
 	);
 #pragma endregion
-#pragma region GameObjectComponent
+
+#pragma region TransformComponent
 	RegisterComponentCreator("Transform", [](int i_id, lua_State* i_luaState) {
 		Math::Vector3 position;
 		lua_pushstring(i_luaState, "position");
@@ -88,6 +91,27 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 	);
 #pragma endregion
 
+#pragma region MeshRender
+	RegisterComponentCreator("MeshRender", [](int i_id, lua_State* i_luaState) {
+		Render::Mesh* mesh;
+		lua_pushstring(i_luaState, "mesh");
+		lua_gettable(i_luaState, -2);
+		std::string mesh_name = lua_tostring(i_luaState,-1);
+		lua_pop(i_luaState, 1);
+		MeshRender::MeshRenderSystem* n = MeshRender::MeshRenderSystem::GetInstance();
+		mesh = MeshRender::MeshRenderSystem::GetInstance()->meshes.find(mesh_name)->second;
+
+		Render::Effect* effect;
+		lua_pushstring(i_luaState, "effect");
+		lua_gettable(i_luaState, -2);
+		std::string effect_name = lua_tostring(i_luaState,-1);
+		lua_pop(i_luaState, 1);
+		effect = MeshRender::MeshRenderSystem::GetInstance()->effects.find(effect_name)->second;
+
+		MeshRender::MeshRenderSystem::GetInstance()->AddComponent(new MeshRender::MeshRenderComponent(i_id, mesh, effect));
+		}
+	);
+#pragma endregion
 }
 
 void Rain::Asset::SceneLoader::RegisterComponentCreator(const std::string& i_ComponentName, std::function<void(int, lua_State*)> i_ComponentCreator) {

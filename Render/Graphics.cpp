@@ -52,6 +52,7 @@ void Rain::Render::Graphics::DoFrame() {
 		pContext->VSSetConstantBuffers(0, 1, &pVSConstantBuffer);
 		renderData.effect->Bind();
 		renderData.mesh->Draw();
+		
 	}
 
 	pSwapChain->Present(0, 0);

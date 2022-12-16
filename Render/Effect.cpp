@@ -46,7 +46,7 @@ void Rain::Render::Effect::Initialize(const char* i_vertexShaderPath, const char
 
 }
 
-void Rain::Render::Effect::Bind() {
+void Rain::Render::Effect::Bind() const {
 
 	//Set input layout
 	Graphics::pContext->IASetInputLayout(m_InputLayout);

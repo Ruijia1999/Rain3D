@@ -14,7 +14,7 @@ namespace Rain {
 
 
 			
-			void Initialize();
+			virtual void Initialize();
 			void Update(uint64_t i_timeSinceLastFrame);
 			void Destroy();
 

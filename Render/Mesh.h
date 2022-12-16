@@ -21,12 +21,12 @@ namespace Rain {
 		
 		public:
 			void Initialize(const char* i_filePath);
-			void Draw();
+			void Draw() const;
 			void CleanUp();
 
 			const char* m_name;
 
-		private:
+		
 			//helper
 			//--------
 			int vertexCount;

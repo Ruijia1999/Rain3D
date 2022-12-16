@@ -245,6 +245,9 @@
     <ProjectReference Include="..\Math\Math.vcxproj">
       <Project>{026e63e4-4685-487c-a2af-cabde1858bf8}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\MeshRender\MeshRender.vcxproj">
+      <Project>{3dada264-3893-4d8e-846d-0e49c503de89}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Render\Render.vcxproj">
       <Project>{d3a01780-35f7-4b01-b2ac-241d5245687e}</Project>
     </ProjectReference>
