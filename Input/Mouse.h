@@ -15,11 +15,18 @@ namespace Rain {
 #define MOUSE_MOVE 6
 #define MOUSE_EVENT_NULL -1
 		struct MouseInfo {
+			int eventType;
 			Math::Vector2 m_mousePos;
-			MouseInfo(int x, int y) {
+			MouseInfo() {
+				eventType = -1;
+				m_mousePos = Math::Vector2(0, 0);
+			}
+			MouseInfo(int i_type, int x, int y) {
+				eventType = i_type;
 				m_mousePos = Math::Vector2((float)x, (float)y);
 			}
-			MouseInfo(Math::Vector2 i_pos) {
+			MouseInfo(int i_type, Math::Vector2 i_pos) {
+				eventType = i_type;
 				m_mousePos = i_pos;
 			}
 		};
@@ -40,7 +47,7 @@ namespace Rain {
 			void BindEvent(int i_eventType, Func func) {
 				eventsMap.find(i_eventType)->second.Bind(func);
 			}
-			void OnMouseEvent(int i_eventType, MouseInfo i_mouseInfo);
+
 			void OnMouseLeftDown();
 			void OnMouseRightDown();
 			void OnMouseLeftUp();

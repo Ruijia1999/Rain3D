@@ -2,6 +2,7 @@
 #define RAIN_INPUT_H
 #include "Math/Math.h"
 #include "Mouse.h"
+#include "InputEventQueue.h"
 namespace Rain {
 	namespace Input {
 			void Initialize();
@@ -11,8 +12,6 @@ namespace Rain {
 			//KeyBoard
 			void OnKeyDown(int i_keyCode);
 			void OnKeyUp(int i_keyCode);
-
-		
 
 
 	}

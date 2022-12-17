@@ -6,10 +6,12 @@
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="MouseEvent.cpp" />
+    <ClCompile Include="InputEventQueue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="MouseEvent.h" />
+    <ClInclude Include="InputEventQueue.h" />
   </ItemGroup>
 </Project>

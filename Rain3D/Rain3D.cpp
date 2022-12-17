@@ -104,9 +104,13 @@ void Rain3D::Initialize() {
 
     timeLastFrame = 0;
 
-    Input::Mouse::BindEvent(MOUSE_LEFT_DOWN, [](Input::MouseInfo info) {
+    Rain::Input::Mouse::BindEvent(MOUSE_LEFT_DOWN, [](Rain::Input::MouseInfo info) {
         Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(11);
         transform->position = transform->position + Math::Vector3(0.1f, 0, 0);
+        });
+    Rain::Input::Mouse::BindEvent(MOUSE_MOVE, [](Rain::Input::MouseInfo info) {
+        Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(3);
+        transform->position = transform->position + Math::Vector3(0.001f, 0, 0);
         });
 }
 
