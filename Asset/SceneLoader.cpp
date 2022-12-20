@@ -4,7 +4,8 @@
 #include "EngineLog/EngineLog.h"
 #include "MeshRender/MeshRender.h"
 #include "Math/Math.h"
-
+#include "ECS/Entity.h"
+#include "Reflect/Reflect.h"
 namespace {
 	std::map<std::string, std::function<void(int, lua_State*)>> m_componentCreators;
 }
@@ -25,10 +26,17 @@ void Rain::Asset::SceneLoader::LoadScene(const char* i_filePath) {
 }
 void Rain::Asset::SceneLoader::LoadEntity(lua_State* i_luaState) {
 	int id;
+	std::string script;
 
 	lua_pushstring(i_luaState, "id");
 	lua_gettable(i_luaState, -2);
 	id = lua_tointeger(i_luaState, -1);
+	lua_pop(i_luaState, 1);
+
+
+	lua_pushstring(i_luaState, "script");
+	lua_gettable(i_luaState, -2);
+	script = lua_tostring(i_luaState, -1);
 	lua_pop(i_luaState, 1);
 
 	lua_pushstring(i_luaState, "components");
@@ -42,6 +50,8 @@ void Rain::Asset::SceneLoader::LoadEntity(lua_State* i_luaState) {
 	}
 	lua_pop(i_luaState, 1);
 
+	ECS::Entity* entity = Rain::Reflect::GetClass(script);
+	entity->Initialize(id);
 }
 
 void Rain::Asset::SceneLoader::LoadComponent(int i_id, lua_State* i_luaState) {

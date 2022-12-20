@@ -21,21 +21,18 @@
       <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
       <Extensions>ts</Extensions>
     </Filter>
-    <Filter Include="GameObjects">
-      <UniqueIdentifier>{f667d293-a818-45af-92d3-484ff75cd97b}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="Rain3D.qrc">
+    <QtRcc Include="Rain3DGame.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-    <QtUic Include="Rain3D.ui">
+    <QtUic Include="Rain3DGame.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtMoc Include="Rain3D.h">
+    <QtMoc Include="Rain3DGame.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClCompile Include="Rain3D.cpp">
+    <ClCompile Include="Rain3DGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -43,41 +40,5 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SceneView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ContentBrowser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Cube.cpp">
-      <Filter>GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="Circle.cpp">
-      <Filter>GameObjects</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="SceneView.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="ContentBrowser.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-  </ItemGroup>
-  <ItemGroup>
-    <QtUic Include="SceneView.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="ContentBrowser.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Cube.h">
-      <Filter>GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="Circle.h">
-      <Filter>GameObjects</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

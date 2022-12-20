@@ -167,6 +167,9 @@
     <ProjectReference Include="..\MeshRender\MeshRender.vcxproj">
       <Project>{3dada264-3893-4d8e-846d-0e49c503de89}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Reflect\Reflect.vcxproj">
+      <Project>{f1a88e4c-2af6-40e0-beae-f79def1593b3}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MeshLoader.h" />

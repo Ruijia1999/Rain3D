@@ -29,7 +29,7 @@ Rain::Math::Vector3 Rain::Math::Vector3::operator+(const Vector3& i_vec) {
 	return outcome;
 }
 
-Rain::Math::Vector3& Rain::Math::Vector3::operator-(const Vector3& i_vec) {
+Rain::Math::Vector3 Rain::Math::Vector3::operator-(const Vector3& i_vec) {
 	Vector3 outcome(x - i_vec.x, y - i_vec.y, z - i_vec.z);
 	return outcome;
 }

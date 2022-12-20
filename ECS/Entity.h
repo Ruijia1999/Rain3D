@@ -5,7 +5,9 @@ namespace Rain {
 
 		class Entity
 		{
-			void RigisterEntity(int id);
+		public:
+			int id;
+			virtual void Initialize(int id) = 0;
 		};
 
 	}

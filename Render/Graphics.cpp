@@ -68,8 +68,8 @@ void Rain::Render::Graphics::InitializeGraphics(HWND hWnd) {
 	sd.BufferDesc.RefreshRate.Denominator = 0;
 	sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 	sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	sd.SampleDesc.Count = 1;
-	sd.SampleDesc.Quality = 0;
+	sd.SampleDesc.Count = 4;
+	sd.SampleDesc.Quality = -1;
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	sd.BufferCount = 1;
 	sd.OutputWindow = hWnd;
@@ -117,13 +117,13 @@ void Rain::Render::Graphics::InitializeGraphics(HWND hWnd) {
 	// create depth stensil texture
 	ID3D11Texture2D* pDepthStencil = nullptr;
 	D3D11_TEXTURE2D_DESC descDepth = {};
-	descDepth.Width = 1600u;
-	descDepth.Height = 900u;
+	descDepth.Width = 800u;
+	descDepth.Height = 800u;
 	descDepth.MipLevels = 1u;
 	descDepth.ArraySize = 1u;
 	descDepth.Format = DXGI_FORMAT_D32_FLOAT;
-	descDepth.SampleDesc.Count = 1u;
-	descDepth.SampleDesc.Quality = 0u;
+	descDepth.SampleDesc.Count = 4;
+	descDepth.SampleDesc.Quality = -1;
 	descDepth.Usage = D3D11_USAGE_DEFAULT;
 	descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	pDevice->CreateTexture2D(&descDepth, nullptr, &pDepthStencil);
@@ -164,11 +164,11 @@ void Rain::Render::Graphics::InitializeGraphics(HWND hWnd) {
 	// configure viewport
 	D3D11_VIEWPORT vp;
 
-	vp.Width = 900.0f;
-	vp.Height = 900.0f;
+	vp.Width = 800.0f;
+	vp.Height = 800.0f;
 	vp.MinDepth = 0.0f;
 	vp.MaxDepth = 1.0f;
-	vp.TopLeftX = 350.0f;
+	vp.TopLeftX = 0.0f;
 	vp.TopLeftY = 0.0f;
 	pContext->RSSetViewports(1u, &vp);
 
