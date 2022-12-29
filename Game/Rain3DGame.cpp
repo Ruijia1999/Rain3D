@@ -1,6 +1,6 @@
-#include "SceneView.h"
-#include "Render/RenderSystem.h"
-#include "Event/EventBase.h"
+#include "Rain3DGame.h"
+#include "ECS/World.h"
+#include "Input/Input.h"
 #include <functional>
 #include <map>
 #include <string>
@@ -14,9 +14,8 @@
 #include "Asset/SceneLoader.h"
 #include "EngineLog/EngineLog.h"
 #include "MeshRender/MeshRender.h"
-#include "ECS/World.h"
-#include "Input/Input.h"
-#include "Reflect/Reflect.h"
+#include "Render/RenderSystem.h"
+
 using namespace std::placeholders;
 using namespace Rain;
 namespace {
@@ -24,31 +23,20 @@ namespace {
     uint64_t timeLastFrame;
     bool stop;
     std::thread* mainGameThread;
-
 }
 
-SceneView::SceneView(QWidget *parent)
-	: QWidget(parent)
-{
-    ui.setupUi(this);
-    setAttribute(Qt::WA_PaintOnScreen, true);
-    setAttribute(Qt::WA_NoSystemBackground, true);
-    setAttribute(Qt::WA_OpaquePaintEvent, true);
-    setMouseTracking(true);
-    setAttribute(Qt::WA_Hover, true);
-
-   
-    Initialize();
-    mainGameThread = new std::thread(StartGame);
+void Rain3DGame::StartGame() {
+    stop = false;
+    while (!stop) {
+        Update();
+    }
 }
 
-SceneView::~SceneView()
-{}
-void SceneView::Initialize() {
+void Rain3DGame::Initialize(HWND hWnd, int width, int height) {
     Rain::EngineLog::CreateLogFile("ss");
 
     Rain::Input::Initialize();
-    Rain::Render::RenderSystem::Initialize((HWND)winId(),1600,900);
+    Rain::Render::RenderSystem::Initialize(hWnd,width, height);
 
     GameObject::GameObjectSystem::GetInstance()->Initialize();
     Transform::TransformSystem::GetInstance()->Initialize();
@@ -59,14 +47,18 @@ void SceneView::Initialize() {
 
     timeLastFrame = 0;
 
+    Rain::Input::Mouse::BindEvent(MOUSE_LEFT_DOWN, [](Rain::Input::MouseInfo info) {
+        Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(11);
+        transform->position = transform->position + Math::Vector3(0.1f, 0, 0);
+        });
+    Rain::Input::Mouse::BindEvent(MOUSE_MOVE, [](Rain::Input::MouseInfo info) {
+        Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(3);
+        transform->position = transform->position + Math::Vector3(0.001f, 0, 0);
+        });
+    mainGameThread = new std::thread( StartGame);
 }
-void SceneView::StartGame() {
-    stop = false;
-    while (!stop) {
-        Update();
-    }
-}
-void SceneView::Update() {
+
+void Rain3DGame::Update() {
     uint64_t timeSinceLastFrame;
     if (timeLastFrame == 0) {
         timeSinceLastFrame = 60;
@@ -89,7 +81,7 @@ void SceneView::Update() {
 
             Render::ConstantBuffer::VSConstantBuffer vsConstantBuffer;
             Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(go->id);
-            vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1.5708f, 1, 1, 12);
+            vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1.5708f, 1600/900.0f, 1, 12);
             vsConstantBuffer.transform_localToWorld = Math::CreateLocalToWorldTransform(Math::Quaternion(), transform->position);
             vsConstantBuffer.transform_localToWorld.Inverse();
             vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(), Math::Vector3(0, 0, 10));
@@ -103,38 +95,6 @@ void SceneView::Update() {
     Rain::Render::RenderSystem::Update();
 }
 
-void SceneView::ClearUp() {
+void Rain3DGame::ClearUp() {
     int j = 0;
 }
-
-
-
-void SceneView::mousePressEvent(QMouseEvent* event) {
-
-    if (event->button() == Qt::LeftButton) {
-        Rain::Input::Mouse::OnMouseLeftDown();
-    }
-    else if (event->button() == Qt::RightButton) {
-        Rain::Input::Mouse::OnMouseRightDown();
-    }
-    else if (event->button() == Qt::MidButton) {
-        Rain::Input::Mouse::OnMouseMidDown();
-    }
-}
-
-void SceneView::mouseReleaseEvent(QMouseEvent* event) {
-    if (event->button() == Qt::LeftButton) {
-        Rain::Input::Mouse::OnMouseLeftUp();
-    }
-    else if (event->button() == Qt::RightButton) {
-        Rain::Input::Mouse::OnMouseRightUp();
-    }
-    else if (event->button() == Qt::MidButton) {
-        Rain::Input::Mouse::OnMouseMidUp();
-    }
-}
-
-void SceneView::mouseMoveEvent(QMouseEvent* event) {
-    Rain::Input::Mouse::OnMouseMove(event->x(), event->y());
-}
-

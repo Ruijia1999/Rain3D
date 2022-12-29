@@ -14,8 +14,9 @@ namespace {
 }
 
 void Rain::Input::InputEventQueue::Start() {
-	inputThread = new std::thread(ThreadCallBack);
 	ifStop = false;
+	inputThread = new std::thread(ThreadCallBack);
+
 }
 void Rain::Input::InputEventQueue::Stop() {
 	ifStop = true;

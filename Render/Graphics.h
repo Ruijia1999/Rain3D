@@ -23,10 +23,10 @@ namespace Rain {
 			static DirectX::XMMATRIX m_worldMatrix;
 			static DirectX::XMMATRIX m_orthoMatrix;
 
-			static void Initialize(HWND hwnd);
+			static void Initialize(HWND hwnd, int width, int height);
 			static void DoFrame();
 		private:
-			static void InitializeGraphics(HWND hwnd);
+			static void InitializeGraphics(HWND hwnd, int width, int height);
 			static void SetConstantBuffer();
 		};
 

@@ -64,7 +64,7 @@ void Rain::Asset::SceneLoader::LoadComponent(int i_id, lua_State* i_luaState) {
 	m_componentCreators.find(component)->second(i_id, i_luaState);
 }
 void Rain::Asset::SceneLoader::RegisterComponentCreators() {
-
+	int j = 0;
 #pragma region GameObjectComponent
 	RegisterComponentCreator("GameObject", [](int i_id, lua_State* i_luaState) {
 

@@ -13,18 +13,17 @@ public:
     ~Rain3DGame();
 protected:
     void Initialize();
-    void Update();
+    static void StartGame();
+    static void Update();
     void ClearUp();
 private:
     QPaintEngine* paintEngine() const { return 0; }
-
-    void paintEvent(QPaintEvent* event);
-    void resizeEvent(QResizeEvent* event);
 
     //Mouse
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
     void mouseMoveEvent(QMouseEvent* event);
+
 private:
     Ui::Rain3DGameClass ui;
 };

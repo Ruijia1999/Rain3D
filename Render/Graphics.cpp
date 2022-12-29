@@ -17,8 +17,8 @@ ID3D11RenderTargetView* Rain::Render::Graphics::pTarget;
 ID3D11DepthStencilView* Rain::Render::Graphics::pDSV;
 ID3D11RasterizerState* Rain::Render::Graphics::pRasterState;
 
-void Rain::Render::Graphics::Initialize(HWND hWnd) {
-	InitializeGraphics(hWnd);
+void Rain::Render::Graphics::Initialize(HWND hWnd, int width, int height) {
+	InitializeGraphics(hWnd, width, height);
 
 	
 	constDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -58,11 +58,11 @@ void Rain::Render::Graphics::DoFrame() {
 	pSwapChain->Present(0, 0);
 	pVSConstantBuffer = nullptr;
 }
-void Rain::Render::Graphics::InitializeGraphics(HWND hWnd) {
+void Rain::Render::Graphics::InitializeGraphics(HWND hWnd, int width, int height) {
 	//Set the device and swap chain
 	DXGI_SWAP_CHAIN_DESC sd = {};
-	sd.BufferDesc.Width = 0;
-	sd.BufferDesc.Height = 0;
+	sd.BufferDesc.Width = width;
+	sd.BufferDesc.Height = height;
 	sd.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 	sd.BufferDesc.RefreshRate.Numerator = 0;
 	sd.BufferDesc.RefreshRate.Denominator = 0;
@@ -117,8 +117,8 @@ void Rain::Render::Graphics::InitializeGraphics(HWND hWnd) {
 	// create depth stensil texture
 	ID3D11Texture2D* pDepthStencil = nullptr;
 	D3D11_TEXTURE2D_DESC descDepth = {};
-	descDepth.Width = 800u;
-	descDepth.Height = 800u;
+	descDepth.Width = width;
+	descDepth.Height = height;
 	descDepth.MipLevels = 1u;
 	descDepth.ArraySize = 1u;
 	descDepth.Format = DXGI_FORMAT_D32_FLOAT;
@@ -164,16 +164,13 @@ void Rain::Render::Graphics::InitializeGraphics(HWND hWnd) {
 	// configure viewport
 	D3D11_VIEWPORT vp;
 
-	vp.Width = 800.0f;
-	vp.Height = 800.0f;
+	vp.Width = width;
+	vp.Height = height;
 	vp.MinDepth = 0.0f;
 	vp.MaxDepth = 1.0f;
 	vp.TopLeftX = 0.0f;
 	vp.TopLeftY = 0.0f;
 	pContext->RSSetViewports(1u, &vp);
-
-	float fieldOfView = 3.141592654f / 4.0f;
-	float screenAspect = 1;
 
 }
 

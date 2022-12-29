@@ -21,12 +21,15 @@
   <ItemGroup>
     <BuildMacro Include="TempDir">
       <Value>$(TempDir)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
     <BuildMacro Include="OutputDir">
       <Value>$(OutputDir)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
     <BuildMacro Include="IntermediateDir">
       <Value>$(IntermediateDir)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
   </ItemGroup>
 </Project>

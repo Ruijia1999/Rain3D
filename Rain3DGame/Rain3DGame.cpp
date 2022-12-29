@@ -6,6 +6,8 @@
 #include <functional>
 #include <map>
 #include <string>
+#include <thread>
+#include <mutex>
 #include "GameObject/GameObjectSystem.h"
 #include "Transform/TransformSystem.h"
 #include "Render/RenderData.h"
@@ -15,22 +17,19 @@
 #include "EngineLog/EngineLog.h"
 #include "MeshRender/MeshRender.h"
 #include "Render/RenderSystem.h"
+
 using namespace std::placeholders;
 using namespace Rain;
 namespace {
     std::vector<Rain::Render::RenderData> RenderData;
     uint64_t timeLastFrame;
-
-    //std::map<std::string, Render::Mesh*> meshes;
-    //std::map<std::string, Render::Effect*> effects;
-
+    bool stop;
+    std::thread* mainGameThread;
 }
 
 Rain3DGame::Rain3DGame(QWidget* parent)
     : QMainWindow(parent)
 {
-
-
     ui.setupUi(this);
     setFixedSize(QSize(1600, 900));
     setWindowTitle("Rain3DGame");
@@ -42,6 +41,7 @@ Rain3DGame::Rain3DGame(QWidget* parent)
     setMouseTracking(true);
     setAttribute(Qt::WA_Hover, true);
     Initialize();
+    mainGameThread = new std::thread(StartGame);
 
 
 }
@@ -49,7 +49,12 @@ Rain3DGame::Rain3DGame(QWidget* parent)
 Rain3DGame::~Rain3DGame()
 {}
 
-
+void Rain3DGame::StartGame() {
+    stop = false;
+    while (!stop) {
+        Update();
+    }
+}
 
 void Rain3DGame::mousePressEvent(QMouseEvent* event) {
 
@@ -78,17 +83,6 @@ void Rain3DGame::mouseReleaseEvent(QMouseEvent* event) {
 
 void Rain3DGame::mouseMoveEvent(QMouseEvent* event) {
     Rain::Input::Mouse::OnMouseMove(event->x(), event->y());
-}
-
-void Rain3DGame::paintEvent(QPaintEvent* event)
-{
-    Update();
-    update();
-}
-
-void Rain3DGame::resizeEvent(QResizeEvent* event)
-{
-
 }
 
 void Rain3DGame::Initialize() {

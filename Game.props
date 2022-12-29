@@ -5,7 +5,13 @@
     <GameInstallDir>$(TempDir)Game\</GameInstallDir>
   </PropertyGroup>
   <PropertyGroup />
-  <ItemDefinitionGroup />
+  <ItemDefinitionGroup>
+    <CustomBuildStep>
+      <Command>copy "$(TargetPath)" "$(GameInstallDir)$(TargetFileName)" /y</Command>
+      <Outputs>$(GameInstallDir)$(TargetFileName)</Outputs>
+      <Inputs>$(TargetPath)</Inputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <BuildMacro Include="GameInstallDir">
       <Value>$(GameInstallDir)</Value>

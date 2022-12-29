@@ -10,7 +10,7 @@ namespace Rain {
 	namespace Render{
 		namespace RenderSystem
 		{
-			void Initialize(HWND hwnd);
+			void Initialize(HWND hwnd, int width, int height);
 			void Update();
 			void CleanUp();
 		};
