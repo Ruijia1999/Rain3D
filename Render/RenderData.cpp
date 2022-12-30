@@ -8,3 +8,7 @@ Rain::Render::RenderData::RenderData(const Mesh* i_mesh, const Effect* i_effect,
 	effect = i_effect;
 	constantBuffer = i_constantBuffer;
 }
+Rain::Render::RenderData::~RenderData() {
+	//delete mesh;
+	//delete effect;
+}

@@ -6,7 +6,9 @@
 #include "Rain3DGame.h"
 #include "Input/Mouse.h"
 #define MAX_LOADSTRING 100
-
+namespace {
+    Rain3DGame mainGame;
+}
 // Global Variables:
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
@@ -108,7 +110,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
-   Rain3DGame mainGame;
+   
    mainGame.Initialize(hWnd,1600, 900);
    return TRUE;
 }
@@ -236,6 +238,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     //}
 #pragma endregion
     case WM_DESTROY:
+        mainGame.ExitGame();
         PostQuitMessage(0);
         break;
     default:

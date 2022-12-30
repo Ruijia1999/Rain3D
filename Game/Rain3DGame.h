@@ -9,6 +9,7 @@ public:
     void Initialize(HWND hWnd, int width, int height);
     static void StartGame();
     static void Update();
+    void ExitGame();
     void ClearUp();
 };
 

@@ -94,7 +94,9 @@ void Rain3DGame::Update() {
     Render::Graphics::NextRenderData.swap(RenderData);
     Rain::Render::RenderSystem::Update();
 }
-
+void Rain3DGame::ExitGame() {
+    stop = true;
+}
 void Rain3DGame::ClearUp() {
     int j = 0;
 }
