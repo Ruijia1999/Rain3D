@@ -92,6 +92,7 @@ void Rain::Render::Mesh::Draw() const {
 		Graphics::pContext->IASetIndexBuffer(m_indexBuffer, indexFormat, offset);
 	}
 
+
 	//Set primitive topology to triangle list
 	Graphics::pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	Graphics::pContext->DrawIndexed((UINT)(indexCount*3), 0u, 0u);

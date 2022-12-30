@@ -18,6 +18,7 @@ namespace Rain {
 			static ID3D11DeviceContext* pContext;
 			static ID3D11RenderTargetView* pTarget;
 			static ID3D11DepthStencilView* pDSV;
+			static ID3D11DepthStencilState* pDSState;
 			static ID3D11RasterizerState* pRasterState;
 			static DirectX::XMMATRIX m_projectionMatrix;
 			static DirectX::XMMATRIX m_worldMatrix;

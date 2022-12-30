@@ -71,6 +71,11 @@ void Rain::Render::Effect::Bind() const {
 	Graphics::pContext->VSSetShader(m_VertexShader, 0, 0);
 	//Bind pixelShader
 	Graphics::pContext->PSSetShader(m_PixelShader, 0, 0);
+	// bind depth state
+	Graphics::pContext->OMSetDepthStencilState(Graphics::pDSState, 0u);
+	// Now set the rasterizer state.
+	Graphics::pContext->RSSetState(Graphics::pRasterState);
+
 }
 
 void Rain::Render::Effect::CleanUp() {

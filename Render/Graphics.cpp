@@ -15,6 +15,7 @@ IDXGISwapChain* Rain::Render::Graphics::pSwapChain;
 ID3D11DeviceContext* Rain::Render::Graphics::pContext;
 ID3D11RenderTargetView* Rain::Render::Graphics::pTarget;
 ID3D11DepthStencilView* Rain::Render::Graphics::pDSV;
+ID3D11DepthStencilState* Rain::Render::Graphics::pDSState;
 ID3D11RasterizerState* Rain::Render::Graphics::pRasterState;
 
 void Rain::Render::Graphics::Initialize(HWND hWnd, int width, int height) {
@@ -113,11 +114,18 @@ void Rain::Render::Graphics::InitializeGraphics(HWND hWnd, int width, int height
 	dsDesc.DepthEnable = TRUE;
 	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
-	ID3D11DepthStencilState* pDSState;
+	dsDesc.StencilEnable = FALSE;
+	dsDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
+	dsDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+	dsDesc.FrontFace.StencilFunc = dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	dsDesc.FrontFace.StencilDepthFailOp = dsDesc.BackFace.StencilDepthFailOp =
+		dsDesc.FrontFace.StencilPassOp = dsDesc.BackFace.StencilPassOp =
+		dsDesc.FrontFace.StencilFailOp = dsDesc.BackFace.StencilFailOp =
+		D3D11_STENCIL_OP_KEEP;
+
 	pDevice->CreateDepthStencilState(&dsDesc, &pDSState);
 
-	// bind depth state
-	pContext->OMSetDepthStencilState(pDSState, 1u);
+
 
 	// create depth stensil texture
 	ID3D11Texture2D* pDepthStencil = nullptr;
@@ -134,16 +142,16 @@ void Rain::Render::Graphics::InitializeGraphics(HWND hWnd, int width, int height
 	pDevice->CreateTexture2D(&descDepth, nullptr, &pDepthStencil);
 
 	// create view of depth stensil texture
-	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
-	descDSV.Format = DXGI_FORMAT_D32_FLOAT;
-	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	descDSV.Texture2D.MipSlice = 0u;
-	pDevice->CreateDepthStencilView(
-		pDepthStencil, &descDSV, &pDSV
-	);
+	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
 
+	if (FAILED(pDevice->CreateDepthStencilView(
+		pDepthStencil, nullptr, &pDSV
+	))) {
+		int i =0;
+	}
+	
 	// bind depth stensil view to OM
-	pContext->OMSetRenderTargets(1u, &pTarget, pDSV);
+	Graphics::pContext->OMSetRenderTargets(1u, &Graphics::pTarget, Graphics::pDSV);
 	
 	D3D11_RASTERIZER_DESC rasterDesc = {};
 
@@ -163,9 +171,6 @@ void Rain::Render::Graphics::InitializeGraphics(HWND hWnd, int width, int height
 	
 	pDevice->CreateRasterizerState(&rasterDesc, &pRasterState);
 
-
-	// Now set the rasterizer state.
-	pContext->RSSetState(pRasterState);
 	// configure viewport
 	D3D11_VIEWPORT vp;
 
@@ -176,6 +181,7 @@ void Rain::Render::Graphics::InitializeGraphics(HWND hWnd, int width, int height
 	vp.TopLeftX = 0.0f;
 	vp.TopLeftY = 0.0f;
 	pContext->RSSetViewports(1u, &vp);
+
 
 }
 

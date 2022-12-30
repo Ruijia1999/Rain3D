@@ -4,7 +4,7 @@ Rain::Math::Quaternion::Quaternion() {
 	x = 0;
 	y = 0;
 	z = 0;
-	w = 0;
+	w = 1;
 }
 Rain::Math::Quaternion::Quaternion(float i_x, float i_y, float i_z, float i_w) {
 	x = i_x;

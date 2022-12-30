@@ -13,10 +13,10 @@ Rain::MeshRender::MeshRenderSystem* Rain::MeshRender::MeshRenderSystem::GetInsta
 
 void Rain::MeshRender::MeshRenderSystem::Initialize() {
 	SystemBase::Initialize();
-	//meshes.insert(std::pair<std::string, Render::Mesh*>("cube.lua", new Render::Mesh()));
-	//meshes.insert(std::pair<std::string, Render::Mesh*>("circle.lua", new Render::Mesh()));
-	//meshes.find("cube.lua")->second->Initialize("cube.lua");
-	//meshes.find("circle.lua")->second->Initialize("circle.lua");
+	meshes.insert(std::pair<std::string, Render::Mesh*>("box.hrj", new Render::Mesh()));
+	meshes.find("box.hrj")->second->Initialize("box.hrj");
+	meshes.insert(std::pair<std::string, Render::Mesh*>("house.hrj", new Render::Mesh()));
+	meshes.find("house.hrj")->second->Initialize("house.hrj");
 	meshes.insert(std::pair<std::string, Render::Mesh*>("ss.hrj", new Render::Mesh()));
 	meshes.find("ss.hrj")->second->Initialize("ss.hrj");
 	meshes.insert(std::pair<std::string, Render::Mesh*>("cube.hrj", new Render::Mesh()));
