@@ -7,10 +7,20 @@ cbuffer VSConstantBuffer : register(b0)
 
 }
 
-float4 main( float3 i_vertexPosition_local : POSITION ) : SV_POSITION
+struct VertexIn {
+	float3 pos:POSITION;
+	float3 nml:NORMAL;
+	float2 uv:TEXCOORD0;
+};
+struct VertexOut {
+	float4 pos:SV_POSITION;
+	float2 uv:TEXCOORD0;
+	float3 nml:TEXCOORD1;
+};
+VertexOut main(VertexIn input)
 {
-	
-	
+	VertexOut output;
+	float3 i_vertexPosition_local = input.pos;
 	float4 vertexPosition_local = float4(i_vertexPosition_local, 1.0);
 
 	float4 vertexPosition_world = mul(transform_localToWorld,vertexPosition_local);
@@ -18,6 +28,8 @@ float4 main( float3 i_vertexPosition_local : POSITION ) : SV_POSITION
     float4 vertexPosition_camera = mul(transform_worldToCamera, vertexPosition_world);
 		
 	float4 vertexPosition_projected = mul(transform_cameraToProjected, vertexPosition_camera);
-	
-	return vertexPosition_projected/ vertexPosition_projected[3];
+	output.pos = vertexPosition_projected / vertexPosition_projected[3];
+	output.uv = input.uv;
+	output.nml = (float3)mul(transform_localToWorld, float4(input.nml, 1.0));
+	return output;
 }

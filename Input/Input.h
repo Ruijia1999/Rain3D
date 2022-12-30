@@ -6,12 +6,6 @@
 namespace Rain {
 	namespace Input {
 			void Initialize();
-			void Update();
-			void Clear();
-
-			//KeyBoard
-			void OnKeyDown(int i_keyCode);
-			void OnKeyUp(int i_keyCode);
 
 
 	}

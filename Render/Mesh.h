@@ -8,6 +8,8 @@ namespace Rain {
 	namespace Render {
 		struct VertexFormat {
 			FLOAT x, y, z;
+			FLOAT nx, ny, nz;
+			FLOAT u,v;
 		};
 		struct IndexFormat {
 			INT16 x, y, z;

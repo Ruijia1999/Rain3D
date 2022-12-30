@@ -7,8 +7,10 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <CustomBuildStep>
-      <Command>copy "$(TargetPath)" "$(GameInstallDir)$(TargetFileName)" /y</Command>
-      <Outputs>$(GameInstallDir)$(TargetFileName)</Outputs>
+      <Command>copy "$(TargetPath)" "$(GameInstallDir)$(TargetFileName)" /y
+copy "$(OutputDir)PixelShader.cso" "$(GameInstallDir)PixelShader.cso" /y
+copy "$(OutputDir)VertexShader.cso" "$(GameInstallDir)VertexShader.cso" /y</Command>
+      <Outputs>$(GameInstallDir)$(TargetFileName);$(GameInstallDir)PixelShader.cso;$(GameInstallDir)VertexShader.cso</Outputs>
       <Inputs>$(TargetPath)</Inputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>

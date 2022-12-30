@@ -141,10 +141,11 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <CustomBuildStep>
-      <Command>copy "$(TargetPath)" "$(GameInstallDir)$(TargetFileName)" /y</Command>
+      <Command>copy "$(TargetPath)" "$(GameInstallDir)$(TargetFileName)" /y
+copy "$(TargetPath)PixelShader.cso" "$(GameInstallDir)PixelShader.cso" /y</Command>
     </CustomBuildStep>
     <CustomBuildStep>
-      <Outputs>$(GameInstallDir)$(TargetFileName)</Outputs>
+      <Outputs>$(GameInstallDir)$(TargetFileName);$(GameInstallDir)PixelShader.cso</Outputs>
     </CustomBuildStep>
     <CustomBuildStep>
       <Inputs>$(TargetPath)</Inputs>
@@ -155,10 +156,11 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <CustomBuildStep>
-      <Command>copy "$(TargetPath)" "$(GameInstallDir)$(TargetFileName)" /y</Command>
+      <Command>copy "$(TargetPath)" "$(GameInstallDir)$(TargetFileName)" /y
+copy "$(TargetPath)PixelShader.cso" "$(GameInstallDir)PixelShader.cso" /y</Command>
     </CustomBuildStep>
     <CustomBuildStep>
-      <Outputs>$(GameInstallDir)$(TargetFileName)</Outputs>
+      <Outputs>$(GameInstallDir)$(TargetFileName);$(GameInstallDir)PixelShader.cso</Outputs>
     </CustomBuildStep>
     <CustomBuildStep>
       <Inputs>$(TargetPath)</Inputs>

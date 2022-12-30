@@ -81,13 +81,18 @@ void Rain3DGame::Update() {
 
             Render::ConstantBuffer::VSConstantBuffer vsConstantBuffer;
             Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(go->id);
-            vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1.5708f, 1600/900.0f, 1, 12);
+            vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(900.0f, 1600.0f, 1, 40);
             vsConstantBuffer.transform_localToWorld = Math::CreateLocalToWorldTransform(Math::Quaternion(), transform->position);
             vsConstantBuffer.transform_localToWorld.Inverse();
-            vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(), Math::Vector3(0, 0, 10));
+            vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(), Math::Vector3(0, 0, -30));
             vsConstantBuffer.transform_worldToCamera.Inverse();
             MeshRender::MeshRenderComponent* meshRender = MeshRender::MeshRenderSystem::GetInstance()->GetComponent<MeshRender::MeshRenderComponent>(go->id);
             RenderData.push_back(Render::RenderData(meshRender->mesh, meshRender->effect, vsConstantBuffer));
+            Math::Vector4 vec(meshRender->mesh->vertexData[0].x, meshRender->mesh->vertexData[0].y, meshRender->mesh->vertexData[0].z, 1);
+            vec = vsConstantBuffer.transform_localToWorld * vec;
+            vec = vsConstantBuffer.transform_worldToCamera * vec;
+            vec = vsConstantBuffer.transform_cameraToProjected * vec;
+            int j = 1;
         }
     }
     Render::Graphics::NextRenderData.resize(RenderData.size());

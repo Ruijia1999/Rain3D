@@ -113,6 +113,7 @@ void Rain::Render::Mesh::Load(int& i_vertexCount, int& i_indexCount, VertexForma
 	int n = luaL_len(L, -1);
 	for (int i = 1; i <= n; ++i) {
 		lua_rawgeti(L, -1, i);
+		//position
 		lua_rawgeti(L, -1, 1);
 		i_vertexData[i - 1].x = lua_tonumber(L, -1);
 		lua_pop(L, 1);
@@ -122,6 +123,24 @@ void Rain::Render::Mesh::Load(int& i_vertexCount, int& i_indexCount, VertexForma
 		lua_rawgeti(L, -1, 3);
 		i_vertexData[i - 1].z = lua_tonumber(L, -1);
 		lua_pop(L, 1);
+		//normal
+		lua_rawgeti(L, -1, 4);
+		i_vertexData[i - 1].nx = lua_tonumber(L, -1);
+		lua_pop(L, 1);
+		lua_rawgeti(L, -1, 5);
+		i_vertexData[i - 1].ny = lua_tonumber(L, -1);
+		lua_pop(L, 1);
+		lua_rawgeti(L, -1, 6);
+		i_vertexData[i - 1].nz = lua_tonumber(L, -1);
+		lua_pop(L, 1);
+		//uv
+		lua_rawgeti(L, -1, 7);
+		i_vertexData[i - 1].u = lua_tonumber(L, -1);
+		lua_pop(L, 1);
+		lua_rawgeti(L, -1, 8);
+		i_vertexData[i - 1].v = lua_tonumber(L, -1);
+		lua_pop(L, 1);
+
 		lua_pop(L, 1);
 	}
 #pragma endregion
