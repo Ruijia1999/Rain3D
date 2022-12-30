@@ -37,8 +37,13 @@ void Rain::Render::Graphics::DoFrame() {
 	InitData.SysMemSlicePitch = 0;
 
 	const float bgColor[] = { 0.0f, 0.0f, 0, 0.0f };
-	pContext->ClearRenderTargetView(pTarget, bgColor);
-	pContext->ClearDepthStencilView(pDSV, D3D11_CLEAR_DEPTH, 1.0f, 0u);
+	if (pTarget != nullptr) {
+		pContext->ClearRenderTargetView(pTarget, bgColor);
+	}
+	if (pDSV != nullptr) {
+		pContext->ClearDepthStencilView(pDSV, D3D11_CLEAR_DEPTH, 1.0f, 0u);
+	}
+
 
 	//Render Data
 	for (auto renderData : NextRenderData) {

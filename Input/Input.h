@@ -6,8 +6,7 @@
 namespace Rain {
 	namespace Input {
 			void Initialize();
-
-
+			
 	}
 }
 #endif // !RAIN_INPUT_H

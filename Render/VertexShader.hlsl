@@ -30,6 +30,6 @@ VertexOut main(VertexIn input)
 	float4 vertexPosition_projected = mul(transform_cameraToProjected, vertexPosition_camera);
 	output.pos = vertexPosition_projected / vertexPosition_projected[3];
 	output.uv = input.uv;
-	output.nml = (float3)mul(transform_localToWorld, float4(input.nml, 1.0));
+	output.nml = input.nml;
 	return output;
 }

@@ -15,8 +15,8 @@ Rain::Math::Matrix Rain::Math::CreateCameraToProjectedTransform_perspective(
 	float    h, w, Q;
 	float viewVertical = i_vertical/sqrt(i_vertical*i_vertical+i_horizental*i_horizental);
 	float viewHorizental = i_horizental / sqrt(i_vertical * i_vertical + i_horizental * i_horizental);
-	w = (float)1 / tan(viewHorizental* 0.5);  // 1/tan(x) == cot(x)
-	h = (float)1 / tan(viewVertical * 0.5);   // 1/tan(x) == cot(x)
+	w = (float)1 / tan(viewHorizental* 0.5); 
+	h = (float)1 / tan(viewVertical * 0.5); 
 	Q = i_z_farPlane / (i_z_farPlane - i_z_nearPlane);
 		return Matrix(
 		w, 0.0f, 0.0f, 0.0f,

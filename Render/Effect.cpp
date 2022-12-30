@@ -52,13 +52,14 @@ void Rain::Render::Effect::Initialize(const char* i_vertexShaderPath, const char
 
 	HRESULT result;
 	if (FAILED(result = Graphics::pDevice->CreateInputLayout(
-		polygonLayout, (UINT)1,
+		polygonLayout, (UINT)3,
 		pVertexBlob->GetBufferPointer(),
 		pVertexBlob->GetBufferSize(),
 		&m_InputLayout
 	))) {
 		int j = 0;
 	}
+	int j = 0;
 
 }
 
