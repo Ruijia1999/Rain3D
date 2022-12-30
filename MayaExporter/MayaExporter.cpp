@@ -322,8 +322,7 @@ namespace
 
 		// Fill the vertex buffer with the vertices
 		// and create a map from the unique key to the assigned index in the vertex buffer
-		std::map<const sVertex_maya, size_t> vertexToIndexMap;
-		std::map<std::string, const sVertex_maya> vertexKeyToVertexMap;
+		std::map<std::string, size_t> vertexKeyToIndexMap;
 		{
 			// Create a reverse map with a custom sorting order for the vertices
 			struct CompareVertices
@@ -343,33 +342,25 @@ namespace
 					}
 				}
 			};
-			std::map<const sVertexInfo, std::string, CompareVertices> sortedVertices;
+			std::map<sVertexInfo, std::string, CompareVertices> sortedVertices;
 			for (auto i = std::as_const(i_uniqueVertices).begin(); i != i_uniqueVertices.end(); ++i)
 			{
 				sortedVertices.insert(std::make_pair(i->second, i->first));
 			}
 			// Assign the sorted vertices to the buffer
-			size_t vertexCount = 0;
-			for (auto i = sortedVertices.begin(); i != sortedVertices.end(); ++i)
+			size_t vertexIndex = 0;
+			for (auto i = sortedVertices.begin(); i != sortedVertices.end(); ++i, ++vertexIndex)
 			{
-				if (vertexToIndexMap.find(i->first.vertex)==vertexToIndexMap.end()) {
-					auto& vertex = i->first;
-					o_vertexArray.push_back(vertex);
-					std::make_pair(i->first.vertex, vertexCount);
-					vertexToIndexMap.insert(std::make_pair(i->first.vertex, vertexCount));
-					vertexCount++;
-					// Update the vertex range for the shading group that this material uses
-					if (vertex.shadingGroup < o_materialInfo.size())
-					{
-						auto& materialInfo = o_materialInfo[vertex.shadingGroup];
-						materialInfo.vertexRange.first = std::min(vertexCount, materialInfo.vertexRange.first);
-						materialInfo.vertexRange.last = std::max(vertexCount, materialInfo.vertexRange.last);
-					}
+				const auto& vertex = i->first;
+				o_vertexArray.push_back(vertex);
+				vertexKeyToIndexMap.insert(std::make_pair(i->second, vertexIndex));
+				// Update the vertex range for the shading group that this material uses
+				if (vertex.shadingGroup < o_materialInfo.size())
+				{
+					auto& materialInfo = o_materialInfo[vertex.shadingGroup];
+					materialInfo.vertexRange.first = std::min(vertexIndex, materialInfo.vertexRange.first);
+					materialInfo.vertexRange.last = std::max(vertexIndex, materialInfo.vertexRange.last);
 				}
-				
-
-				vertexKeyToVertexMap.insert(std::make_pair(i->second,i->first.vertex));
-				
 			}
 		}
 
@@ -387,7 +378,7 @@ namespace
 				for (size_t j = 0; j < s_vertexCountPerTriangle; ++j)
 				{
 					const auto& vertexKey = triangle.vertexKeys[j];
-					const auto triangleIndex = vertexToIndexMap.find(vertexKeyToVertexMap.find( vertexKey)->second)->second;
+					const auto triangleIndex = vertexKeyToIndexMap.find(vertexKey)->second;
 					const auto indexBufferIndex = (i * s_vertexCountPerTriangle) + j;
 					o_indexArray[indexBufferIndex] = triangleIndex;
 					// Update the index range for the shading group that this material uses
@@ -822,7 +813,9 @@ namespace
 				fout << "vertexData = {""\n";
 				{
 					for (int i = 0; i < vertexCount; i++) {
-						fout << "	{" << i_vertexArray[i].vertex.x << "," << i_vertexArray[i].vertex.y << "," << i_vertexArray[i].vertex.z << "},""\n";
+						fout << "	{" << i_vertexArray[i].vertex.x << "," << i_vertexArray[i].vertex.y << "," << i_vertexArray[i].vertex.z <<","
+							 << i_vertexArray[i].vertex.nx << "," << i_vertexArray[i].vertex.ny << "," << i_vertexArray[i].vertex.nz <<","
+							 << i_vertexArray[i].vertex.u << "," << i_vertexArray[i].vertex.v<< "},""\n";
 					}
 				}
 				fout << "}""\n";

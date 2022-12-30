@@ -17,8 +17,10 @@ void Rain::MeshRender::MeshRenderSystem::Initialize() {
 	meshes.insert(std::pair<std::string, Render::Mesh*>("circle.lua", new Render::Mesh()));
 	meshes.find("cube.lua")->second->Initialize("cube.lua");
 	meshes.find("circle.lua")->second->Initialize("circle.lua");
-	meshes.insert(std::pair<std::string, Render::Mesh*>("ss.lua", new Render::Mesh()));
-	meshes.find("ss.lua")->second->Initialize("ss.lua");
+	meshes.insert(std::pair<std::string, Render::Mesh*>("ss.hrj", new Render::Mesh()));
+	meshes.find("ss.hrj")->second->Initialize("ss.hrj");
+	meshes.insert(std::pair<std::string, Render::Mesh*>("cube.hrj", new Render::Mesh()));
+	meshes.find("cube.hrj")->second->Initialize("cube.hrj");
 	effects.insert(std::pair<std::string, Render::Effect*>("default", new Render::Effect()));
 	effects.find("default")->second->Initialize("vertexShader", "pixelShader");
 }
