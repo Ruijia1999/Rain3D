@@ -15,6 +15,8 @@ void Rain::MeshRender::MeshRenderSystem::Initialize() {
 	SystemBase::Initialize();
 	meshes.insert(std::pair<std::string, Render::Mesh*>("box.hrj", new Render::Mesh()));
 	meshes.find("box.hrj")->second->Initialize("box.hrj");
+	meshes.insert(std::pair<std::string, Render::Mesh*>("boxes.hrj", new Render::Mesh()));
+	meshes.find("boxes.hrj")->second->Initialize("boxes.hrj");
 	meshes.insert(std::pair<std::string, Render::Mesh*>("house.hrj", new Render::Mesh()));
 	meshes.find("house.hrj")->second->Initialize("house.hrj");
 	meshes.insert(std::pair<std::string, Render::Mesh*>("ss.hrj", new Render::Mesh()));

@@ -39,7 +39,7 @@ namespace Rain {
 				return results;
 			}
 			SystemBase();
-		private:
+		protected:
 			std::vector<ComponentBase*> m_componnets;
 
 	

@@ -10,6 +10,8 @@
 
 namespace Rain {
 	namespace Math {
+		float Dot(const Vector3& i_lhs, const Vector3& i_rhs);
+		Vector3 Cross(const Vector3& i_lhs, const Vector3& i_rhs);
 		Matrix CreateCameraToProjectedTransform_perspective(
 			const float i_verticalFieldOfView_inRadians,
 			const float i_aspectRatio,

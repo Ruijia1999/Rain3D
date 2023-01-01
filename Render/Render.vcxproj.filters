@@ -15,7 +15,21 @@
       <Filter>ECS</Filter>
     </ClInclude>
     <ClInclude Include="ConstantBuffer.h" />
-    <ClInclude Include="RenderData.h" />
+    <ClInclude Include="RenderData.h">
+      <Filter>RenderData</Filter>
+    </ClInclude>
+    <ClInclude Include="rText.h">
+      <Filter>RenderData</Filter>
+    </ClInclude>
+    <ClInclude Include="rObject.h">
+      <Filter>RenderData</Filter>
+    </ClInclude>
+    <ClInclude Include="rMesh.h">
+      <Filter>RenderData</Filter>
+    </ClInclude>
+    <ClInclude Include="rImage.h">
+      <Filter>RenderData</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderSystem.d3d.cpp">
@@ -31,7 +45,21 @@
       <Filter>ECS</Filter>
     </ClCompile>
     <ClCompile Include="ConstantBuffer.cpp" />
-    <ClCompile Include="RenderData.cpp" />
+    <ClCompile Include="RenderData.cpp">
+      <Filter>RenderData</Filter>
+    </ClCompile>
+    <ClCompile Include="rText.cpp">
+      <Filter>RenderData</Filter>
+    </ClCompile>
+    <ClCompile Include="rObject.cpp">
+      <Filter>RenderData</Filter>
+    </ClCompile>
+    <ClCompile Include="rImage.cpp">
+      <Filter>RenderData</Filter>
+    </ClCompile>
+    <ClCompile Include="rMesh.cpp">
+      <Filter>RenderData</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="OpenGL">
@@ -45,6 +73,9 @@
     </Filter>
     <Filter Include="ECS">
       <UniqueIdentifier>{c9b52d9b-6ae6-41ad-8f72-2ba9387e0b92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderData">
+      <UniqueIdentifier>{d583f5e9-5042-4f29-a5d4-171a94e3fcfc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

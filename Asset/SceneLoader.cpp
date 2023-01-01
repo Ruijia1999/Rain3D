@@ -6,6 +6,8 @@
 #include "Math/Math.h"
 #include "ECS/Entity.h"
 #include "Reflect/Reflect.h"
+#include "GameObject/GameObjectSystem.h"
+#include "Transform/TransformSystem.h"
 namespace {
 	std::map<std::string, std::function<void(int, lua_State*)>> m_componentCreators;
 }

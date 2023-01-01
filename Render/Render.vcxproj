@@ -26,6 +26,10 @@
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="RenderData.h" />
     <ClInclude Include="RenderSystem.h" />
+    <ClInclude Include="rImage.h" />
+    <ClInclude Include="rMesh.h" />
+    <ClInclude Include="rObject.h" />
+    <ClInclude Include="rText.h" />
     <ClInclude Include="windows.h" />
     <ClInclude Include="windows\windows.h" />
   </ItemGroup>
@@ -41,6 +45,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="rImage.cpp" />
+    <ClCompile Include="rMesh.cpp" />
+    <ClCompile Include="rObject.cpp" />
+    <ClCompile Include="rText.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelShader.hlsl">

@@ -5,6 +5,7 @@
 #include "Render/Effect.h"
 #include "Render/Mesh.h"
 #include "ECS/ComponentBase.h"
+#include <vector>
 namespace Rain {
 	namespace MeshRender {
 		class MeshRenderComponent : public ECS::ComponentBase

@@ -65,3 +65,8 @@ Rain::Math::Vector3& Rain::Math::Vector3::operator^(const Vector3& i_vec) {
 	return x;
 }
 
+ float Rain::Math::Vector3::GetLength() const
+ {
+	 const auto length_squared = (x * x) + (y * y) + (z * z);
+	 return std::sqrt(length_squared);
+ }

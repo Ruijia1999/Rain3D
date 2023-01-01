@@ -1,5 +1,19 @@
 #include "Math.h"
 #include <cmath>
+
+float Rain::Math::Dot(const Vector3& i_lhs, const Vector3& i_rhs)
+{
+	return (i_lhs.x * i_rhs.x) + (i_lhs.y * i_rhs.y) + (i_lhs.z * i_rhs.z);
+}
+
+Rain::Math::Vector3 Rain::Math::Cross(const Vector3& i_lhs, const Vector3& i_rhs)
+{
+	return Vector3(
+		(i_lhs.y * i_rhs.z) - (i_lhs.z * i_rhs.y),
+		(i_lhs.z * i_rhs.x) - (i_lhs.x * i_rhs.z),
+		(i_lhs.x * i_rhs.y) - (i_lhs.y * i_rhs.x)
+	);
+}
 Rain::Math::Matrix Rain::Math::CreateWorldToCameraTransform(
 	const Quaternion& i_cameraOrientation, const Vector3& i_cameraPosition)
 {

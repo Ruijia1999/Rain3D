@@ -3,13 +3,11 @@
   <ItemGroup>
     <ClInclude Include="ComponentBase.h" />
     <ClInclude Include="SystemBase.h" />
-    <ClInclude Include="World.h" />
     <ClInclude Include="Entity.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ComponentBase.cpp" />
     <ClCompile Include="SystemBase.cpp" />
-    <ClCompile Include="World.cpp" />
     <ClCompile Include="Entity.cpp" />
   </ItemGroup>
 </Project>

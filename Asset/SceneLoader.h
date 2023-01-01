@@ -2,7 +2,7 @@
 #define  RAIN_ASSET_SCENELOADER
 #include <functional>
 #include "Lua/Lua.h"
-#include "ECS/World.h"
+#include <string>
 namespace Rain {
 	namespace Asset {
 		namespace SceneLoader {

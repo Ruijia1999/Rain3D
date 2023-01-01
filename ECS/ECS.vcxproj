@@ -22,13 +22,11 @@
     <ClInclude Include="ComponentBase.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="SystemBase.h" />
-    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ComponentBase.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="SystemBase.cpp" />
-    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Time\Time.vcxproj">

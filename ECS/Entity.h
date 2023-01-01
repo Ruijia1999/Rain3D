@@ -7,6 +7,8 @@ namespace Rain {
 		{
 		public:
 			int id;
+			const char* tag;
+			const char* name;
 			virtual void Initialize(int id) = 0;
 		};
 

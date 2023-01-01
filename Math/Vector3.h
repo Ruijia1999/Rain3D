@@ -20,6 +20,8 @@ namespace Rain {
 			Vector3 operator*(const float& i) const;
 
 			float& operator[](int i);
+
+			float GetLength() const;
 		};
 	}
 	
