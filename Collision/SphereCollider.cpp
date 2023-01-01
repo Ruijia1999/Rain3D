@@ -3,6 +3,7 @@
 
 #include "SphereCollider.h"
 
+
 Rain::Collision::SphereCollider::SphereCollider(Math::Quaternion rot, Math::Vector3 pos, float r): ColliderBase() {
 	radius = r;
 }
@@ -15,6 +16,6 @@ float Rain::Collision::SphereCollider::GetSize() const{
 }
 
 void Rain::Collision::SphereCollider::Update(Math::Quaternion rot, Math::Vector3 pos) {
-
+	this->pos = pos;
 }
 #endif

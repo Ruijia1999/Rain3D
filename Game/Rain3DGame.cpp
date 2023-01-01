@@ -15,7 +15,7 @@
 #include "EngineLog/EngineLog.h"
 #include "MeshRender/MeshRender.h"
 #include "Render/RenderSystem.h"
-
+#include "Collision\ColliderSystem.h"
 using namespace std::placeholders;
 using namespace Rain;
 namespace {
@@ -30,10 +30,11 @@ void Rain3DGame::StartGame() {
     while (!stop) {
         Update();
     }
+    int exit = 1;
 }
 
 void Rain3DGame::Initialize(HWND hWnd, int width, int height) {
-    Rain::EngineLog::CreateLogFile("ss");
+    Rain::EngineLog::CreateLogFile("log");
 
     Rain::Input::Initialize();
     Rain::Render::RenderSystem::Initialize(hWnd,width, height);
@@ -41,9 +42,9 @@ void Rain3DGame::Initialize(HWND hWnd, int width, int height) {
     GameObject::GameObjectSystem::GetInstance()->Initialize();
     Transform::TransformSystem::GetInstance()->Initialize();
     MeshRender::MeshRenderSystem::GetInstance()->Initialize();
-
+    ColliderSystem::GetInstance()->Initialize();
     Rain::Asset::SceneLoader::RegisterComponentCreators();
-    Rain::Asset::SceneLoader::LoadScene("ss");
+    Rain::Asset::SceneLoader::LoadScene("test");
 
     timeLastFrame = 0;
 
@@ -71,7 +72,7 @@ void Rain3DGame::Update() {
     }
     GameObject::GameObjectSystem::GetInstance()->Update(timeSinceLastFrame);
     Transform::TransformSystem::GetInstance()->Update(timeSinceLastFrame);
-
+    ColliderSystem::GetInstance()->Update(timeSinceLastFrame);
     //Init Constant Buffer
     RenderData.clear();
     std::vector<GameObject::GameObjectComponent*> gameobjects = GameObject::GameObjectSystem::GetInstance()->GetAllComponents<GameObject::GameObjectComponent>();
@@ -81,10 +82,10 @@ void Rain3DGame::Update() {
 
             Render::ConstantBuffer::VSConstantBuffer vsConstantBuffer;
             Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(go->id);
-            vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(900.0f, 1600.0f, 1, 200);
-            vsConstantBuffer.transform_localToWorld = Math::CreateLocalToWorldTransform(Math::Quaternion(0, 0.247404,0, 0.9689124), transform->position);
+            vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(900.0f, 1600.0f, 1, 20);
+            vsConstantBuffer.transform_localToWorld = Math::CreateLocalToWorldTransform(Math::Quaternion(0, 0,0, 1), transform->position);
             vsConstantBuffer.transform_localToWorld.Inverse();
-            vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(), Math::Vector3(0, 0, -100));
+            vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(0,0,0,1), Math::Vector3(0, 0, -10));
             vsConstantBuffer.transform_worldToCamera.Inverse();
             MeshRender::MeshRenderComponent* meshRender = MeshRender::MeshRenderSystem::GetInstance()->GetComponent<MeshRender::MeshRenderComponent>(go->id);
             RenderData.push_back(Render::RenderData(meshRender->mesh, meshRender->effect, vsConstantBuffer));

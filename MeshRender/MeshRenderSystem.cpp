@@ -25,6 +25,8 @@ void Rain::MeshRender::MeshRenderSystem::Initialize() {
 	meshes.find("cube.hrj")->second->Initialize("cube.hrj");
 	effects.insert(std::pair<std::string, Render::Effect*>("default", new Render::Effect()));
 	effects.find("default")->second->Initialize("vertexShader", "pixelShader");
+	effects.insert(std::pair<std::string, Render::Effect*>("red", new Render::Effect()));
+	effects.find("red")->second->Initialize("vertexShader", "red");
 }
 
 Rain::MeshRender::MeshRenderSystem::MeshRenderSystem() {

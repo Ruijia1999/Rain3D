@@ -152,6 +152,9 @@
     <ClCompile Include="SceneLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Collision\Collision.vcxproj">
+      <Project>{3a4b6747-2a72-4433-8cb1-621cbe9bab07}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\ECS\ECS.vcxproj">
       <Project>{43ad0a70-e908-4b94-8167-a1a14e9f23c6}</Project>
     </ProjectReference>

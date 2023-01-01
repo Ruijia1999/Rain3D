@@ -2,6 +2,9 @@
 #include "Transform/TransformComponent.h"
 #include "Transform/TransformSystem.h"
 #include "Input/Input.h"
+#include "Collision\ColliderSystem.h"
+#include "Collision\ColliderComponent.h"
+#include "MeshRender\MeshRender.h"
 void Rain::Circle::Initialize(int i_id) {
     id = i_id;
     Rain::Input::Mouse::BindEvent(MOUSE_LEFT_DOWN, [this](Rain::Input::MouseInfo info) {
@@ -9,6 +12,14 @@ void Rain::Circle::Initialize(int i_id) {
         transform->position = transform->position - Math::Vector3(0.1f, 0, 0);
         int o = 1;
         });
+
+    ColliderComponent* collider = ColliderSystem::GetInstance()->GetComponent<ColliderComponent>(id);
+    collider->OnColliderEnter = [this](const ColliderComponent* other) {
+        MeshRender::MeshRenderSystem::GetInstance()->GetComponent< MeshRender::MeshRenderComponent>(id)->mesh = MeshRender::MeshRenderSystem::GetInstance()->meshes.find("ss.hrj")->second;
+    };
+    collider->OnColliderExit = [this](const ColliderComponent* other) {
+        MeshRender::MeshRenderSystem::GetInstance()->GetComponent< MeshRender::MeshRenderComponent>(id)->mesh = MeshRender::MeshRenderSystem::GetInstance()->meshes.find("cube.hrj")->second;
+    };
 }
 
 Rain::Circle::Circle() {

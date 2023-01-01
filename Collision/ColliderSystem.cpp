@@ -1,13 +1,27 @@
 #include "ColliderSystem.h"
+Rain::ColliderSystem* Rain::ColliderSystem::instance;
 
+Rain::ColliderSystem* Rain::ColliderSystem::GetInstance() {
+	if (instance == nullptr) {
+		instance = new ColliderSystem();
+		return instance;
+	}
+	else {
+		return instance;
+	}
+}
+
+Rain::ColliderSystem::ColliderSystem() {
+
+}
 #ifdef OCTREE
 
-eae6320::cResult eae6320::Collision::Update(const float i_secondCountToIntegrate) {
+eae6320::cResult eae6320::Collision::Update(const float i_timeSinceLastFrame) {
 	cResult result = Results::Success;
 	s_Octree = new Octree();
 	for (int i = 0; i < 1024; i++) {
 		if (s_Colliders[i] != nullptr && s_Colliders[i]->isActive) {
-			s_Colliders[i]->CheckColliders(i_secondCountToIntegrate);
+			s_Colliders[i]->CheckColliders(i_timeSinceLastFrame);
 			if (s_Colliders[i]->type != ColliderType::AABB) {
 				EAE6320_ASSERTF(false, "Failed to use Octree optimization. Only AABB Collider can be optimized.");
 				Logging::OutputError("Failed to use Octree optimization. Only AABB Collider can be optimized.");
@@ -54,13 +68,13 @@ bool Rain::ColliderSystem::CheckCollision(const ColliderComponent* i_collider0, 
 		switch (i_collider1->type)
 		{
 		case Collision::ColliderType::Sphere:
-			return Collision::SphereSphere((Collision::SphereCollider*)i_collider0->collider, (Collision::SphereCollider*)i_collider1->collider, i_secondCountToIntegrate);
+			return Collision::SphereSphere((Collision::SphereCollider*)i_collider0->collider, (Collision::SphereCollider*)i_collider1->collider, i_timeSinceLastFrame);
 			break;
 		case Collision::ColliderType::AABB:
-			return Collision::BoxSphere((Collision::AABBCollider*)i_collider1->collider, (Collision::SphereCollider*)i_collider0->collider, i_secondCountToIntegrate);
+			return Collision::BoxSphere((Collision::AABBCollider*)i_collider1->collider, (Collision::SphereCollider*)i_collider0->collider, i_timeSinceLastFrame);
 			break;
 		case Collision::ColliderType::OBB:
-			return Collision::BoxSphereOBB((Collision::OBBCollider*)i_collider1->collider, (Collision::SphereCollider*)i_collider0->collider, i_secondCountToIntegrate);
+			return Collision::BoxSphereOBB((Collision::OBBCollider*)i_collider1->collider, (Collision::SphereCollider*)i_collider0->collider, i_timeSinceLastFrame);
 			break;
 		}
 		break;
@@ -68,13 +82,13 @@ bool Rain::ColliderSystem::CheckCollision(const ColliderComponent* i_collider0, 
 		switch (i_collider1->type)
 		{
 		case Collision::ColliderType::Sphere:
-			return Collision::BoxSphere((Collision::AABBCollider*)i_collider0->collider, (Collision::SphereCollider*)i_collider1->collider, i_secondCountToIntegrate);
+			return Collision::BoxSphere((Collision::AABBCollider*)i_collider0->collider, (Collision::SphereCollider*)i_collider1->collider, i_timeSinceLastFrame);
 			break;
 		case Collision::ColliderType::AABB:
-			return Collision::BoxBox((Collision::AABBCollider*)i_collider0->collider, (Collision::AABBCollider*)i_collider1->collider, i_secondCountToIntegrate);
+			return Collision::BoxBox((Collision::AABBCollider*)i_collider0->collider, (Collision::AABBCollider*)i_collider1->collider, i_timeSinceLastFrame);
 			break;
 		case Collision::ColliderType::OBB:
-			return Collision::BoxBoxOBB((Collision::AABBCollider*)i_collider0->collider, (Collision::OBBCollider*)i_collider1->collider, i_secondCountToIntegrate);
+			return Collision::BoxBoxOBB((Collision::AABBCollider*)i_collider0->collider, (Collision::OBBCollider*)i_collider1->collider, i_timeSinceLastFrame);
 			break;
 		}
 		break;
@@ -82,13 +96,13 @@ bool Rain::ColliderSystem::CheckCollision(const ColliderComponent* i_collider0, 
 		switch (i_collider1->type)
 		{
 		case Collision::ColliderType::Sphere:
-			return Collision::BoxSphereOBB((Collision::OBBCollider*)i_collider0->collider, (Collision::SphereCollider*)i_collider1->collider, i_secondCountToIntegrate);
+			return Collision::BoxSphereOBB((Collision::OBBCollider*)i_collider0->collider, (Collision::SphereCollider*)i_collider1->collider, i_timeSinceLastFrame);
 			break;
 		case Collision::ColliderType::OBB:
-			return Collision::BoxOBBBoxOBB((Collision::OBBCollider*)i_collider0->collider, (Collision::OBBCollider*)i_collider1->collider, i_secondCountToIntegrate);
+			return Collision::BoxOBBBoxOBB((Collision::OBBCollider*)i_collider0->collider, (Collision::OBBCollider*)i_collider1->collider, i_timeSinceLastFrame);
 			break;
 		case Collision::ColliderType::AABB:
-			return Collision::BoxBoxOBB((Collision::AABBCollider*)i_collider1->collider, (Collision::OBBCollider*)i_collider0->collider, i_secondCountToIntegrate);
+			return Collision::BoxBoxOBB((Collision::AABBCollider*)i_collider1->collider, (Collision::OBBCollider*)i_collider0->collider, i_timeSinceLastFrame);
 			break;
 		}
 		break;

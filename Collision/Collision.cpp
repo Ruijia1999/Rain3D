@@ -3,6 +3,7 @@
 #include "Math\Quaternion.h"
 #include "Math\Math.h"
 using namespace Rain::Math;
+
 bool Rain::Collision::BoxBox(const AABBCollider* i_collider0, const AABBCollider* i_collider1, const uint64_t i_timeSinceLastFrame) {
 	Math::Vector3 pos0 = i_collider0->pos;
 	Math::Vector3 pos1 = i_collider1->pos;

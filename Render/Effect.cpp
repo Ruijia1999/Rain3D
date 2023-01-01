@@ -2,13 +2,33 @@
 #include "Graphics.h"
 
 void Rain::Render::Effect::Initialize(const char* i_vertexShaderPath, const char* i_pixelShaderPath) {
+	
 	//Create pixelShader
 	ID3DBlob* pPixelBlob = nullptr;
 	
-	if (FAILED(D3DReadFileToBlob(L"PixelShader.cso", &pPixelBlob))) {
+
+	//const char* suffix = ".cso";
+
+	//int iWCharLen = MultiByteToWideChar(CP_ACP, 0, i_pixelShaderPath, -1, NULL, NULL);
+	//wchar_t* pWideChar = (wchar_t*)malloc(wchar_t(iWCharLen);
+
+	//
+	//MultiByteToWideChar(CP_ACP, 0, i_pixelShaderPath, strlen(i_pixelShaderPath), pWideChar, iWCharLen);
+
+	//delete pWideChar;
+
+	//int* p = (int*)malloc(2 * (int)sizeof(int));
+	//if (p == NULL)
+	//{
+	//	perror("malloc error!");
+	//}
+	//memset(p, 0, 2 * (int)sizeof(int));
+	//free(p);
+	if (FAILED(D3DReadFileToBlob(L"PixelShader", &pPixelBlob))) {
+		
 		int j = 0;
 	}
-
+	
 	if (FAILED(Graphics::pDevice->CreatePixelShader(pPixelBlob->GetBufferPointer(), pPixelBlob->GetBufferSize(), nullptr, &m_PixelShader))) {
 		int j = 0;
 	}
@@ -16,7 +36,7 @@ void Rain::Render::Effect::Initialize(const char* i_vertexShaderPath, const char
 	//Create vertexShader
 	ID3DBlob* pVertexBlob;
 
-	if (FAILED(D3DReadFileToBlob(L"VertexShader.cso", &pVertexBlob))) {
+	if (FAILED(D3DReadFileToBlob(L"VertexShader", &pVertexBlob))) {
 
 	}
 	if (FAILED(Graphics::pDevice->CreateVertexShader(pVertexBlob->GetBufferPointer(), pVertexBlob->GetBufferSize(), nullptr, &m_VertexShader))) {

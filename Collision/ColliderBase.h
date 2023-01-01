@@ -1,5 +1,5 @@
 #ifndef Rain_COLLISION_COLLIDERBASE
-
+#define Rain_COLLISION_COLLIDERBASE
 #include <functional>
 #include "Math/Vector3.h"
 #include "Math/Quaternion.h"

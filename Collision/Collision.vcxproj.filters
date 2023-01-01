@@ -1,18 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Collider">
-      <UniqueIdentifier>{2305e6ec-e584-4416-8d29-16b06b2d44fd}</UniqueIdentifier>
-    </Filter>
+    <ClInclude Include="ColliderComponent.h" />
+    <ClInclude Include="ColliderSystem.h" />
+    <ClInclude Include="Collision.h" />
+    <ClInclude Include="ColliderBase.h">
+      <Filter>Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="AABBCollider.h">
+      <Filter>Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereCollider.h">
+      <Filter>Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="OBBCollider.h">
+      <Filter>Collider</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Collision.cpp" />
     <ClCompile Include="ColliderComponent.cpp" />
     <ClCompile Include="ColliderSystem.cpp" />
-    <ClCompile Include="Collision.cpp" />
-    <ClCompile Include="AABBCollider.cpp">
+    <ClCompile Include="ColliderBase.cpp">
       <Filter>Collider</Filter>
     </ClCompile>
-    <ClCompile Include="ColliderBase.cpp">
+    <ClCompile Include="AABBCollider.cpp">
       <Filter>Collider</Filter>
     </ClCompile>
     <ClCompile Include="OBBCollider.cpp">
@@ -23,20 +35,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ColliderComponent.h" />
-    <ClInclude Include="ColliderSystem.h" />
-    <ClInclude Include="Collision.h" />
-    <ClInclude Include="AABBCollider.h">
-      <Filter>Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="ColliderBase.h">
-      <Filter>Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="OBBCollider.h">
-      <Filter>Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="SphereCollider.h">
-      <Filter>Collider</Filter>
-    </ClInclude>
+    <Filter Include="Collider">
+      <UniqueIdentifier>{363cd321-2cd3-4f05-8c9a-369175e64a5a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

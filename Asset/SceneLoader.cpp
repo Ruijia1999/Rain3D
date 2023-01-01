@@ -8,6 +8,8 @@
 #include "Reflect/Reflect.h"
 #include "GameObject/GameObjectSystem.h"
 #include "Transform/TransformSystem.h"
+#include "Collision\ColliderSystem.h"
+#include "Collision\ColliderBase.h"
 namespace {
 	std::map<std::string, std::function<void(int, lua_State*)>> m_componentCreators;
 }
@@ -121,6 +123,19 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		effect = MeshRender::MeshRenderSystem::GetInstance()->effects.find(effect_name)->second;
 
 		MeshRender::MeshRenderSystem::GetInstance()->AddComponent(new MeshRender::MeshRenderComponent(i_id, mesh, effect));
+		}
+	);
+#pragma endregion
+
+#pragma region Collider
+	RegisterComponentCreator("Collider", [](int i_id, lua_State* i_luaState) {
+		
+		lua_pushstring(i_luaState, "type");
+		lua_gettable(i_luaState, -2);
+		std::string type = lua_tostring(i_luaState, -1);
+		lua_pop(i_luaState, 1);
+
+		ColliderSystem::GetInstance()->AddComponent(new ColliderComponent(i_id, type.c_str()));
 		}
 	);
 #pragma endregion

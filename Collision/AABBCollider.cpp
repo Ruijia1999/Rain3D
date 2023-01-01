@@ -6,7 +6,9 @@ Rain::Collision::AABBCollider::AABBCollider(Math::Quaternion rot, Math::Vector3 
 	size[0] = hX;
 	size[1] = hY;
 	size[2] = hZ;
-
+	
+	this->rot = rot;
+	this->pos = pos;
 	//Get the AABB Box
 
 	Math::Quaternion quaternion = rot;
@@ -82,5 +84,5 @@ Rain::Math::Vector3 Rain::Collision::AABBCollider::GetSize() {
 }
 
 void Rain::Collision::AABBCollider::Update(Math::Quaternion rot, Math::Vector3 pos) {
-
+	this->pos = pos;
 }

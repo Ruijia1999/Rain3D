@@ -13,15 +13,16 @@ namespace Rain {
 	public:
 		Collision::ColliderType type;
 		Collision::ColliderBase* collider;
-
-
+		void Initialize();
 		void Update(uint64_t i_timeSinceLastFrame);
+		void Destroy();
+
 		std::function<void(const ColliderComponent*)> OnColliderEnter;
 		std::function<void(const ColliderComponent*)> OnColliderStay;
 		std::function<void(const ColliderComponent*)> OnColliderExit;
 		void Intersect(const ColliderComponent* i_collider);
 
-
+		ColliderComponent(int i_id, const char* i_type);
 	private:
 		//The colliders that were intersected with this collider in the last frame
 		std::unordered_set<const ColliderComponent*> prvIntersections;

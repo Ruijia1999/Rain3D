@@ -1,7 +1,6 @@
 #include "OBBCollider.h"
 
 
-
 Rain::Collision::OBBCollider::OBBCollider(Math::Quaternion rot, Math::Vector3 pos, float hX, float hY, float hZ):ColliderBase() {
 
 	size[0] = hX;
@@ -21,5 +20,5 @@ Rain::Math::Vector3 Rain::Collision::OBBCollider::GetSize() {
 }
 
 void Rain::Collision::OBBCollider::Update(Math::Quaternion rot, Math::Vector3 pos) {
-
+	this->pos = pos;
 }
