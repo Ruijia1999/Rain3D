@@ -1,6 +1,17 @@
 #include "AABBCollider.h"
+#include "Collision.h"
+Rain::Collision::AABBCollider::AABBCollider(Math::Quaternion rot, Math::Vector3 pos, const Render::Mesh* i_mesh) :ColliderBase() {
 
 
+	Collision::GetSize(i_mesh->vertexCount, i_mesh->vertexData, size[0], size[1], size[2]);
+	this->rot = rot;
+	this->pos = pos;
+
+	Initialize();
+
+
+
+}
 Rain::Collision::AABBCollider::AABBCollider(Math::Quaternion rot, Math::Vector3 pos, float hX, float hY, float hZ):ColliderBase() {
 
 	size[0] = hX;
@@ -9,6 +20,21 @@ Rain::Collision::AABBCollider::AABBCollider(Math::Quaternion rot, Math::Vector3 
 	
 	this->rot = rot;
 	this->pos = pos;
+
+	Initialize();
+	
+}
+
+void Rain::Collision::AABBCollider::SetSize(float hX, float hY, float hZ) {
+	size[0] = hX;
+	size[1] = hY;
+	size[2] = hZ;
+}
+
+Rain::Math::Vector3 Rain::Collision::AABBCollider::GetSize() {
+	return Math::Vector3(size[0], size[1], size[2]);
+}
+void Rain::Collision::AABBCollider::Initialize() {
 	//Get the AABB Box
 
 	Math::Quaternion quaternion = rot;
@@ -68,21 +94,8 @@ Rain::Collision::AABBCollider::AABBCollider(Math::Quaternion rot, Math::Vector3 
 	size[0] = abs(minX);
 	size[1] = abs(minY);
 	size[2] = abs(minZ);
-
-
-	
 }
-
-void Rain::Collision::AABBCollider::SetSize(float hX, float hY, float hZ) {
-	size[0] = hX;
-	size[1] = hY;
-	size[2] = hZ;
-}
-
-Rain::Math::Vector3 Rain::Collision::AABBCollider::GetSize() {
-	return Math::Vector3(size[0], size[1], size[2]);
-}
-
 void Rain::Collision::AABBCollider::Update(Math::Quaternion rot, Math::Vector3 pos) {
 	this->pos = pos;
+	this->rot = rot;
 }

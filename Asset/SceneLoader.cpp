@@ -137,7 +137,17 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		}
 		lua_pop(i_luaState, 1);
 
-		Transform::TransformSystem::GetInstance()->AddComponent(new Transform::TransformComponent(i_id,position,position,position));
+		Math::Quaternion rotation;
+		lua_pushstring(i_luaState, "rotation");
+		lua_gettable(i_luaState, -2);
+		for (int i = 1; i <= 4; ++i) {
+			lua_rawgeti(i_luaState, -1, i);
+			rotation[i - 1] = lua_tonumber(i_luaState, -1);
+			lua_pop(i_luaState, 1);
+		}
+		lua_pop(i_luaState, 1);
+
+		Transform::TransformSystem::GetInstance()->AddComponent(new Transform::TransformComponent(i_id,position,position,rotation));
 		}
 	);
 #pragma endregion

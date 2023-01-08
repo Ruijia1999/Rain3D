@@ -154,3 +154,23 @@ bool Rain::Collision::BoxSphereOBB(const OBBCollider* i_collider0, const SphereC
 	}
 	return true;
 }
+void Rain::Collision::GetSize(const int vertexCount, const Render::VertexFormat* vertexData, float& outX, float& outY, float& outZ) {
+	float minX = FLT_MAX;
+	float minY = FLT_MAX;
+	float minZ = FLT_MAX;
+
+	float maxX = FLT_MIN;
+	float maxY = FLT_MIN;
+	float maxZ = FLT_MIN;
+	for (int i = 0; i < vertexCount; i++) {
+		minX = min(vertexData[i].x, minX);
+		minY = min(vertexData[i].y, minY);
+		minZ = min(vertexData[i].z, minZ);
+		maxX = max(vertexData[i].x, maxX);
+		maxY = max(vertexData[i].y, maxY);
+		maxZ = max(vertexData[i].z, maxZ);
+	}
+	outX = max(abs(minX), abs(maxX));
+	outY = max(abs(minY), abs(maxY));
+	outZ = max(abs(minZ), abs(maxZ));
+}

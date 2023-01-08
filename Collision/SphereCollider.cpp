@@ -17,5 +17,6 @@ float Rain::Collision::SphereCollider::GetSize() const{
 
 void Rain::Collision::SphereCollider::Update(Math::Quaternion rot, Math::Vector3 pos) {
 	this->pos = pos;
+	this->rot = rot;
 }
 #endif

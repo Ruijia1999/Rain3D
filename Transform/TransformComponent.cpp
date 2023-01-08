@@ -2,9 +2,9 @@
 Rain::Transform::TransformComponent::TransformComponent() {
 	position = Math::Vector3();
 	scale = Math::Vector3(1, 1, 1);
-	rotation = Math::Vector3();
+	rotation = Math::Quaternion();
 }
-Rain::Transform::TransformComponent::TransformComponent(int i_id, Math::Vector3 i_Position, Math::Vector3 i_Scale, Math::Vector3 i_Rotation){
+Rain::Transform::TransformComponent::TransformComponent(int i_id, Math::Vector3 i_Position, Math::Vector3 i_Scale, Math::Quaternion i_Rotation){
 	id = i_id;
 	position = i_Position;
 	scale = i_Scale;
