@@ -12,6 +12,7 @@ namespace Rain {
 				Math::Matrix transform_localToWorld;
 				Math::Matrix transform_worldToCamera;
 				Math::Matrix transform_cameraToProjected;
+				Math::Vector4 color;
 			};
 		};
 	}

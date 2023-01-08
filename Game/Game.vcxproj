@@ -153,7 +153,6 @@
     <ClInclude Include="Cube.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="Rain3DGame.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -161,7 +160,6 @@
     <ClCompile Include="Circle.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Rain3DGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
@@ -173,6 +171,9 @@
   <ItemGroup>
     <ProjectReference Include="..\AI\AI.vcxproj">
       <Project>{dbd67775-72a3-403b-8dc9-595ef78358e8}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Application\Application.vcxproj">
+      <Project>{f2452c90-ab6d-42cb-88fd-4334b19f870c}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Asset\Asset.vcxproj">
       <Project>{1e18073b-4048-4185-a5b4-8adca554a2da}</Project>

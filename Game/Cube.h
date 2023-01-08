@@ -10,6 +10,7 @@ namespace Rain {
 		ENTITY(Cube)
 		Cube();
 		void Initialize(int i_id);
+		void Update(double i_timeSinceLastFrame);
 
 	};
 	REGIST(Cube)

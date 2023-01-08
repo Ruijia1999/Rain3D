@@ -34,7 +34,7 @@ namespace Rain {
 		class MouseEvent :public Event::EventBase<MouseInfo> {
 		};
 		namespace Mouse {
-			extern std::map<int, Rain::Input::MouseEvent> eventsMap;
+			extern std::map<int,MouseEvent> eventsMap;
 			extern Rain::Math::Vector2 mousePosition;
 
 			//Initialize

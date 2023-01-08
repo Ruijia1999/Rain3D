@@ -1,5 +1,6 @@
 #ifndef RAIN_ECS_ENTITY
 #define RAIN_ECS_ENTITY
+
 namespace Rain {
 	namespace ECS {
 
@@ -10,6 +11,7 @@ namespace Rain {
 			const char* tag;
 			const char* name;
 			virtual void Initialize(int id) = 0;
+			virtual void Update(double i_timeSinceLastFrame) = 0;
 		};
 
 	}

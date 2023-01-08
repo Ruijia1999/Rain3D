@@ -6,6 +6,7 @@
 #include "Render/Mesh.h"
 #include "ECS/ComponentBase.h"
 #include <vector>
+#include "Math/Vector4.h"
 namespace Rain {
 	namespace MeshRender {
 		class MeshRenderComponent : public ECS::ComponentBase
@@ -17,7 +18,7 @@ namespace Rain {
 
 			const Render::Effect* effect;
 			const Render::Mesh* mesh;
-
+			Math::Vector4 color;
 			MeshRenderComponent();
 			MeshRenderComponent(int i_id,  const Render::Mesh* i_mesh, const Render::Effect* i_effect);
 		};

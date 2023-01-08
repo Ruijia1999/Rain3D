@@ -6,9 +6,11 @@
 #include "MouseEvent.h"
 
 namespace {
-	std::queue<Rain::Input::MouseInfo> inputEventQueue;
+	std::queue<Rain::Input::MouseInfo> mouseEventQueue;
+	std::queue<Rain::Input::KeyBoard::KeyInfo> keyEventQueue;
 	std::thread* inputThread;
-	std::recursive_mutex inputMutex;
+	std::recursive_mutex mouseMutex;
+	std::recursive_mutex keyMutex;
 	std::condition_variable inputConditionVariable;
 	bool ifStop;
 }
@@ -16,31 +18,56 @@ namespace {
 void Rain::Input::InputEventQueue::Start() {
 	ifStop = false;
 	inputThread = new std::thread(ThreadCallBack);
-
 }
 void Rain::Input::InputEventQueue::Stop() {
 	ifStop = true;
 }
 void Rain::Input::InputEventQueue::Push(Rain::Input::MouseInfo i_mouseInfo) {
-	std::unique_lock<std::recursive_mutex> lock(inputMutex);
-	inputEventQueue.push(i_mouseInfo);
+	std::unique_lock<std::recursive_mutex> lock(mouseMutex);
+	mouseEventQueue.push(i_mouseInfo);
+}
+
+void Rain::Input::InputEventQueue::Push(KeyBoard::KeyInfo i_keyInfo) {
+	std::unique_lock<std::recursive_mutex> lock(keyMutex);
+	keyEventQueue.push(i_keyInfo);
 }
 void Rain::Input::InputEventQueue::ThreadCallBack() {
 	while (!ifStop) {
-		if (inputEventQueue.size() > 0) {
+		if (mouseEventQueue.size() > 0) {
 			MouseInfo event;
 			{
-				std::lock_guard<std::recursive_mutex> lock(inputMutex);
-				event = inputEventQueue.front();
-				inputEventQueue.pop();
+				std::lock_guard<std::recursive_mutex> lock(mouseMutex);
+				event = mouseEventQueue.front();
+				mouseEventQueue.pop();
 			}
-			if (event.eventType == MOUSE_MOVE) {
-				int l = 0;
-			}
+
 			std::map<int, Rain::Input::MouseEvent>::iterator it;
 			if ((it = Mouse::eventsMap.find(event.eventType)) != Mouse::eventsMap.end()) {
 				it->second.Operate(event);
 			}
+		}
+		if (keyEventQueue.size() > 0) {
+			KeyBoard::KeyInfo event;
+			{
+				std::lock_guard<std::recursive_mutex> lock(keyMutex);
+				event = keyEventQueue.front();
+				keyEventQueue.pop();
+			}
+			std::map<int, Rain::Input::KeyBoard::KeyboardEvent>::iterator it;
+			if (event.eventType == KEYDOWN) {
+				
+				if ((it = KeyBoard::keyDownEventsMap.find(event.keyCode)) != KeyBoard::keyDownEventsMap.end()) {
+					KeyBoard::curKeyStates[event.keyCode] = 1;
+					it->second.Operate(event);
+				}
+			}else if (event.eventType == KEYUP) {
+
+				if ((it = KeyBoard::keyUpEventsMap.find(event.keyCode)) != KeyBoard::keyUpEventsMap.end()) {
+					KeyBoard::curKeyStates[event.keyCode] = 0;
+					it->second.Operate(event);
+				}
+			}
+
 		}
 	}
 }

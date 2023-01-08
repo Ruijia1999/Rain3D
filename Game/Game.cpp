@@ -5,9 +5,11 @@
 #include "Game.h"
 #include "Rain3DGame.h"
 #include "Input/Mouse.h"
+#include "Input/Keyboard.h"
+#include "Application/Rain3DGame.h"
 #define MAX_LOADSTRING 100
 namespace {
-    Rain3DGame mainGame;
+    Rain::Rain3DGame mainGame;
 }
 // Global Variables:
 HINSTANCE hInst;                                // current instance
@@ -154,6 +156,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             EndPaint(hWnd, &ps);
         }
         break;
+#pragma region Key
+    case WM_KEYDOWN:
+        Rain::Input::KeyBoard::OnKeyDown(wParam);
+        break;
+    case WM_KEYUP:
+        Rain::Input::KeyBoard::OnKeyUp(wParam);
+        break;
+#pragma endregion
 #pragma region Mouse
     case WM_MOUSEMOVE:
     {

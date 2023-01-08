@@ -9,6 +9,7 @@ Rain::Render::ConstantBuffer::VSConstantBuffer& Rain::Render::ConstantBuffer::VS
 		transform_localToWorld = i_constantBuffer.transform_localToWorld;
 		transform_worldToCamera = i_constantBuffer.transform_worldToCamera;
 		transform_cameraToProjected = i_constantBuffer.transform_cameraToProjected;
+		color = i_constantBuffer.color;
 	}
 
 	return *this;
@@ -18,4 +19,5 @@ Rain::Render::ConstantBuffer::VSConstantBuffer::VSConstantBuffer(const VSConstan
 	transform_localToWorld = i_constantBuffer.transform_localToWorld;
 	transform_worldToCamera = i_constantBuffer.transform_worldToCamera;
 	transform_cameraToProjected = i_constantBuffer.transform_cameraToProjected;
+	color = i_constantBuffer.color;
 }

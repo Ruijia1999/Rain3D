@@ -21,12 +21,15 @@ using namespace std::placeholders;
 using namespace Rain;
 namespace {
     std::vector<Rain::Render::RenderData> RenderData;
+    std::vector<Rain::ECS::Entity*> entities;
     uint64_t timeLastFrame;
     bool stop;
     std::thread* mainGameThread;
 }
-
-void Rain3DGame::StartGame() {
+void Rain::Rain3DGame::AddEntity(Rain::ECS::Entity* i_entity) {
+    entities.push_back(i_entity);
+}
+void Rain::Rain3DGame::StartGame() {
     stop = false;
     while (!stop) {
         Update();
@@ -34,7 +37,7 @@ void Rain3DGame::StartGame() {
     int exit = 1;
 }
 
-void Rain3DGame::Initialize(HWND hWnd, int width, int height) {
+void Rain::Rain3DGame::Initialize(HWND hWnd, int width, int height) {
     AI::NavMesh mesh;
     std::vector<Math::Vector2> vertices;
     vertices.push_back(Math::Vector2(0, 0));
@@ -50,6 +53,7 @@ void Rain3DGame::Initialize(HWND hWnd, int width, int height) {
     Rain::EngineLog::CreateLogFile("log");
 
     Rain::Input::Initialize();
+    Rain::Time::Initialize();
     Rain::Render::RenderSystem::Initialize(hWnd,width, height);
 
     GameObject::GameObjectSystem::GetInstance()->Initialize();
@@ -63,7 +67,7 @@ void Rain3DGame::Initialize(HWND hWnd, int width, int height) {
     mainGameThread = new std::thread( StartGame);
 }
 
-void Rain3DGame::Update() {
+void Rain::Rain3DGame::Update() {
     uint64_t timeSinceLastFrame;
     if (timeLastFrame == 0) {
         timeSinceLastFrame = 60;
@@ -74,10 +78,17 @@ void Rain3DGame::Update() {
         timeSinceLastFrame = timeThisFrame - timeLastFrame;
         timeLastFrame = timeThisFrame;
     }
-
+    for (auto entity : entities) {
+        if (entity != nullptr) {
+            double i = Time::ConvertTicksToSeconds(timeSinceLastFrame);
+            entity->Update(Time::ConvertTicksToSeconds(timeSinceLastFrame));
+        }
+    }
+    Input::Update(Time::ConvertTicksToSeconds(timeSinceLastFrame));
     GameObject::GameObjectSystem::GetInstance()->Update(timeSinceLastFrame);
     Transform::TransformSystem::GetInstance()->Update(timeSinceLastFrame);
     ColliderSystem::GetInstance()->Update(timeSinceLastFrame);
+
     //Init Constant Buffer
     RenderData.clear();
     std::vector<GameObject::GameObjectComponent*> gameobjects = GameObject::GameObjectSystem::GetInstance()->GetAllComponents<GameObject::GameObjectComponent>();
@@ -87,30 +98,27 @@ void Rain3DGame::Update() {
 
             Render::ConstantBuffer::VSConstantBuffer vsConstantBuffer;
             Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(go->id);
-            vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1, 120, 1.57079632, 1.02477892);
+            vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1, 200, 1.57079632, 1.02477892);
             vsConstantBuffer.transform_localToWorld = Math::CreateLocalToWorldTransform(Math::Quaternion(0, 0,0, 1), transform->position);
             vsConstantBuffer.transform_localToWorld.Inverse();
-            vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(-0.7068252, 0, 0, 0.7073883), Math::Vector3(0, 0, -55));
+            //vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(-0.7068252, 0, 0, 0.7073883), Math::Vector3(0, 0, -100));
+            vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(0, 0, 0, 1), Math::Vector3(0, 0, -100));
+
             vsConstantBuffer.transform_worldToCamera.Inverse();
             
             MeshRender::MeshRenderComponent* meshRender = MeshRender::MeshRenderSystem::GetInstance()->GetComponent<MeshRender::MeshRenderComponent>(go->id);
             vsConstantBuffer.color = meshRender->color;
             RenderData.push_back(Render::RenderData(meshRender->mesh, meshRender->effect, vsConstantBuffer));
-            Math::Vector4 vec(meshRender->mesh->vertexData[0].x, meshRender->mesh->vertexData[0].y, meshRender->mesh->vertexData[0].z, 1);
-            vec = vsConstantBuffer.transform_localToWorld * vec;
-            vec = vsConstantBuffer.transform_worldToCamera * vec;
-            vec = vsConstantBuffer.transform_cameraToProjected * vec;
-            vec = vec / vec[3];
-            int j = 1;
+
         }
     }
     Render::Graphics::NextRenderData.resize(RenderData.size());
     Render::Graphics::NextRenderData.swap(RenderData);
     Rain::Render::RenderSystem::Update();
 }
-void Rain3DGame::ExitGame() {
+void Rain::Rain3DGame::ExitGame() {
     stop = true;
 }
-void Rain3DGame::ClearUp() {
+void Rain::Rain3DGame::ClearUp() {
     int j = 0;
 }

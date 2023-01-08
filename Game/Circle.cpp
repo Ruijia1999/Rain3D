@@ -12,15 +12,39 @@ void Rain::Circle::Initialize(int i_id) {
         transform->position = transform->position + Math::Vector3(0.0f, 0, 0.49f);
         int o = 1;
         });
-
+    MeshRender::MeshRenderSystem::GetInstance()->GetComponent< MeshRender::MeshRenderComponent>(id)->color = Math::Vector4(0, 1, 0, 1);
     ColliderComponent* collider = ColliderSystem::GetInstance()->GetComponent<ColliderComponent>(id);
     collider->OnColliderEnter = [this](const ColliderComponent* other) {
-        MeshRender::MeshRenderSystem::GetInstance()->GetComponent< MeshRender::MeshRenderComponent>(id)->mesh = MeshRender::MeshRenderSystem::GetInstance()->meshes.find("cube.hrj")->second;
+        //MeshRender::MeshRenderSystem::GetInstance()->GetComponent< MeshRender::MeshRenderComponent>(id)->mesh = MeshRender::MeshRenderSystem::GetInstance()->meshes.find("cube.hrj")->second;
     };
     collider->OnColliderExit = [this](const ColliderComponent* other) {
-        MeshRender::MeshRenderSystem::GetInstance()->GetComponent< MeshRender::MeshRenderComponent>(id)->mesh = MeshRender::MeshRenderSystem::GetInstance()->meshes.find("ss.hrj")->second;
+        //MeshRender::MeshRenderSystem::GetInstance()->GetComponent< MeshRender::MeshRenderComponent>(id)->mesh = MeshRender::MeshRenderSystem::GetInstance()->meshes.find("ss.hrj")->second;
     };
+    //A
+    Rain::Input::KeyBoard::BindEvent(0x41, KEYSTAY, [this](Rain::Input::KeyBoard::KeyInfo info) {
+        Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
+        transform->position = transform->position - Math::Vector3(0.01f, 0, 0);
+        });
+    //w
+    Rain::Input::KeyBoard::BindEvent(0x57, KEYSTAY, [this](Rain::Input::KeyBoard::KeyInfo info) {
+        Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
+        transform->position = transform->position + Math::Vector3(0, 0, 0.01f);
+        });
+    //S
+    Rain::Input::KeyBoard::BindEvent(0x53, KEYSTAY, [this](Rain::Input::KeyBoard::KeyInfo info) {
+        Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
+        transform->position = transform->position - Math::Vector3(0, 0, 0.01f);
+        });
+    //D
+    Rain::Input::KeyBoard::BindEvent(0x44, KEYSTAY, [this](Rain::Input::KeyBoard::KeyInfo info) {
+        Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
+        transform->position = transform->position + Math::Vector3(0.01f, 0, 0);
+        });
 }
-
+void Rain::Circle::Update(double i_timeSinceLastFrame) {
+    /*Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
+    if(i_timeSinceLastFrame>0)
+    transform->position.x -= i_timeSinceLastFrame * 1;*/
+}
 Rain::Circle::Circle() {
 }

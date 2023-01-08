@@ -4,7 +4,7 @@ cbuffer VSConstantBuffer : register(b0)
 	matrix transform_localToWorld;
 	matrix transform_worldToCamera;
 	matrix transform_cameraToProjected;
-
+	float4 color;
 }
 
 struct VertexIn {
@@ -16,6 +16,7 @@ struct VertexOut {
 	float4 pos:SV_POSITION;
 	float2 uv:TEXCOORD0;
 	float3 nml:TEXCOORD1;
+	float4 color:COLOR;
 };
 VertexOut main(VertexIn input)
 {
@@ -31,5 +32,6 @@ VertexOut main(VertexIn input)
 	output.pos = vertexPosition_projected / vertexPosition_projected[3];
 	output.uv = input.uv;
 	output.nml = input.nml;
+	output.color = color;
 	return output;
 }

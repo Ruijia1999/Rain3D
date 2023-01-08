@@ -8,6 +8,7 @@ Rain::MeshRender::MeshRenderComponent::MeshRenderComponent(int i_id, const Rende
 	id = i_id;
 	mesh = i_mesh;
 	effect = i_effect;
+	color = Math::Vector4(1, 1, 1, 1);
 }
 void Rain::MeshRender::MeshRenderComponent::Initialize() {
 

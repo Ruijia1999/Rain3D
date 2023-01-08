@@ -10,6 +10,7 @@ namespace Rain {
 		ENTITY(Circle)
 		Circle();
 		void Initialize(int i_id);
+		void Update(double i_timeSinceLastFrame);
 
 	};
 	REGIST(Circle)

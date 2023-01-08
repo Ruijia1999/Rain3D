@@ -8,11 +8,14 @@
 #include "Reflect/Reflect.h"
 #include "GameObject/GameObjectSystem.h"
 #include "Transform/TransformSystem.h"
-#include "Collision\ColliderSystem.h"
-#include "Collision\ColliderBase.h"
+#include "Collision/ColliderSystem.h"
+#include "Collision/ColliderBase.h"
+#include "Application/Rain3DGame.h"
+
 namespace {
 	std::map<std::string, std::function<void(int, lua_State*)>> m_componentCreators;
 }
+
 void Rain::Asset::SceneLoader::LoadScene(const char* i_filePath) {
 	lua_State* L = luaL_newstate();
 	auto i = luaL_dofile(L, "test.lua");
@@ -55,6 +58,7 @@ void Rain::Asset::SceneLoader::LoadEntity(lua_State* i_luaState) {
 	lua_pop(i_luaState, 1);
 
 	ECS::Entity* entity = Rain::Reflect::GetClass(script);
+	Rain::Rain3DGame::AddEntity(entity);
 	if(entity!=nullptr)
 	entity->Initialize(id);
 }
