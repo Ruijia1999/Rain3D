@@ -3,9 +3,10 @@
   <ItemGroup>
     <ClCompile Include="MayaExporter.cpp" />
     <ClCompile Include="EntryPoint.cpp" />
+    <ClCompile Include="AnimationExporter.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EntryPoint.h" />
     <ClInclude Include="MayaExporter.h" />
+    <ClInclude Include="AnimationExporter.h" />
   </ItemGroup>
 </Project>

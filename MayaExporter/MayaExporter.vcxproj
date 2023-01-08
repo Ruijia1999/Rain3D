@@ -110,10 +110,11 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="EntryPoint.h" />
+    <ClInclude Include="AnimationExporter.h" />
     <ClInclude Include="MayaExporter.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationExporter.cpp" />
     <ClCompile Include="EntryPoint.cpp" />
     <ClCompile Include="MayaExporter.cpp" />
   </ItemGroup>

@@ -23,6 +23,8 @@ void Rain::MeshRender::MeshRenderSystem::Initialize() {
 	meshes.find("ss.hrj")->second->Initialize("ss.hrj");
 	meshes.insert(std::pair<std::string, Render::Mesh*>("cube.hrj", new Render::Mesh()));
 	meshes.find("cube.hrj")->second->Initialize("cube.hrj");
+	meshes.insert(std::pair<std::string, Render::Mesh*>("plane.hrj", new Render::Mesh()));
+	meshes.find("plane.hrj")->second->Initialize("plane.hrj");
 	effects.insert(std::pair<std::string, Render::Effect*>("default", new Render::Effect()));
 	effects.find("default")->second->Initialize("vertexShader", "pixelShader");
 	effects.insert(std::pair<std::string, Render::Effect*>("red", new Render::Effect()));

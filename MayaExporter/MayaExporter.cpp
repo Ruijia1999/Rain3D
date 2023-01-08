@@ -1,5 +1,5 @@
 #include "MayaExporter.h"
-
+#include "AnimationExporter.h"
 #include <algorithm>
 #include <cstdint>
 #include <fstream>
@@ -9,6 +9,8 @@
 #include <maya/MFloatVector.h>
 #include <maya/MFloatVectorArray.h>
 #include <maya/MFnMesh.h>
+#include <maya/MFnIkJoint.h>
+#include <maya/MAnimControl.h>
 #include <maya/MGlobal.h>
 #include <maya/MIntArray.h>
 #include <maya/MItDag.h>
@@ -109,6 +111,10 @@ namespace
 		{
 
 		}
+	};
+
+	struct sJointInfo {
+
 	};
 }
 
@@ -233,6 +239,13 @@ MStatus Rain::MayaExporter::writer(const MFileObject& i_file, const MString& i_o
 			return status;
 		}
 	}
+
+	// get start and end time
+	MTime start = MAnimControl::animationStartTime();
+	MTime end = MAnimControl::animationEndTime();
+
+	AnimationExporter::readSkinCluster();
+	std::vector<Animation::Joint> Joint;
 	// Write the mesh data to the requested file
 	{
 		const auto filePath = i_file.resolvedFullName();
@@ -428,11 +441,13 @@ namespace
 			{
 				MDagPath dagPath;
 				i.getDagPath(dagPath);
+
 				if (!(status = ProcessSingleDagNode(dagPath, o_uniqueVertices, o_triangles, o_shadingGroups, map_shadingGroupNamesToIndices)))
 				{
 					return status;
 				}
 			}
+			
 		}
 		else
 		{
@@ -449,6 +464,7 @@ namespace
 	{
 		// Get the mesh from the DAG path
 		MFnMesh mesh(i_dagPath);
+		
 		if (mesh.isIntermediateObject())
 		{
 			return MStatus::kSuccess;

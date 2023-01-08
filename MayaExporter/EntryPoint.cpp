@@ -5,7 +5,6 @@
 #include <maya/MString.h>
 #include <maya/MSimple.h>
 
-#include "EntryPoint.h"
 #include "MayaExporter.h"
 namespace
 {

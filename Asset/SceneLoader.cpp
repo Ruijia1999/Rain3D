@@ -55,6 +55,7 @@ void Rain::Asset::SceneLoader::LoadEntity(lua_State* i_luaState) {
 	lua_pop(i_luaState, 1);
 
 	ECS::Entity* entity = Rain::Reflect::GetClass(script);
+	if(entity!=nullptr)
 	entity->Initialize(id);
 }
 

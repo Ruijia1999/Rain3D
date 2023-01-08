@@ -13,9 +13,13 @@ namespace Rain {
 		float Dot(const Vector3& i_lhs, const Vector3& i_rhs);
 		Vector3 Cross(const Vector3& i_lhs, const Vector3& i_rhs);
 		Matrix CreateCameraToProjectedTransform_perspective(
-			const float i_verticalFieldOfView_inRadians,
-			const float i_aspectRatio,
-			const float i_z_nearPlane, const float i_z_farPlane);
+			const float near_plane, // Distance to near clipping 
+										 // plane
+			const float far_plane,  // Distance to far clipping 
+									// plane
+			const float fov_horiz,  // Horizontal field of view 
+									// angle, in radians
+			const float fov_vert);
 		Matrix CreateWorldToCameraTransform(const Quaternion& i_cameraOrientation, const Vector3& i_cameraPosition);
 		Matrix CreateLocalToWorldTransform(const Quaternion& i_ObjectOrientation, const Vector3& i_ObjectPosition);
 	}

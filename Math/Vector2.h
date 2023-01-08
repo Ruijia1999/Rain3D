@@ -14,10 +14,15 @@ namespace Rain {
 			Vector2();
 			Vector2(float i_x, float i_y);
 			Vector2(Vector3 i_vec);
+			Vector2(const Vector2& i_vec);
+
 			//cross product
 			float operator^(const Vector2& i_vec2);
-			Vector2& operator/(const float& i_vec2);
+			Vector2 operator/(const float& i_vec2);
 			Vector2& operator-(const Vector2& i_vec2);
+			Vector2& operator+(const Vector2& i_vec2);
+			Vector2& operator=(const Vector2& i_vec2);
+			bool operator==(const Vector2& i_vec2) const;
 			float& operator[](int i);
 		};
 	}

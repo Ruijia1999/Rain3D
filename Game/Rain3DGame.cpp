@@ -15,7 +15,8 @@
 #include "EngineLog/EngineLog.h"
 #include "MeshRender/MeshRender.h"
 #include "Render/RenderSystem.h"
-#include "Collision\ColliderSystem.h"
+#include "Collision/ColliderSystem.h"
+#include "AI/NavMesh.h"
 using namespace std::placeholders;
 using namespace Rain;
 namespace {
@@ -34,6 +35,18 @@ void Rain3DGame::StartGame() {
 }
 
 void Rain3DGame::Initialize(HWND hWnd, int width, int height) {
+    AI::NavMesh mesh;
+    std::vector<Math::Vector2> vertices;
+    vertices.push_back(Math::Vector2(0, 0));
+    vertices.push_back(Math::Vector2(3, 6));
+    vertices.push_back(Math::Vector2(7, 4));
+    vertices.push_back(Math::Vector2(6, 1));
+    vertices.push_back(Math::Vector2(5, 2));
+    vertices.push_back(Math::Vector2(3, 2));
+
+    AI::Polygon polygon(vertices);
+    mesh.polygonData = polygon;
+    mesh.GenerateNavMesh();
     Rain::EngineLog::CreateLogFile("log");
 
     Rain::Input::Initialize();
@@ -47,15 +60,6 @@ void Rain3DGame::Initialize(HWND hWnd, int width, int height) {
     Rain::Asset::SceneLoader::LoadScene("test");
 
     timeLastFrame = 0;
-
-    Rain::Input::Mouse::BindEvent(MOUSE_LEFT_DOWN, [](Rain::Input::MouseInfo info) {
-        Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(11);
-        transform->position = transform->position + Math::Vector3(0.1f, 0, 0);
-        });
-    Rain::Input::Mouse::BindEvent(MOUSE_MOVE, [](Rain::Input::MouseInfo info) {
-        Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(3);
-        transform->position = transform->position + Math::Vector3(0.001f, 0, 0);
-        });
     mainGameThread = new std::thread( StartGame);
 }
 
@@ -82,10 +86,10 @@ void Rain3DGame::Update() {
 
             Render::ConstantBuffer::VSConstantBuffer vsConstantBuffer;
             Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(go->id);
-            vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(900.0f, 1600.0f, 1, 20);
+            vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1, 120, 1.57079632, 1.02477892);
             vsConstantBuffer.transform_localToWorld = Math::CreateLocalToWorldTransform(Math::Quaternion(0, 0,0, 1), transform->position);
             vsConstantBuffer.transform_localToWorld.Inverse();
-            vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(0,0,0,1), Math::Vector3(0, 0, -10));
+            vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(-0.7068252, 0, 0, 0.7073883), Math::Vector3(0, 0, -55));
             vsConstantBuffer.transform_worldToCamera.Inverse();
             MeshRender::MeshRenderComponent* meshRender = MeshRender::MeshRenderSystem::GetInstance()->GetComponent<MeshRender::MeshRenderComponent>(go->id);
             RenderData.push_back(Render::RenderData(meshRender->mesh, meshRender->effect, vsConstantBuffer));
@@ -93,6 +97,7 @@ void Rain3DGame::Update() {
             vec = vsConstantBuffer.transform_localToWorld * vec;
             vec = vsConstantBuffer.transform_worldToCamera * vec;
             vec = vsConstantBuffer.transform_cameraToProjected * vec;
+            vec = vec / vec[3];
             int j = 1;
         }
     }
