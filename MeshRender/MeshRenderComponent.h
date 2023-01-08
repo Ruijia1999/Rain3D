@@ -20,7 +20,7 @@ namespace Rain {
 			const Render::Mesh* mesh;
 			Math::Vector4 color;
 			MeshRenderComponent();
-			MeshRenderComponent(int i_id,  const Render::Mesh* i_mesh, const Render::Effect* i_effect);
+			MeshRenderComponent(int i_id,  const Render::Mesh* i_mesh, const Render::Effect* i_effect, Math::Vector4 i_color = Math::Vector4(1, 1, 1, 1));
 		};
 
 	}

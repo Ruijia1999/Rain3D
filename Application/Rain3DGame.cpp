@@ -24,6 +24,8 @@ namespace {
     std::vector<Rain::ECS::Entity*> entities;
     uint64_t timeLastFrame;
     bool stop;
+    Math::Vector3 cameraPos;
+    Math::Quaternion cameraRot;
     std::thread* mainGameThread;
 }
 void Rain::Rain3DGame::AddEntity(Rain::ECS::Entity* i_entity) {
@@ -36,7 +38,10 @@ void Rain::Rain3DGame::StartGame() {
     }
     int exit = 1;
 }
-
+void Rain::Rain3DGame::InitializeSettings(Math::Vector3 ligthDirection, Math::Quaternion i_cameraRot, Math::Vector3 i_cameraPos) {
+    cameraPos = i_cameraPos;
+    cameraRot = i_cameraRot;
+}
 void Rain::Rain3DGame::Initialize(HWND hWnd, int width, int height) {
     AI::NavMesh mesh;
     std::vector<Math::Vector2> vertices;
@@ -99,10 +104,10 @@ void Rain::Rain3DGame::Update() {
             Render::ConstantBuffer::VSConstantBuffer vsConstantBuffer;
             Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(go->id);
             vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1, 200, 1.57079632, 1.02477892);
-            vsConstantBuffer.transform_localToWorld = Math::CreateLocalToWorldTransform(Math::Quaternion(0, 0,0, 1), transform->position);
+            vsConstantBuffer.transform_localToWorld = Math::CreateLocalToWorldTransform(Math::Quaternion(0, 1,0 , 0), transform->position);
             vsConstantBuffer.transform_localToWorld.Inverse();
             //vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(-0.7068252, 0, 0, 0.7073883), Math::Vector3(0, 0, -100));
-            vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(0, 0, 0, 1), Math::Vector3(0, 0, -100));
+            vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(cameraRot, cameraPos);
 
             vsConstantBuffer.transform_worldToCamera.Inverse();
             

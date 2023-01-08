@@ -19,7 +19,11 @@ namespace {
 void Rain::Asset::SceneLoader::LoadScene(const char* i_filePath) {
 	lua_State* L = luaL_newstate();
 	auto i = luaL_dofile(L, "test.lua");
-
+#pragma region Settings
+	lua_getglobal(L, "settings");
+	LoadSettings(L);
+	
+#pragma endregion
 #pragma region Entities
 	lua_getglobal(L, "entities");
 	int n = luaL_len(L, -1);
@@ -31,6 +35,34 @@ void Rain::Asset::SceneLoader::LoadScene(const char* i_filePath) {
 #pragma endregion
 
 }
+void Rain::Asset::SceneLoader::LoadSettings(lua_State* i_luaState) {
+	Math::Vector3 cameraPos;
+	Math::Quaternion cameraRot;
+	
+
+	lua_pushstring(i_luaState, "camera");
+	lua_gettable(i_luaState, -2);
+	lua_pushstring(i_luaState, "rotation");
+	lua_gettable(i_luaState, -2);
+	for (int i = 1; i <= 4; ++i) {
+		lua_rawgeti(i_luaState, -1, i);
+		cameraRot[i - 1] = lua_tonumber(i_luaState, -1);
+		lua_pop(i_luaState, 1);
+	}
+	lua_pop(i_luaState, 1);
+
+	lua_pushstring(i_luaState, "position");
+	lua_gettable(i_luaState, -2);
+	for (int i = 1; i <= 3; ++i) {
+		lua_rawgeti(i_luaState, -1, i);
+		cameraPos[i - 1] = lua_tonumber(i_luaState, -1);
+		lua_pop(i_luaState, 1);
+	}
+	lua_pop(i_luaState, 1);
+
+	Rain::Rain3DGame::InitializeSettings(cameraPos, cameraRot, cameraPos);
+}
+
 void Rain::Asset::SceneLoader::LoadEntity(lua_State* i_luaState) {
 	int id;
 	std::string script;
@@ -127,7 +159,17 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		lua_pop(i_luaState, 1);
 		effect = MeshRender::MeshRenderSystem::GetInstance()->effects.find(effect_name)->second;
 
-		MeshRender::MeshRenderSystem::GetInstance()->AddComponent(new MeshRender::MeshRenderComponent(i_id, mesh, effect));
+		Math::Vector4 color;
+		lua_pushstring(i_luaState, "color");
+		lua_gettable(i_luaState, -2);
+		for (int i = 1; i <= 4; ++i) {
+			lua_rawgeti(i_luaState, -1, i);
+			color[i - 1] = lua_tonumber(i_luaState, -1);
+			lua_pop(i_luaState, 1);
+		}
+		lua_pop(i_luaState, 1);
+
+		MeshRender::MeshRenderSystem::GetInstance()->AddComponent(new MeshRender::MeshRenderComponent(i_id, mesh, effect,color));
 		}
 	);
 #pragma endregion

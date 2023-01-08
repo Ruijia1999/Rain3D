@@ -4,11 +4,11 @@ Rain::MeshRender::MeshRenderComponent::MeshRenderComponent() {
 	mesh = nullptr;
 	effect = nullptr;
 }
-Rain::MeshRender::MeshRenderComponent::MeshRenderComponent(int i_id, const Render::Mesh* i_mesh, const Render::Effect* i_effect) {
+Rain::MeshRender::MeshRenderComponent::MeshRenderComponent(int i_id, const Render::Mesh* i_mesh, const Render::Effect* i_effect, Math::Vector4 i_color) {
 	id = i_id;
 	mesh = i_mesh;
 	effect = i_effect;
-	color = Math::Vector4(1, 1, 1, 1);
+	color = i_color;
 }
 void Rain::MeshRender::MeshRenderComponent::Initialize() {
 

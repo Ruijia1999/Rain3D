@@ -10,6 +10,7 @@ namespace Rain {
 			void RegisterComponentCreators();
 			//help function
 			//----------------
+			void LoadSettings(lua_State* i_luaState);
 			void LoadEntity(lua_State* i_luaState);
 			void LoadComponent(int i_id, lua_State* i_luaState);
 			void RegisterComponentCreator(const std::string& i_ComponentName, std::function<void(int, lua_State*)> i_ComponentCreator);

@@ -3,6 +3,7 @@
 
 #include <Windows.h>
 #include "ECS/Entity.h"
+#include "Math/Math.h"
 #include <vector>
 namespace Rain {
     class Rain3DGame
@@ -13,6 +14,7 @@ namespace Rain {
         static void StartGame();
         static void Update();
         static void AddEntity(Rain::ECS::Entity* i_entity);
+        static void InitializeSettings(Math::Vector3 ligthDirection = Math::Vector3(0,0,1), Math::Quaternion i_cameraRot = Math::Quaternion(0, 0, 0,1), Math::Vector3 i_cameraPos = Math::Vector3(0,0,-60));
         void ExitGame();
         void ClearUp();
     };
