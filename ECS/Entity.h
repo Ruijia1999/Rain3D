@@ -3,7 +3,6 @@
 
 namespace Rain {
 	namespace ECS {
-
 		class Entity
 		{
 		public:

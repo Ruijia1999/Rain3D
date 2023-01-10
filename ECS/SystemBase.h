@@ -6,14 +6,9 @@
 #include "ComponentBase.h"
 namespace Rain {
 	namespace ECS {
-		
 		class SystemBase
 		{
-			
 		public:
-
-
-			
 			virtual void Initialize();
 			void Update(uint64_t i_timeSinceLastFrame);
 			void Destroy();
@@ -41,9 +36,6 @@ namespace Rain {
 			SystemBase();
 		protected:
 			std::vector<ComponentBase*> m_componnets;
-
-	
-
 		};
 	}
 }

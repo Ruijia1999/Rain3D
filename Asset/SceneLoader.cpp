@@ -174,7 +174,7 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		lua_gettable(i_luaState, -2);
 		for (int i = 1; i <= 4; ++i) {
 			lua_rawgeti(i_luaState, -1, i);
-			color[i - 1] = lua_tonumber(i_luaState, -1);
+			color[i - 1] = lua_tonumber(i_luaState, -1)/255.0f;
 			lua_pop(i_luaState, 1);
 		}
 		lua_pop(i_luaState, 1);

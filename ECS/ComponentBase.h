@@ -5,7 +5,6 @@ namespace Rain {
 	namespace ECS {
 		class ComponentBase
 		{
-			
 		public:
 			int id;
 			bool active;

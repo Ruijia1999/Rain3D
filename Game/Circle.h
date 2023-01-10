@@ -11,6 +11,7 @@ namespace Rain {
 		Circle();
 		void Initialize(int i_id);
 		void Update(double i_timeSinceLastFrame);
+		void Destory();
 
 	};
 	REGIST(Circle)
