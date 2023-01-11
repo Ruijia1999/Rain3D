@@ -18,7 +18,7 @@ namespace Rain {
 			Vector3& operator=(const Vector3& i_vec);
 			float operator*(const Vector3& i_vec) const;
 			Vector3 operator*(const float& i) const;
-
+			void Normalize();
 			float& operator[](int i);
 
 			float GetLength() const;

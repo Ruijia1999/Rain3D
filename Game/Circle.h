@@ -12,7 +12,7 @@ namespace Rain {
 		void Initialize(int i_id);
 		void Update(double i_timeSinceLastFrame);
 		void Destory();
-
+		void StartPathFinding();
 	};
 	REGIST(Circle)
 }

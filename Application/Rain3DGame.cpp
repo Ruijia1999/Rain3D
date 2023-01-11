@@ -16,9 +16,7 @@
 #include "MeshRender/MeshRender.h"
 #include "Render/RenderSystem.h"
 #include "Collision/ColliderSystem.h"
-#include "AI/NavMesh.h"
-#include "AI/Map.h"
-#include "AI/AStar.h"
+
 using namespace std::placeholders;
 using namespace Rain;
 namespace {
@@ -45,29 +43,7 @@ void Rain::Rain3DGame::InitializeSettings(Math::Vector3 ligthDirection, Math::Qu
     cameraRot = i_cameraRot;
 }
 void Rain::Rain3DGame::Initialize(HWND hWnd, int width, int height) {
-    AI::NavMesh mesh;
-    std::vector<Math::Vector2> vertices;
-    vertices.push_back(Math::Vector2(0, 0));
-    vertices.push_back(Math::Vector2(3, 6));
-    vertices.push_back(Math::Vector2(2, 8));
-    vertices.push_back(Math::Vector2(7, 4));
-    vertices.push_back(Math::Vector2(6, 1));
-    vertices.push_back(Math::Vector2(5, 2));
-    vertices.push_back(Math::Vector2(3, 2));
-
-    AI::Polygon polygon(vertices);
-    mesh.polygonData = polygon;
-    mesh.GenerateNavMesh();
-
-    Rain::AI::Map* map = new  Rain::AI::Map();
-    map->navMesh = &mesh;
-    map->GenerateMap();
     
-    AI::AStar* aStar = new AI::AStar(map);
-    aStar->startIndex = 1;
-    aStar->endIndex = 0;
-    std::vector < Math::Vector2 > path;
-    aStar->GetPath(Math::Vector2(2, 2), Math::Vector2(2, 2), path);
     Rain::EngineLog::CreateLogFile("log");
 
     Rain::Input::Initialize();

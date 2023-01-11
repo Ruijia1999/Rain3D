@@ -10,7 +10,17 @@ Rain::AI::Polygon::Polygon(std::vector<Math::Vector2> i_vertices) {
 	center = GetCenter();
 	int q;
 }
-
+bool Rain::AI::Polygon::IsInPolygon(Math::Vector2 vtc) {
+	int count = vertices.size();
+	for (int i = 0; i < count; i++) {
+		Math::Vector2 vec1 = vertices[(i + 1) % count] - vertices[i];
+		Math::Vector2 vec2 = vtc - vertices[i];
+		if ((vec1 ^ vec2) > 0) {
+			return false;
+		}
+	}
+	return true;
+}
 void Rain::AI::Polygon::GenerateConvexPolygons(std::vector<Polygon>& convexPolygons) {
 	//Find out concave vertices
 	int count = vertices.size();
@@ -144,4 +154,13 @@ void Rain::AI::NavMesh::GenerateNavMesh() {
 	return;
 }
 
-
+int Rain::AI::NavMesh::GetPolygonIn(Math::Vector2 i_vtc) {
+	int count = convexPolygons.size();
+	for (int i = 0; i < count; i++) {
+		Polygon polygon = convexPolygons[i];
+		if (polygon.IsInPolygon(i_vtc)) {
+			return i;
+		}
+	}
+	return -1;
+}

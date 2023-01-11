@@ -30,6 +30,8 @@ namespace Rain {
 
 			bool IsIntersected(int i_index0, int i_index1);
 
+			bool IsInPolygon(Math::Vector2 vtc);
+
 			bool IsIntersected(Math::Vector2 vtc0, Math::Vector2 vtc1, Math::Vector2 vtc2, Math::Vector2 vtc3);
 		};
 		
@@ -44,7 +46,7 @@ namespace Rain {
 			std::vector<Polygon> convexPolygons;
 
 			 void GenerateNavMesh();
-
+			 int GetPolygonIn(Math::Vector2 i_vtc);
 
 		};
 	}

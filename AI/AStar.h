@@ -5,6 +5,7 @@
 #include "Map.h"
 #include <unordered_map>
 #include <algorithm>
+#include <stack>
 namespace Rain {
 	namespace AI {
 		struct PathNode {
@@ -43,13 +44,13 @@ namespace Rain {
 			}
 			std::unordered_map<int,PathNode*> openList;
 			std::unordered_map<int, PathNode*> closeList;
-			void GetPath(Math::Vector2 i_start, Math::Vector2 i_end, OUT std::vector <Math::Vector2>& path ) {
-				//startIndex = map->GetStartIndex(i_start);
-				//endIndex = map->GetEndIndex(i_end);
+			void GetPath(Math::Vector2 i_start, Math::Vector2 i_end, std::vector <Math::Vector2>& path ) {
+				startIndex = map->navMesh->GetPolygonIn(i_start);
+				endIndex = map->navMesh->GetPolygonIn(i_end);
 				
 				int number = map->pointList.size();
 				for (int i = 0; i < number; i++) {
-						openList.insert(std::pair<int, PathNode*>(i,new PathNode(i, nullptr)));
+					openList.insert(std::pair<int, PathNode*>(i,new PathNode(i, nullptr)));
 					
 				}
 				curNode = openList.find(startIndex)->second;
@@ -59,6 +60,18 @@ namespace Rain {
 				openList.erase(startIndex);
 
 				PathNode* aim = NextNode();
+
+				std::stack<Math::Vector2> temp;
+				while (aim->parent != nullptr) {
+					temp.push(map->adjacencyTbl[aim->index][aim->parent->index].center);
+					aim = aim->parent;
+				}
+				path.push_back(i_start);
+				while (!temp.empty()) {
+					path.push_back(temp.top());
+					temp.pop();
+				}
+				path.push_back(i_end);
 			}
 
 			//Helper
