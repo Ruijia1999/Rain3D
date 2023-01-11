@@ -26,16 +26,16 @@ Rain::Math::Vector2 Rain::Math::Vector2::operator/(const float& i){
 	Vector2 outcome(x / i, y / i);
 	return outcome;
 }
-Rain::Math::Vector2& Rain::Math::Vector2::operator-(const Vector2& i_vec) {
+Rain::Math::Vector2 Rain::Math::Vector2::operator-(const Vector2& i_vec) const {
 	Vector2 outcome(x - i_vec.x, y - i_vec.y);
 	return outcome;
 }
 
-Rain::Math::Vector2& Rain::Math::Vector2::operator+(const Vector2& i_vec) {
+Rain::Math::Vector2 Rain::Math::Vector2::operator+(const Vector2& i_vec)const {
 	Vector2 outcome(x + i_vec.x, y + i_vec.y);
 	return outcome;
 }
-Rain::Math::Vector2& Rain::Math::Vector2::operator=(const Vector2& i_vec) {
+Rain::Math::Vector2 Rain::Math::Vector2::operator=(const Vector2& i_vec) {
 	if (&i_vec != this){
 		x = i_vec.x;
 		y = i_vec.y;

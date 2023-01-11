@@ -147,11 +147,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AStar.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="NavMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AI.cpp" />
+    <ClCompile Include="AStar.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="NavMesh.cpp" />
   </ItemGroup>
   <ItemGroup>

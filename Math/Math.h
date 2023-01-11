@@ -5,7 +5,7 @@
 #include "Vector2.h"
 #include "Vector3.h"
 #include "Vector4.h"
-
+#include <iostream>
 #endif //RAIN_MATH
 
 namespace Rain {
@@ -22,5 +22,6 @@ namespace Rain {
 			const float fov_vert);
 		Matrix CreateWorldToCameraTransform(const Quaternion& i_cameraOrientation, const Vector3& i_cameraPosition);
 		Matrix CreateLocalToWorldTransform(const Quaternion& i_ObjectOrientation, const Vector3& i_ObjectPosition);
+		float Distance(Math::Vector2 i_vtc0, Math::Vector2 i_vtc1);
 	}
 }

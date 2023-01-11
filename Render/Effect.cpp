@@ -1,31 +1,23 @@
 #include "Effect.h"
 #include "Graphics.h"
 
+#include <Windows.h>
+#include <string>
+
 void Rain::Render::Effect::Initialize(const char* i_vertexShaderPath, const char* i_pixelShaderPath) {
 	
 	//Create pixelShader
 	ID3DBlob* pPixelBlob = nullptr;
-	
 
-	//const char* suffix = ".cso";
+	const char* suffix = ".cso";
 
-	//int iWCharLen = MultiByteToWideChar(CP_ACP, 0, i_pixelShaderPath, -1, NULL, NULL);
-	//wchar_t* pWideChar = (wchar_t*)malloc(wchar_t(iWCharLen);
+	std::string pixelPath;
+	pixelPath.append(i_pixelShaderPath);
+	pixelPath.append(suffix);
+	std::wstring temp = std::wstring(pixelPath.begin(), pixelPath.end());
+	LPCWSTR pixelFilename = temp.c_str();
 
-	//
-	//MultiByteToWideChar(CP_ACP, 0, i_pixelShaderPath, strlen(i_pixelShaderPath), pWideChar, iWCharLen);
-
-	//delete pWideChar;
-
-	//int* p = (int*)malloc(2 * (int)sizeof(int));
-	//if (p == NULL)
-	//{
-	//	perror("malloc error!");
-	//}
-	//memset(p, 0, 2 * (int)sizeof(int));
-	//free(p);
-	if (FAILED(D3DReadFileToBlob(L"PixelShader", &pPixelBlob))) {
-		
+	if (FAILED(D3DReadFileToBlob(pixelFilename, &pPixelBlob))) {
 		int j = 0;
 	}
 	
@@ -36,6 +28,11 @@ void Rain::Render::Effect::Initialize(const char* i_vertexShaderPath, const char
 	//Create vertexShader
 	ID3DBlob* pVertexBlob;
 
+	std::string vertexPath;
+	vertexPath.append(i_vertexShaderPath);
+	vertexPath.append(suffix);
+	temp = std::wstring(vertexPath.begin(), vertexPath.end());
+	LPCWSTR vertexFilename = temp.c_str();
 	if (FAILED(D3DReadFileToBlob(L"VertexShader", &pVertexBlob))) {
 
 	}

@@ -10,10 +10,22 @@
       <Filter>PathFinding</Filter>
     </ClInclude>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="Map.h">
+      <Filter>PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="AStar.h">
+      <Filter>PathFinding</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AI.cpp" />
     <ClCompile Include="NavMesh.cpp">
+      <Filter>PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="AStar.cpp">
       <Filter>PathFinding</Filter>
     </ClCompile>
   </ItemGroup>

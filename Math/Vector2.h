@@ -19,9 +19,9 @@ namespace Rain {
 			//cross product
 			float operator^(const Vector2& i_vec2);
 			Vector2 operator/(const float& i_vec2);
-			Vector2& operator-(const Vector2& i_vec2);
-			Vector2& operator+(const Vector2& i_vec2);
-			Vector2& operator=(const Vector2& i_vec2);
+			Vector2 operator-(const Vector2& i_vec2) const;
+			Vector2 operator+(const Vector2& i_vec2) const;
+			Vector2 operator=(const Vector2& i_vec2);
 			bool operator==(const Vector2& i_vec2) const;
 			float& operator[](int i);
 		};
