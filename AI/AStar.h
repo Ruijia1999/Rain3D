@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <algorithm>
 #include <stack>
+#include <list>
 namespace Rain {
 	namespace AI {
 		struct PathNode {
@@ -44,7 +45,7 @@ namespace Rain {
 			}
 			std::unordered_map<int,PathNode*> openList;
 			std::unordered_map<int, PathNode*> closeList;
-			void GetPath(Math::Vector2 i_start, Math::Vector2 i_end, std::vector <Math::Vector2>& path) {
+			void GetPath(Math::Vector2 i_start, Math::Vector2 i_end, std::list <Math::Vector2>& path) {
 				openList.clear();
 				closeList.clear();
 				startIndex = map->navMesh->GetPolygonIn(i_start);

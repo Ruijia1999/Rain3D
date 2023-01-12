@@ -12,10 +12,10 @@
 #include <vector>
 #include <list>
 #include "Application\Rain3DGame.h"
+#include "EngineLog\EngineLog.h"
 namespace {
     std::list < Rain::Math::Vector2 > path;
-    std::vector < Rain::Math::Vector2 > path;
-    int curPathNode = 0;
+    std::list < Rain::Math::Vector2 >::iterator curPathNode;
     Rain::AI::AStar* aStar;
     Rain::Math::Vector3 direction;
 }
@@ -89,27 +89,27 @@ void Rain::Circle::Initialize(int i_id, std::string i_tag, std::string i_name) {
     map->GenerateMap();
 
     aStar = new AI::AStar(map);
-    curPathNode = -1;
 
 }
 void Rain::Circle::Update(double i_timeSinceLastFrame) {
     Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
-    CheckCollision();
+   
     //if (curPathNode == 0) {
     //   curPathNode++;
     //   direction = Math::Vector3(path[curPathNode].x, 0, path[curPathNode].y) - transform->position;
     //   direction.Normalize();
     //}
-    if (curPathNode >= 0) {
-        Math::Vector3 tempDirection = Math::Vector3(path[curPathNode].x, 0,path[curPathNode].y) - transform->position;
-        if (Math::Distance(Math::Vector3(path[curPathNode].x, 0, path[curPathNode].y),transform->position) < 0.1) {
+    if (path.size()>0&&curPathNode!= path.end()) {
+        CheckCollision();
+        Math::Vector3 tempDirection = Math::Vector3(curPathNode->x, 0, curPathNode->y) - transform->position;
+        if (Math::Distance(Math::Vector3(curPathNode->x, 0, curPathNode->y),transform->position) < 0.1) {
             curPathNode++;
-            if (curPathNode >= path.size()) {
-                curPathNode = -1;
+            if (curPathNode != path.end()) {
+                direction = Math::Vector3(curPathNode->x,0, curPathNode->y) - transform->position;
+                direction.Normalize();
             }
             else {
-                direction = Math::Vector3(path[curPathNode].x,0, path[curPathNode].y) - transform->position;
-                direction.Normalize();
+                path.clear();
             }
         }
         
@@ -129,10 +129,11 @@ void Rain::Circle::StartPathFinding() {
     Math::Vector3 end = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(5)->position;
     path.clear();
     aStar->GetPath(Math::Vector2(transform->position.x, transform->position.z),Math::Vector2(end.x,end.z), path);
-    curPathNode = 0;
+    curPathNode = path.begin();
 }
 
 std::vector<int> Rain::Circle::CheckCollision() {
+
     std::vector<int> outcome;
     Rain::Math::Vector3 point = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(id)->position;
     Collision::SphereCollider* collider1;
@@ -141,14 +142,20 @@ std::vector<int> Rain::Circle::CheckCollision() {
     Math::Vector3 pos0;
     Math::Vector3 pos1 = collider2->pos;
     Math::Vector3 posTemp = pos1 + direction * 4;
+
+    float radius0;
+    float radius1 = collider2->radius;
+    if (direction.x >0) {
+        int j = 0;
+    }
     for (auto collider : ColliderSystem::GetInstance()->GetAllComponents<ColliderComponent>()) {
         const ECS::Entity* e = Rain3DGame::GetEntity(collider->id);
         std::string tag = Rain3DGame::GetEntity(collider->id)->tag;
         if (tag.compare("obstacle") == 0) {
             collider1 = (Collision::SphereCollider*)(collider->collider);
             
-            float radius0 = collider1->radius;
-            float radius1 = collider2->radius;
+            radius0 = collider1->radius;
+  
 
             pos0 = collider1->pos;
             float distance = (pos0 - posTemp).GetLength();
@@ -159,34 +166,54 @@ std::vector<int> Rain::Circle::CheckCollision() {
         }
     }
     if (outcome.size() > 0) {
-        ModifyVelocity(Math::Vector2(pos1.x,pos1.z), path[curPathNode], outcome);
+        ModifyVelocity(Math::Vector2(pos1.x,pos1.z), *curPathNode, radius1, outcome);
     }
+    outcome.clear();
     return outcome;
 }
 
-void Rain::Circle::ModifyVelocity(Math::Vector2 i_curPos, Math::Vector2 i_aimPos, const std::vector<int>& i_obstacles) {
+void Rain::Circle::ModifyVelocity(Math::Vector2 i_curPos, Math::Vector2 i_aimPos, float i_radius, const std::vector<int>& i_obstacles) {
     Math::Vector2 tangent0;
-
-
+    EngineLog::Log("ss", "Collider");
     Collision::SphereCollider* collider = ((Collision::SphereCollider*)(ColliderSystem::GetInstance()->GetComponent<ColliderComponent>(i_obstacles[0]))->collider);
     float radius = collider->radius;
     Math::Vector2 obstaclePos= Math::Vector2(collider->pos.x, collider->pos.z);
 
     Math::Vector2 cur_obs = obstaclePos - i_curPos;
-    float i = (cur_obs.x * cur_obs.x + cur_obs.y * cur_obs.y);
-    float angle1 = asinf(radius/sqrtf(cur_obs.x*cur_obs.x+cur_obs.y*cur_obs.y));
-    Math::Vector2 tangent1 = Math::Vector2(cur_obs.x * (sin(angle1) + cos(angle1)),cur_obs.y * (-sin(angle1) + cos(angle1)));
-    float slope1 = tangent1.y / tangent1.x;
-    float intersect1 = -i_curPos.y / slope1 + i_curPos.x;
-
     Math::Vector2 cur_aim = obstaclePos - i_aimPos;
-    float angle2 = asinf(radius / sqrtf(cur_aim.x * cur_aim.x + cur_aim.y * cur_aim.y));
-    Math::Vector2 tangent2 = Math::Vector2(cur_aim.x * (sin(angle2) + cos(angle2)), cur_aim.y * (-sin(angle2) + cos(angle2)));
+
+    bool isRight = !Math::IsLeft(cur_obs, cur_aim);
+
+    float i = (cur_obs.x * cur_obs.x + cur_obs.y * cur_obs.y);
+    float angle1 = asinf((radius + i_radius + 0.1) /sqrtf(cur_obs.x*cur_obs.x+cur_obs.y*cur_obs.y));
+    Math::Vector2 tangent1;
+    if (isRight) {
+        tangent1 = Math::Vector2(cur_obs.x * cos(angle1) + cur_obs.y * sin(angle1), cur_obs.y * cos(angle1) + cur_obs.x * -sin(angle1));
+    }
+    else {
+        tangent1 = Math::Vector2(cur_obs.x * cos(angle1) + cur_obs.y * -sin(angle1), cur_obs.y * cos(angle1) + cur_obs.x * sin(angle1));
+    }
+   
+    float slope1 = tangent1.y / tangent1.x;
+    float intersect1 = i_curPos.y - slope1* i_curPos.x;
+    float angle2 = asinf((radius + i_radius + 0.1) / sqrtf(cur_aim.x * cur_aim.x + cur_aim.y * cur_aim.y));
+    Math::Vector2 tangent2;
+    if (isRight) {
+        tangent2 = Math::Vector2(cur_aim.x * cos(angle2) + cur_aim.y * -sin(angle2), cur_aim.y * cos(angle2) + cur_aim.x * sin(angle2));
+    }
+    else {
+        tangent2 = Math::Vector2(cur_aim.x * cos(angle2) + cur_aim.y * sin(angle2), cur_aim.y * cos(angle2) + cur_aim.x * -sin(angle2));
+    }
     float slope2 = tangent2.y / tangent2.x;
-    float intersect2 = -i_aimPos.y / slope2 + i_aimPos.x;
+    float intersect2 = i_aimPos.y - slope2 * i_aimPos.x;
 
     float x = (intersect2 - intersect1) / (slope1 - slope2);
     float y = slope1*x+intersect1;
+    path.insert(curPathNode++, Math::Vector2(x, y));
 
-    path.insert(path.begin()+1,)
+    curPathNode--;
+    curPathNode--;
+    direction = Math::Vector3(curPathNode->x - i_curPos.x, 0,curPathNode->y - i_curPos.y);
+    direction.Normalize();
+    
 }

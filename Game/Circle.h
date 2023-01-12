@@ -16,7 +16,7 @@ namespace Rain {
 		void StartPathFinding();
 		std::vector<int> CheckCollision();
 
-		void ModifyVelocity(Math::Vector2 i_curPos, Math::Vector2 i_aimPos, const std::vector<int>& i_obstacles);
+		void ModifyVelocity(Math::Vector2 i_curPos, Math::Vector2 i_aimPos, float i_radius, const std::vector<int>& i_obstacles);
 	};
 	REGIST(Circle)
 }
