@@ -13,7 +13,7 @@ namespace Rain {
 		{
 		public:
 			void Initialize();
-			void Update(uint64_t i_timeSinceLastFrame);
+			void Update(double i_timeSinceLastFrame);
 			void Destroy();
 
 			const Render::Effect* effect;

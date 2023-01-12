@@ -22,7 +22,7 @@ Rain::GameObject::GameObjectComponent::GameObjectComponent(int i_id, bool i_isAc
 void Rain::GameObject::GameObjectComponent::Initialize() {
 
 }
-void Rain::GameObject::GameObjectComponent::Update(uint64_t i_timeSinceLastFrame) {
+void Rain::GameObject::GameObjectComponent::Update(double i_timeSinceLastFrame) {
 
 }
 void Rain::GameObject::GameObjectComponent::Destroy() {

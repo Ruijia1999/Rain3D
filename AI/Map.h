@@ -7,6 +7,8 @@ namespace Rain {
 	namespace AI {
 		struct Edge {
 			float weight;
+			Math::Vector2 vtc1;
+			Math::Vector2 vtc2;
 			Math::Vector2 center;
 			Edge();
 		};
@@ -48,7 +50,12 @@ namespace Rain {
 				for (int i = 0; i < count0; i++) {
 					for (int j = 0; j < count1; j++) {
 						if (plg0.vertices[(i + 1) % count0] == plg1.vertices[j] && plg0.vertices[i] == plg1.vertices[(j + 1) % count1]) {
-							adjacencyTbl[index1][index2].center = (plg0.vertices[(i + 1) % count0] + plg0.vertices[i])/2.0f;
+							adjacencyTbl[index1][index2].vtc1 = plg0.vertices[(i + 1) % count0];
+							adjacencyTbl[index1][index2].vtc2 = plg0.vertices[i];
+							adjacencyTbl[index1][index2].center = (plg0.vertices[(i + 1) % count0] + plg0.vertices[i]) / 2;
+
+							adjacencyTbl[index2][index1].vtc1 = adjacencyTbl[index1][index2].vtc1;
+							adjacencyTbl[index2][index1].vtc2 = adjacencyTbl[index1][index2].vtc2;
 							adjacencyTbl[index2][index1].center = adjacencyTbl[index1][index2].center;
 							
 							adjacencyTbl[index1][index2].weight = Distance(plg0.center, adjacencyTbl[index1][index2].center) + Distance(plg1.center, adjacencyTbl[index1][index2].center);

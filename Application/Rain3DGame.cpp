@@ -31,6 +31,17 @@ namespace {
 void Rain::Rain3DGame::AddEntity(Rain::ECS::Entity* i_entity) {
     entities.push_back(i_entity);
 }
+
+Rain::ECS::Entity* Rain::Rain3DGame::GetEntity(int i_id) {
+    for (auto entity : entities) {
+        if (entity->id == i_id) {
+            return entity;
+        }
+    }
+    return nullptr;
+}
+
+
 void Rain::Rain3DGame::StartGame() {
     stop = false;
     while (!stop) {

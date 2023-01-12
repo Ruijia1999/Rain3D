@@ -66,6 +66,8 @@ void Rain::Asset::SceneLoader::LoadSettings(lua_State* i_luaState) {
 void Rain::Asset::SceneLoader::LoadEntity(lua_State* i_luaState) {
 	int id;
 	std::string script;
+	std::string tag;
+	std::string name;
 
 	lua_pushstring(i_luaState, "id");
 	lua_gettable(i_luaState, -2);
@@ -76,6 +78,16 @@ void Rain::Asset::SceneLoader::LoadEntity(lua_State* i_luaState) {
 	lua_pushstring(i_luaState, "script");
 	lua_gettable(i_luaState, -2);
 	script = lua_tostring(i_luaState, -1);
+	lua_pop(i_luaState, 1);
+
+	lua_pushstring(i_luaState, "tag");
+	lua_gettable(i_luaState, -2);
+	tag = lua_tostring(i_luaState, -1);
+	lua_pop(i_luaState, 1);
+
+	lua_pushstring(i_luaState, "name");
+	lua_gettable(i_luaState, -2);
+	name = lua_tostring(i_luaState, -1);
 	lua_pop(i_luaState, 1);
 
 	lua_pushstring(i_luaState, "components");
@@ -92,7 +104,7 @@ void Rain::Asset::SceneLoader::LoadEntity(lua_State* i_luaState) {
 	ECS::Entity* entity = Rain::Reflect::GetClass(script);
 	Rain::Rain3DGame::AddEntity(entity);
 	if(entity!=nullptr)
-	entity->Initialize(id);
+	entity->Initialize(id,tag,name);
 }
 
 void Rain::Asset::SceneLoader::LoadComponent(int i_id, lua_State* i_luaState) {

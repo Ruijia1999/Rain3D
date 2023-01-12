@@ -13,7 +13,7 @@ namespace Rain {
 			Math::Quaternion rotation;
 
 			void Initialize();
-			void Update(uint64_t i_timeSinceLastFrame);
+			void Update(double i_timeSinceLastFrame);
 			void Destroy();
 
 			TransformComponent();

@@ -16,7 +16,7 @@ Rain::ColliderSystem::ColliderSystem() {
 }
 #ifdef OCTREE
 
-eae6320::cResult eae6320::Collision::Update(const float i_timeSinceLastFrame) {
+void Rain::Collision::Update(const float i_timeSinceLastFrame) {
 	cResult result = Results::Success;
 	s_Octree = new Octree();
 	for (int i = 0; i < 1024; i++) {
@@ -39,7 +39,7 @@ eae6320::cResult eae6320::Collision::Update(const float i_timeSinceLastFrame) {
 
 #else
 
-void Rain::ColliderSystem::Update(uint64_t i_timeSinceLastFrame) {
+void Rain::ColliderSystem::Update(double i_timeSinceLastFrame) {
 
 	for (auto component1 : m_componnets) {
 		for (auto component2 : m_componnets) {
@@ -60,7 +60,7 @@ void Rain::ColliderSystem::Update(uint64_t i_timeSinceLastFrame) {
 #endif // OCTREE
 
 
-bool Rain::ColliderSystem::CheckCollision(const ColliderComponent* i_collider0, const ColliderComponent* i_collider1, const uint64_t i_timeSinceLastFrame) {
+bool Rain::ColliderSystem::CheckCollision(const ColliderComponent* i_collider0, const ColliderComponent* i_collider1, const double i_timeSinceLastFrame) {
 	
 	switch (i_collider0->type)
 	{

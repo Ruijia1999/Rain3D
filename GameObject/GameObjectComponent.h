@@ -11,7 +11,7 @@ namespace Rain {
 			GameObjectComponent(int i_id, bool i_isActive, bool i_isVisible, const char* name, const char* tag);
 			GameObjectComponent(int i_id);
 			void Initialize();
-			void Update(uint64_t i_timeSinceLastFrame);
+			void Update(double i_timeSinceLastFrame);
 			void Destroy();
 
 			bool isActive;

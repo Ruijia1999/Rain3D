@@ -14,7 +14,7 @@ namespace Rain {
 		Collision::ColliderType type;
 		Collision::ColliderBase* collider;
 		void Initialize();
-		void Update(uint64_t i_timeSinceLastFrame);
+		void Update(double i_timeSinceLastFrame);
 		void Destroy();
 
 		std::function<void(const ColliderComponent*)> OnColliderEnter;

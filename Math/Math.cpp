@@ -70,3 +70,9 @@ float Rain::Math::Distance(Math::Vector2 i_vtc0, Math::Vector2 i_vtc1) {
     float y = (i_vtc1 - i_vtc0).y;
     return sqrtf(x * x + y * y);
 }
+
+bool Rain::Math::IsLeft(Math::Vector2 i_vec0, Math::Vector2 i_vec1) {
+    if ((i_vec0 ^ i_vec1) < 0) {
+        return true;
+    }return false;
+}

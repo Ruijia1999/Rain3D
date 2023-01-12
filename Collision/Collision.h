@@ -28,8 +28,8 @@ namespace Rain {
 		bool BoxBoxOBB(const AABBCollider* i_collider0, const OBBCollider* i_collider1, const uint64_t i_timeSinceLastFrame);
 		bool BoxOBBBoxOBB(const OBBCollider* i_collider0, const OBBCollider* i_collider1, const uint64_t i_timeSinceLastFrame);
 		bool BoxSphereOBB(const OBBCollider* i_collider0, const SphereCollider* i_collider1, const uint64_t i_timeSinceLastFrame);
-
 		void GetSize(const int vertexCount, const Render::VertexFormat* vertexData, float& outX, float& outY, float& outZ);
+		void GetSize(const int vertexCount, const Render::VertexFormat* vertexData, float& outRadius);
 	};
 }
 

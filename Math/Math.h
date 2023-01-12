@@ -23,5 +23,6 @@ namespace Rain {
 		Matrix CreateWorldToCameraTransform(const Quaternion& i_cameraOrientation, const Vector3& i_cameraPosition);
 		Matrix CreateLocalToWorldTransform(const Quaternion& i_ObjectOrientation, const Vector3& i_ObjectPosition);
 		float Distance(Math::Vector2 i_vtc0, Math::Vector2 i_vtc1);
+		bool IsLeft(Math::Vector2 i_vtc0, Math::Vector2 i_vtc1);
 	}
 }

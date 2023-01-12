@@ -25,13 +25,13 @@ bool Rain::Collision::BoxSphere(const AABBCollider* i_collider0, const SphereCol
 	Math::Vector3 pos0 = i_collider0->pos;
 	Math::Vector3 pos1 = i_collider1->pos;
 
-	if (abs(i_collider0->size[1] + i_collider1->GetSize()) < abs(pos0.y - pos1.y)) {
+	if (abs(i_collider0->size[1] + i_collider1->radius) < abs(pos0.y - pos1.y)) {
 		return false;
 	}
-	if (abs(i_collider0->size[0] + i_collider1->GetSize()) < abs(pos0.x - pos1.x)) {
+	if (abs(i_collider0->size[0] + i_collider1->radius) < abs(pos0.x - pos1.x)) {
 		return false;
 	}
-	if (abs(i_collider0->size[2] + i_collider1->GetSize()) < abs(pos0.z - pos1.z)) {
+	if (abs(i_collider0->size[2] + i_collider1->radius) < abs(pos0.z - pos1.z)) {
 		return false;
 	}
 	return true;
@@ -41,7 +41,7 @@ bool Rain::Collision::SphereSphere(const Collision::SphereCollider* i_collider0,
 
 	float distance = (i_collider0->pos - i_collider1->pos).GetLength();
 
-	if (i_collider0->GetSize() + i_collider1->GetSize() > distance) {
+	if (i_collider0->radius + i_collider1->radius > distance) {
 		return true;
 	}
 	return false;
@@ -147,7 +147,7 @@ bool Rain::Collision::BoxSphereOBB(const OBBCollider* i_collider0, const SphereC
 	for (int i = 0; i < 3; i++) {
 		float r = abs(Dot(distance, Box0Vec[i]));
 		float a = i_collider0->size[i];
-		float b = i_collider1->GetSize();
+		float b = i_collider1->radius;
 		if (r > a + b) {
 			return false;
 		}
@@ -173,4 +173,17 @@ void Rain::Collision::GetSize(const int vertexCount, const Render::VertexFormat*
 	outX = max(abs(minX), abs(maxX));
 	outY = max(abs(minY), abs(maxY));
 	outZ = max(abs(minZ), abs(maxZ));
+}
+
+void Rain::Collision::GetSize(const int vertexCount, const Render::VertexFormat* vertexData, float& outRadius) {
+
+	float maxRadius = FLT_MIN;
+	float radius = 0;
+	for (int i = 0; i < vertexCount; i++) {
+		radius = vertexData[i].x * vertexData[i].x  +vertexData[i].y * vertexData[i].y  +vertexData[i].z * vertexData[i].z;
+		maxRadius = max(radius, maxRadius);
+
+	}
+	outRadius = sqrtf(maxRadius);
+
 }

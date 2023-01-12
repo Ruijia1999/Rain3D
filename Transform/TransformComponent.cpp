@@ -13,7 +13,7 @@ Rain::Transform::TransformComponent::TransformComponent(int i_id, Math::Vector3 
 void Rain::Transform::TransformComponent::Initialize() {
 
 }
-void Rain::Transform::TransformComponent::Update(uint64_t i_timeSinceLastFrame) {
+void Rain::Transform::TransformComponent::Update(double i_timeSinceLastFrame) {
 
 }
 void Rain::Transform::TransformComponent::Destroy() {

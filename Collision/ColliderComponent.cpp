@@ -10,7 +10,7 @@ void Rain::ColliderComponent::Initialize() {
 
 }
 
-void Rain::ColliderComponent::Update(uint64_t i_timeSinceLastFrame) {
+void Rain::ColliderComponent::Update(double i_timeSinceLastFrame) {
 	Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(id);
 	collider->Update(transform->rotation, transform->position);
 	CheckIntersections();
@@ -32,7 +32,7 @@ Rain::ColliderComponent::ColliderComponent(int i_id, const char* i_type):Compone
 	}
 	else if (strcmp(i_type, "Sphere") == 0) {
 		type = Collision::ColliderType::Sphere;
-		collider = (Collision::ColliderBase*)new Collision::SphereCollider(transform->rotation, transform->position,5);
+		collider = (Collision::ColliderBase*)new Collision::SphereCollider(transform->rotation, transform->position, meshRender->mesh);
 	}
 }
 void Rain::ColliderComponent::CheckIntersections() {
