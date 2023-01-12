@@ -102,7 +102,7 @@ void Rain::Circle::Update(double i_timeSinceLastFrame) {
     if (path.size()>0&&curPathNode!= path.end()) {
         CheckCollision();
         Math::Vector3 tempDirection = Math::Vector3(curPathNode->x, 0, curPathNode->y) - transform->position;
-        if (Math::Distance(Math::Vector3(curPathNode->x, 0, curPathNode->y),transform->position) < 0.1) {
+        if (Math::Distance(Math::Vector2(curPathNode->x, curPathNode->y), Math::Vector2(transform->position.x, transform->position.z)) < 0.1) {
             curPathNode++;
             if (curPathNode != path.end()) {
                 direction = Math::Vector3(curPathNode->x,0, curPathNode->y) - transform->position;
