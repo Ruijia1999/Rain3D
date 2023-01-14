@@ -9,7 +9,8 @@ namespace Rain {
 	public:
 		ENTITY(Cube)
 		Cube();
-		void Initialize(int i_id, std::string i_tag, std::string i_name);
+		Cube(int i_id, std::string i_tag, std::string i_name);
+		void Initialize();
 		void Update(double i_timeSinceLastFrame);
 
 	};

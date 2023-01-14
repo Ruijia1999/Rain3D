@@ -8,9 +8,8 @@ namespace Rain {
 	{
 	public:
 		ENTITY(Enemy)
-			Enemy();
-		void Initialize(int i_id, std::string i_tag, std::string i_name);
-		void Update(double i_timeSinceLastFrame);
+		Enemy();
+		Enemy(int i_id, std::string i_tag, std::string i_name);
 
 	};
 	REGIST(Enemy)

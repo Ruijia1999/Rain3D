@@ -54,7 +54,7 @@ void Rain::Rain3DGame::InitializeSettings(Math::Vector3 ligthDirection, Math::Qu
     cameraRot = i_cameraRot;
 }
 void Rain::Rain3DGame::Initialize(HWND hWnd, int width, int height) {
-    
+
     Rain::EngineLog::CreateLogFile("log");
 
     Rain::Input::Initialize();
@@ -67,7 +67,9 @@ void Rain::Rain3DGame::Initialize(HWND hWnd, int width, int height) {
     ColliderSystem::GetInstance()->Initialize();
     Rain::Asset::SceneLoader::RegisterComponentCreators();
     Rain::Asset::SceneLoader::LoadScene("test");
-
+    for (auto entity : entities) {
+        entity->Initialize();
+    }
     timeLastFrame = 0;
     mainGameThread = new std::thread( StartGame);
 }

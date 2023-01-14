@@ -17,7 +17,7 @@ void Rain::Reflect::RegistClass(const std::string& class_name, const ClassType c
 	}
 	entities->insert(std::pair<std::string, ClassType>(class_name, class_type));
 }
-Rain::ECS::Entity* Rain::Reflect::GetClass(const std::string& class_name) {
+Rain::ECS::Entity* Rain::Reflect::GetClass(const std::string& class_name, int i_id, std::string i_tag, std::string i_name) {
 	std::map<std::string, ClassType>::template iterator it = entities->find(class_name);
-	return (it != entities->end()) ? it->second() : nullptr;
+	return (it != entities->end()) ? it->second(i_id,i_tag,i_name) : nullptr;
 }

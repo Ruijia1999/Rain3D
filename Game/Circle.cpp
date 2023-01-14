@@ -19,10 +19,15 @@ namespace {
     Rain::AI::AStar* aStar;
     Rain::Math::Vector3 direction;
 }
-void Rain::Circle::Initialize(int i_id, std::string i_tag, std::string i_name) {
-    id = i_id;
-    name = i_name;
-    tag = i_tag;
+
+Rain::Circle::Circle() :Entity() {
+
+}
+Rain::Circle::Circle(int i_id, std::string i_tag, std::string i_name) : Entity(i_id, i_tag, i_name) {
+
+}
+void Rain::Circle::Initialize() {
+
     //Click and the object will move forward.
     Rain::Input::Mouse::BindEvent(MOUSE_LEFT_DOWN, [this](Rain::Input::MouseInfo info) {
         this->StartPathFinding();
@@ -120,8 +125,6 @@ void Rain::Circle::Update(double i_timeSinceLastFrame) {
 }
 void Rain::Circle::Destory() {
 
-}
-Rain::Circle::Circle() {
 }
 
 void Rain::Circle::StartPathFinding() {

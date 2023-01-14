@@ -101,10 +101,13 @@ void Rain::Asset::SceneLoader::LoadEntity(lua_State* i_luaState) {
 	}
 	lua_pop(i_luaState, 1);
 
-	ECS::Entity* entity = Rain::Reflect::GetClass(script);
-	Rain::Rain3DGame::AddEntity(entity);
-	if(entity!=nullptr)
-	entity->Initialize(id,tag,name);
+	ECS::Entity* entity = Rain::Reflect::GetClass(script, id, tag, name);
+	if (entity != nullptr) {
+		Rain::Rain3DGame::AddEntity(entity);
+	}
+
+
+
 }
 
 void Rain::Asset::SceneLoader::LoadComponent(int i_id, lua_State* i_luaState) {
@@ -172,7 +175,7 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		std::string mesh_name = lua_tostring(i_luaState,-1);
 		lua_pop(i_luaState, 1);
 		MeshRender::MeshRenderSystem* n = MeshRender::MeshRenderSystem::GetInstance();
-		mesh = MeshRender::MeshRenderSystem::GetInstance()->meshes.find(mesh_name)->second;
+		mesh = MeshRender::MeshRenderSystem::GetInstance()->InitializeMesh(mesh_name.c_str());
 
 		Render::Effect* effect;
 		lua_pushstring(i_luaState, "effect");

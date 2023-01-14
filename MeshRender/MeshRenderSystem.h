@@ -13,7 +13,7 @@ namespace Rain {
 			void Initialize();
 			std::map<std::string, Render::Effect*> effects;
 			std::map<std::string, Render::Mesh*> meshes;
-
+			Rain::Render::Mesh* InitializeMesh(const char* i_name);
 		private:
 			static MeshRenderSystem* instance;
 			MeshRenderSystem();

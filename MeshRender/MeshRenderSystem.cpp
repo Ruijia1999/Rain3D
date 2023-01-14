@@ -10,21 +10,15 @@ Rain::MeshRender::MeshRenderSystem* Rain::MeshRender::MeshRenderSystem::GetInsta
 		return instance;
 	}
 }
-
+Rain::Render::Mesh* Rain::MeshRender::MeshRenderSystem::InitializeMesh(const char* i_name) {
+	Render::Mesh* mesh = new Render::Mesh();
+	meshes.insert(std::pair<std::string, Render::Mesh*>(i_name, mesh));
+	mesh->Initialize(i_name);
+	return mesh;
+}
 void Rain::MeshRender::MeshRenderSystem::Initialize() {
 	SystemBase::Initialize();
-	meshes.insert(std::pair<std::string, Render::Mesh*>("box.hrj", new Render::Mesh()));
-	meshes.find("box.hrj")->second->Initialize("box.hrj");
-	meshes.insert(std::pair<std::string, Render::Mesh*>("boxes.hrj", new Render::Mesh()));
-	meshes.find("boxes.hrj")->second->Initialize("boxes.hrj");
-	meshes.insert(std::pair<std::string, Render::Mesh*>("house.hrj", new Render::Mesh()));
-	meshes.find("house.hrj")->second->Initialize("house.hrj");
-	meshes.insert(std::pair<std::string, Render::Mesh*>("ss.hrj", new Render::Mesh()));
-	meshes.find("ss.hrj")->second->Initialize("ss.hrj");
-	meshes.insert(std::pair<std::string, Render::Mesh*>("cube.hrj", new Render::Mesh()));
-	meshes.find("cube.hrj")->second->Initialize("cube.hrj");
-	meshes.insert(std::pair<std::string, Render::Mesh*>("plane.hrj", new Render::Mesh()));
-	meshes.find("plane.hrj")->second->Initialize("plane.hrj");
+	
 	effects.insert(std::pair<std::string, Render::Effect*>("default", new Render::Effect()));
 	effects.find("default")->second->Initialize("VertexShader", "PixelShader");
 	effects.insert(std::pair<std::string, Render::Effect*>("red", new Render::Effect()));

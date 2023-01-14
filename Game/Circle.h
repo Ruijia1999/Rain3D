@@ -10,7 +10,8 @@ namespace Rain {
 	public:
 		ENTITY(Circle)
 		Circle();
-		void Initialize(int i_id, std::string i_tag, std::string i_name);
+		Circle(int i_id, std::string i_tag, std::string i_name);
+		void Initialize();
 		void Update(double i_timeSinceLastFrame);
 		void Destory();
 		void StartPathFinding();
