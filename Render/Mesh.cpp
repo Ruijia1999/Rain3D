@@ -70,7 +70,37 @@ void Rain::Render::Mesh::Initialize(const char* i_filePath) {
 	
 
 }
+Rain::Render::Mesh::Mesh() {
+	
+	m_vertexBuffer = nullptr;
+	m_indexBuffer = nullptr;
+	vertexData = nullptr;
+	indexData = nullptr;
+}
+Rain::Render::Mesh::Mesh(const Mesh& i_mesh) {
+	m_vertexBuffer = i_mesh.m_vertexBuffer;
+	m_indexBuffer = i_mesh.m_indexBuffer;
 
+	m_name = i_mesh.m_name;
+	vertexCount = i_mesh.vertexCount;
+	indexCount = i_mesh.indexCount;
+	vertexData = i_mesh.vertexData;
+	indexData = i_mesh.indexData;
+}
+Rain::Render::Mesh& Rain::Render::Mesh::operator=(const Mesh& i_mesh){
+	if (&i_mesh != this) {
+		m_vertexBuffer = i_mesh.m_vertexBuffer;
+		m_indexBuffer = i_mesh.m_indexBuffer;
+
+		m_name = i_mesh.m_name;
+		vertexCount = i_mesh.vertexCount;
+		indexCount = i_mesh.indexCount;
+		vertexData = i_mesh.vertexData;
+		indexData = i_mesh.indexData;
+	}
+	return *this;
+
+}
 void Rain::Render::Mesh::Draw() const {
 	// Bind a specific vertex buffer to the device as a data source
 	{
@@ -100,7 +130,7 @@ void Rain::Render::Mesh::Draw() const {
 
 void Rain::Render::Mesh::Load(int& i_vertexCount, int& i_indexCount, VertexFormat*& i_vertexData, IndexFormat*& i_indexData) {
 	lua_State* L = luaL_newstate();
-	auto ret = luaL_dofile(L, m_name);
+	auto ret = luaL_dofile(L, m_name.c_str());
 	lua_getglobal(L, "vertexCount");
 	i_vertexCount = lua_tointeger(L, -1);
 	lua_pop(L, 1);

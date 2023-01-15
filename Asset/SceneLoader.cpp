@@ -169,15 +169,21 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 
 #pragma region MeshRender
 	RegisterComponentCreator("MeshRender", [](int i_id, lua_State* i_luaState) {
-		Render::Mesh* mesh;
+		std::shared_ptr< Render::Mesh> mesh;
 		lua_pushstring(i_luaState, "mesh");
 		lua_gettable(i_luaState, -2);
 		std::string mesh_name = lua_tostring(i_luaState,-1);
 		lua_pop(i_luaState, 1);
 		MeshRender::MeshRenderSystem* n = MeshRender::MeshRenderSystem::GetInstance();
-		mesh = MeshRender::MeshRenderSystem::GetInstance()->InitializeMesh(mesh_name.c_str());
+		if (MeshRender::MeshRenderSystem::GetInstance()->meshes.find(mesh_name) == MeshRender::MeshRenderSystem::GetInstance()->meshes.end()) {
+			mesh = MeshRender::MeshRenderSystem::GetInstance()->InitializeMesh(mesh_name.c_str());
+		}
+		else {
+			mesh = MeshRender::MeshRenderSystem::GetInstance()->meshes.find(mesh_name)->second;
+		}
+		
 
-		Render::Effect* effect;
+		std::shared_ptr < Render::Effect> effect;
 		lua_pushstring(i_luaState, "effect");
 		lua_gettable(i_luaState, -2);
 		std::string effect_name = lua_tostring(i_luaState,-1);

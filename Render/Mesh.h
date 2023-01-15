@@ -3,7 +3,7 @@
 
 
 #include "windows/windows.h"
-
+#include <string>
 namespace Rain {
 	namespace Render {
 		struct VertexFormat {
@@ -22,13 +22,21 @@ namespace Rain {
 			ID3D11Buffer* m_indexBuffer = nullptr;
 		
 		public:
+
 			void Initialize(const char* i_filePath);
 			void Draw() const;
 			void CleanUp();
+			Mesh(const Mesh& i_mesh);
+			Mesh();
+			~Mesh() {
+				m_vertexBuffer = nullptr;
+				m_indexBuffer = nullptr;
+				delete vertexData;
+				delete indexData;
+			}
+			Mesh& operator=(const Mesh& i_mesh);
+			std::string m_name;
 
-			const char* m_name;
-
-		
 			//helper
 			//--------
 			int vertexCount;

@@ -4,7 +4,7 @@ Rain::MeshRender::MeshRenderComponent::MeshRenderComponent() {
 	mesh = nullptr;
 	effect = nullptr;
 }
-Rain::MeshRender::MeshRenderComponent::MeshRenderComponent(int i_id, const Render::Mesh* i_mesh, const Render::Effect* i_effect, Math::Vector4 i_color) {
+Rain::MeshRender::MeshRenderComponent::MeshRenderComponent(int i_id, const std::shared_ptr <Render::Mesh>& i_mesh, const std::shared_ptr < Render::Effect>& i_effect, Math::Vector4 i_color){
 	id = i_id;
 	mesh = i_mesh;
 	effect = i_effect;

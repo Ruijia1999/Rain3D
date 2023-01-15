@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+#include <memory>
 #include "ComponentBase.h"
 namespace Rain {
 	namespace ECS {
@@ -11,11 +12,16 @@ namespace Rain {
 		public:
 			virtual void Initialize();
 			void Update(uint64_t i_timeSinceLastFrame);
-			void Destroy();
 
 			void AddComponent(ComponentBase* component);
 			void RemoveComponent(const int i_id);
 
+			template<class T>
+			void Destroy() {
+				for (auto component : m_componnets) {
+					delete((T*)component);
+				}
+			}
 			template<class T>
 			T* GetComponent(const int i_id) {
 				for (auto component : m_componnets) {

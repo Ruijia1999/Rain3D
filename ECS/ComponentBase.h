@@ -1,6 +1,7 @@
 #ifndef RAIN_ECS_COMPONENTBASE
 #define RAIN_ECS_COMPONENTBASE
 #include <cstdint>
+#include <memory>
 namespace Rain {
 	namespace ECS {
 		class ComponentBase

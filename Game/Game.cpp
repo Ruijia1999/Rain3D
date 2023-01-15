@@ -7,6 +7,7 @@
 #include "Input/Mouse.h"
 #include "Input/Keyboard.h"
 #include "Application/Rain3DGame.h"
+#define CRTDBG_MAP_ALLOC
 #define MAX_LOADSTRING 100
 namespace {
     Rain::Rain3DGame mainGame;
@@ -250,6 +251,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         mainGame.ExitGame();
         PostQuitMessage(0);
+        //_CrtDumpMemoryLeaks();
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);

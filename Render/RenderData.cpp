@@ -1,14 +1,13 @@
 #include "RenderData.h"
 Rain::Render::RenderData::RenderData() {
-	mesh = nullptr;
-	effect = nullptr;
 }
-Rain::Render::RenderData::RenderData(const Mesh* i_mesh, const Effect* i_effect, const ConstantBuffer::VSConstantBuffer i_constantBuffer) {
-	mesh = i_mesh;
-	effect = i_effect;
-	constantBuffer = i_constantBuffer;
+Rain::Render::RenderData::RenderData(const std::shared_ptr<Mesh>& i_mesh, const std::shared_ptr <Effect>& i_effect, const ConstantBuffer::VSConstantBuffer i_constantBuffer):
+	mesh(i_mesh),
+    effect(i_effect),
+    constantBuffer(i_constantBuffer)
+{
+	int j = 0;
 }
 Rain::Render::RenderData::~RenderData() {
-	//delete mesh;
-	//delete effect;
+	int j = 0;
 }

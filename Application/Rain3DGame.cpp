@@ -47,6 +47,7 @@ void Rain::Rain3DGame::StartGame() {
     while (!stop) {
         Update();
     }
+    ClearUp();
     int exit = 1;
 }
 void Rain::Rain3DGame::InitializeSettings(Math::Vector3 ligthDirection, Math::Quaternion i_cameraRot, Math::Vector3 i_cameraPos) {
@@ -112,7 +113,7 @@ void Rain::Rain3DGame::Update() {
             vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(cameraRot, cameraPos);
 
             vsConstantBuffer.transform_worldToCamera.Inverse();
-            
+
             MeshRender::MeshRenderComponent* meshRender = MeshRender::MeshRenderSystem::GetInstance()->GetComponent<MeshRender::MeshRenderComponent>(go->id);
             vsConstantBuffer.color = meshRender->color;
             RenderData.push_back(Render::RenderData(meshRender->mesh, meshRender->effect, vsConstantBuffer));
@@ -127,5 +128,6 @@ void Rain::Rain3DGame::ExitGame() {
     stop = true;
 }
 void Rain::Rain3DGame::ClearUp() {
-    int j = 0;
+    Render::Graphics::ClearUp();
+    MeshRender::MeshRenderSystem::GetInstance()->ClearUp();
 }

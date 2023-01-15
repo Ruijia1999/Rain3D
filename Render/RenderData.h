@@ -9,10 +9,10 @@ namespace Rain {
 		struct RenderData
 		{
 			RenderData();
-			RenderData(const Mesh* i_mesh, const Effect* i_effect, const ConstantBuffer::VSConstantBuffer i_constantBuffer);
+			RenderData(const std::shared_ptr<Mesh>& i_mesh, const std::shared_ptr <Effect>& i_effect, const ConstantBuffer::VSConstantBuffer i_constantBuffer);
 			~RenderData();
-			const Mesh* mesh;
-			const Effect* effect;
+			const std::shared_ptr<Mesh> mesh;
+			const std::shared_ptr <Effect> effect;
 			ConstantBuffer::VSConstantBuffer constantBuffer;
 		};
 	}

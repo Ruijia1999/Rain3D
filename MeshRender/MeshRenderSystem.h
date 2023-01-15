@@ -3,6 +3,7 @@
 #include "Render/Effect.h"
 #include "Render/Mesh.h"
 #include "ECS/SystemBase.h"
+#include "MeshRenderComponent.h"
 #include <map>
 namespace Rain {
 	namespace MeshRender {
@@ -11,12 +12,19 @@ namespace Rain {
 			static MeshRenderSystem* GetInstance();
 
 			void Initialize();
-			std::map<std::string, Render::Effect*> effects;
-			std::map<std::string, Render::Mesh*> meshes;
-			Rain::Render::Mesh* InitializeMesh(const char* i_name);
+			void ClearUp () {
+				Destroy<MeshRenderComponent>();
+				delete instance;
+			}
+			std::map<std::string, std::shared_ptr<Render::Effect>> effects;
+			std::map<std::string, std::shared_ptr<Render::Mesh>> meshes;
+			std::shared_ptr<Render::Mesh> InitializeMesh(const char* i_name);
 		private:
 			static MeshRenderSystem* instance;
 			MeshRenderSystem();
+			~MeshRenderSystem() {
+				int i = 0;
+			}
 		};
 	}
 }

@@ -3,7 +3,7 @@
 #include <functional>
 #include "Math/Vector3.h"
 #include "Math/Quaternion.h"
-
+#include <memory>
 namespace Rain {
 	namespace Collision {
 		

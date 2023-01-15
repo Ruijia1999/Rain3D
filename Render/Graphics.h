@@ -26,6 +26,7 @@ namespace Rain {
 
 			static void Initialize(HWND hwnd, int width, int height);
 			static void DoFrame();
+			static void ClearUp();
 		private:
 			static void InitializeGraphics(HWND hwnd, int width, int height);
 			static void SetConstantBuffer();

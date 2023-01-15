@@ -64,6 +64,22 @@ void Rain::Render::Graphics::DoFrame() {
 	pSwapChain->Present(0, 0);
 	pVSConstantBuffer = nullptr;
 }
+void Rain::Render::Graphics::ClearUp(){
+	//for (auto renderData : NextRenderData) {
+	//	renderData.~RenderData();
+	//}
+	//for (auto renderData : CurrentRenderData) {
+	//	renderData.~RenderData();
+	//}
+	pDevice = nullptr;
+	pSwapChain = nullptr;
+	pContext = nullptr;
+	pTarget = nullptr;
+	pDSV = nullptr;
+	pDSState = nullptr;
+	pRasterState = nullptr;
+
+}
 void Rain::Render::Graphics::InitializeGraphics(HWND hWnd, int width, int height) {
 	//Set the device and swap chain
 	DXGI_SWAP_CHAIN_DESC sd = {};

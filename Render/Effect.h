@@ -17,6 +17,11 @@ namespace Rain {
 			void Bind() const;
 			void CleanUp();
 
+			~Effect() {
+				 m_PixelShader = nullptr;
+			     m_VertexShader = nullptr;
+				m_InputLayout = nullptr;
+			}
 			const char* m_name;
 		};
 	}
