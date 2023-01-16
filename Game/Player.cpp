@@ -1,4 +1,4 @@
-#include "Circle.h"
+#include "Player.h"
 #include "Transform/TransformComponent.h"
 #include "Transform/TransformSystem.h"
 #include "Input/Input.h"
@@ -20,17 +20,17 @@ namespace {
     Rain::Math::Vector3 direction;
 }
 
-Rain::Circle::Circle() :Entity() {
+Rain::Player::Player() :Entity() {
 
 }
-Rain::Circle::Circle(int i_id, std::string i_tag, std::string i_name) : Entity(i_id, i_tag, i_name) {
+Rain::Player::Player(int i_id, std::string i_tag, std::string i_name) : Entity(i_id, i_tag, i_name) {
 
 }
-void Rain::Circle::Initialize() {
+void Rain::Player::Initialize() {
 
     //Click and the object will move forward.
     Rain::Input::Mouse::BindEvent(MOUSE_LEFT_DOWN, [this](Rain::Input::MouseInfo info) {
-        this->StartPathFinding();
+        //this->StartPathFinding();
         /*Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
         transform->position = transform->position + Math::Vector3(0.0f, 0, 0.49f);
         int o = 1;*/
@@ -96,7 +96,7 @@ void Rain::Circle::Initialize() {
     aStar = new AI::AStar(map);
 
 }
-void Rain::Circle::Update(double i_timeSinceLastFrame) {
+void Rain::Player::Update(double i_timeSinceLastFrame) {
     Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
    
     //if (curPathNode == 0) {
@@ -123,11 +123,11 @@ void Rain::Circle::Update(double i_timeSinceLastFrame) {
     }
    
 }
-void Rain::Circle::Destory() {
+void Rain::Player::Destory() {
 
 }
 
-void Rain::Circle::StartPathFinding() {
+void Rain::Player::StartPathFinding() {
     Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
     Math::Vector3 end = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(5)->position;
     path.clear();
@@ -135,7 +135,7 @@ void Rain::Circle::StartPathFinding() {
     curPathNode = path.begin();
 }
 
-std::vector<int> Rain::Circle::CheckCollision() {
+std::vector<int> Rain::Player::CheckCollision() {
 
     std::vector<int> outcome;
     Rain::Math::Vector3 point = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(id)->position;
@@ -175,7 +175,7 @@ std::vector<int> Rain::Circle::CheckCollision() {
     return outcome;
 }
 
-void Rain::Circle::ModifyVelocity(Math::Vector2 i_curPos, Math::Vector2 i_aimPos, float i_radius, const std::vector<int>& i_obstacles) {
+void Rain::Player::ModifyVelocity(Math::Vector2 i_curPos, Math::Vector2 i_aimPos, float i_radius, const std::vector<int>& i_obstacles) {
     Math::Vector2 tangent0;
     EngineLog::Log("ss", "Collider");
     Collision::SphereCollider* collider = ((Collision::SphereCollider*)(ColliderSystem::GetInstance()->GetComponent<ColliderComponent>(i_obstacles[0]))->collider);

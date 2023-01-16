@@ -30,6 +30,7 @@
     <ClInclude Include="rImage.h">
       <Filter>RenderData</Filter>
     </ClInclude>
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderSystem.d3d.cpp">
@@ -60,6 +61,7 @@
     <ClCompile Include="rMesh.cpp">
       <Filter>RenderData</Filter>
     </ClCompile>
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="OpenGL">

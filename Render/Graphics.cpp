@@ -51,9 +51,11 @@ void Rain::Render::Graphics::DoFrame() {
 		// Fill in the subresource data.
 		
 		InitData.pSysMem = &(renderData.constantBuffer);
-
-		if (FAILED(pDevice->CreateBuffer(&constDesc, &InitData, &pVSConstantBuffer))) {
+		if (pDevice != nullptr) {
+			if (FAILED(pDevice->CreateBuffer(&constDesc, &InitData, &pVSConstantBuffer))) {
+			}
 		}
+
 
 		pContext->VSSetConstantBuffers(0, 1, &pVSConstantBuffer);
 		renderData.effect->Bind();
