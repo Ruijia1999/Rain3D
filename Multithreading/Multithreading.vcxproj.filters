@@ -3,9 +3,11 @@
   <ItemGroup>
     <ClCompile Include="Multithreading.cpp" />
     <ClCompile Include="RainThread.cpp" />
+    <ClCompile Include="Semaphore.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Multithreading.h" />
     <ClInclude Include="RainThread.h" />
+    <ClInclude Include="Semaphore.h" />
   </ItemGroup>
 </Project>

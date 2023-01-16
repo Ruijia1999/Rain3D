@@ -69,11 +69,17 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Event\Event.vcxproj">
+      <Project>{7878b4de-1a09-4e5e-b6f1-f6941c2aa292}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Lua\Lua.vcxproj">
       <Project>{33d7da59-534c-40ee-9f25-59b184db5cef}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Math\Math.vcxproj">
       <Project>{026e63e4-4685-487c-a2af-cabde1858bf8}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Multithreading\Multithreading.vcxproj">
+      <Project>{f5f60413-b760-4577-bd03-8d9cd04286c0}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">

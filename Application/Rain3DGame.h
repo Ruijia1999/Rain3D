@@ -11,7 +11,8 @@ namespace Rain {
 
     public:
         void Initialize(HWND hWnd, int width, int height);
-        static void StartGame();
+        static void StartGameThread();
+        static void StartRenderThread();
         static void Update();
         static void AddEntity(Rain::ECS::Entity* i_entity);
         static ECS::Entity* GetEntity(int i_id);

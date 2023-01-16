@@ -16,7 +16,7 @@
 #include "MeshRender/MeshRender.h"
 #include "Render/RenderSystem.h"
 #include "Collision/ColliderSystem.h"
-
+#include "Multithreading\Semaphore.h"
 using namespace std::placeholders;
 using namespace Rain;
 namespace {
@@ -27,6 +27,7 @@ namespace {
     Math::Vector3 cameraPos;
     Math::Quaternion cameraRot;
     std::thread* mainGameThread;
+    std::thread* renderThread;
 }
 void Rain::Rain3DGame::AddEntity(Rain::ECS::Entity* i_entity) {
     entities.push_back(i_entity);
@@ -42,13 +43,22 @@ Rain::ECS::Entity* Rain::Rain3DGame::GetEntity(int i_id) {
 }
 
 
-void Rain::Rain3DGame::StartGame() {
-    stop = false;
+void Rain::Rain3DGame::StartGameThread() {
+
     while (!stop) {
         Update();
     }
     ClearUp();
     int exit = 1;
+}
+
+void Rain::Rain3DGame::StartRenderThread() {
+    Semaphore::Signal(NEW_RENDERDATA_PREPARED);
+    while (!stop) {
+        Rain::Render::RenderSystem::Update();
+    }
+    Render::RenderSystem::CleanUp();
+
 }
 void Rain::Rain3DGame::InitializeSettings(Math::Vector3 ligthDirection, Math::Quaternion i_cameraRot, Math::Vector3 i_cameraPos) {
     cameraPos = i_cameraPos;
@@ -57,7 +67,7 @@ void Rain::Rain3DGame::InitializeSettings(Math::Vector3 ligthDirection, Math::Qu
 void Rain::Rain3DGame::Initialize(HWND hWnd, int width, int height) {
 
     Rain::EngineLog::CreateLogFile("log");
-
+    Rain::Semaphore::Initialize();
     Rain::Input::Initialize();
     Rain::Time::Initialize();
     Rain::Render::RenderSystem::Initialize(hWnd,width, height);
@@ -72,7 +82,9 @@ void Rain::Rain3DGame::Initialize(HWND hWnd, int width, int height) {
         entity->Initialize();
     }
     timeLastFrame = 0;
-    mainGameThread = new std::thread( StartGame);
+    stop = false;
+    mainGameThread = new std::thread( StartGameThread);
+    renderThread = new std::thread(StartRenderThread);
 }
 
 void Rain::Rain3DGame::Update() {
@@ -120,9 +132,11 @@ void Rain::Rain3DGame::Update() {
 
         }
     }
+    Semaphore::Wait(DATA_RENDER_COMPLETED);
     Render::Graphics::NextRenderData.resize(RenderData.size());
     Render::Graphics::NextRenderData.swap(RenderData);
-    Rain::Render::RenderSystem::Update();
+    Semaphore::Signal(NEW_RENDERDATA_PREPARED);
+
 }
 void Rain::Rain3DGame::ExitGame() {
     stop = true;

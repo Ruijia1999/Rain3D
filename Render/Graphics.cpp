@@ -2,7 +2,7 @@
 #include "Mesh.h"
 #include "Effect.h"
 #include "ConstantBuffer.h"
-
+#include "Multithreading/Semaphore.h"
 namespace {
 	ID3D11Buffer* pVSConstantBuffer = nullptr;
 	D3D11_BUFFER_DESC constDesc;
@@ -32,7 +32,7 @@ void Rain::Render::Graphics::Initialize(HWND hWnd, int width, int height) {
 
 }
 void Rain::Render::Graphics::DoFrame() {
-
+	Semaphore::Wait(NEW_RENDERDATA_PREPARED);
 	D3D11_SUBRESOURCE_DATA InitData;
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
@@ -63,6 +63,7 @@ void Rain::Render::Graphics::DoFrame() {
 
 	pSwapChain->Present(0, 0);
 	pVSConstantBuffer = nullptr;
+	Semaphore::Signal(DATA_RENDER_COMPLETED);
 }
 void Rain::Render::Graphics::ClearUp(){
 	//for (auto renderData : NextRenderData) {
