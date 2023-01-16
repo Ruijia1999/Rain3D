@@ -16,6 +16,16 @@ std::shared_ptr<Rain::Render::Mesh> Rain::MeshRender::MeshRenderSystem::Initiali
 	mesh->Initialize(i_name);
 	return meshes.find(i_name)->second;
 }
+
+std::shared_ptr<Rain::Render::Texture> Rain::MeshRender::MeshRenderSystem::InitializeTexture(const char* i_name) {
+	if (strcmp(i_name,"")==0) {
+		return nullptr;
+	}
+	Render::Texture* texture = new Render::Texture();
+	textures.insert(std::pair<std::string, Render::Texture*>(i_name, texture));
+	texture->Initialize(i_name);
+	return textures.find(i_name)->second;
+}
 void Rain::MeshRender::MeshRenderSystem::Initialize() {
 	SystemBase::Initialize();
 	

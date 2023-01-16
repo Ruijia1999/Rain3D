@@ -56,11 +56,14 @@ void Rain::Render::Graphics::DoFrame() {
 			}
 		}
 
-
+		if(pContext!=nullptr)
 		pContext->VSSetConstantBuffers(0, 1, &pVSConstantBuffer);
 		renderData.effect->Bind();
+		if (renderData.texture != nullptr) {
+			renderData.texture->Draw();
+		}
 		renderData.mesh->Draw();
-		
+
 	}
 
 	pSwapChain->Present(0, 0);

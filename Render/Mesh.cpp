@@ -152,7 +152,7 @@ void Rain::Render::Mesh::Load(int& i_vertexCount, int& i_indexCount, VertexForma
 		i_vertexData[i - 1].y = lua_tonumber(L, -1);
 		lua_pop(L, 1);
 		lua_rawgeti(L, -1, 3);
-		i_vertexData[i - 1].z = lua_tonumber(L, -1);
+		i_vertexData[i - 1].z = -1*lua_tonumber(L, -1);
 		lua_pop(L, 1);
 		//normal
 		lua_rawgeti(L, -1, 4);

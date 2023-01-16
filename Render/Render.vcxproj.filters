@@ -83,6 +83,9 @@
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl" />
     <FxCompile Include="PixelShader.hlsl" />
-    <FxCompile Include="red.hlsl" />
+    <FxCompile Include="water.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

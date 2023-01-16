@@ -17,6 +17,9 @@
     <QtRcc>
       <OverrideClCompile>false</OverrideClCompile>
     </QtRcc>
+    <Link>
+      <AdditionalDependencies>$(OutputDir)DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <BuildMacro Include="TempDir">

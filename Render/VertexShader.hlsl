@@ -18,6 +18,9 @@ struct VertexOut {
 	float3 nml:TEXCOORD1;
 	float4 color:COLOR;
 };
+Texture2D colorMap : register(t0);
+SamplerState colorSampler: register(s0);
+
 VertexOut main(VertexIn input)
 {
 	VertexOut output;
@@ -36,7 +39,7 @@ VertexOut main(VertexIn input)
 	float4 normal_world = mul(transform_localToWorld, normal_local);
 
 	output.pos = vertexPosition_projected / vertexPosition_projected[3];
-	output.uv = input.uv;
+	output.uv = float2(input.uv[0],1-input.uv[1]);
 	output.nml = float3(normal_world[0], normal_world[1], normal_world[2]) ;
 	output.color = color;
 	return output;

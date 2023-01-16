@@ -189,7 +189,20 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		std::string effect_name = lua_tostring(i_luaState,-1);
 		lua_pop(i_luaState, 1);
 		effect = MeshRender::MeshRenderSystem::GetInstance()->effects.find(effect_name)->second;
+		
+		std::shared_ptr< Render::Texture> texture;
+		lua_pushstring(i_luaState, "texture");
+		lua_gettable(i_luaState, -2);
+		std::string texture_name = lua_tostring(i_luaState, -1);
+		lua_pop(i_luaState, 1);
+		if (MeshRender::MeshRenderSystem::GetInstance()->textures.find(texture_name) == MeshRender::MeshRenderSystem::GetInstance()->textures.end()) {
+			texture = MeshRender::MeshRenderSystem::GetInstance()->InitializeTexture(texture_name.c_str());
+		}
+		else {
+			texture = MeshRender::MeshRenderSystem::GetInstance()->textures.find(texture_name)->second;
+		}
 
+		
 		Math::Vector4 color;
 		lua_pushstring(i_luaState, "color");
 		lua_gettable(i_luaState, -2);
@@ -200,7 +213,7 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		}
 		lua_pop(i_luaState, 1);
 
-		MeshRender::MeshRenderSystem::GetInstance()->AddComponent(new MeshRender::MeshRenderComponent(i_id, mesh, effect,color));
+		MeshRender::MeshRenderSystem::GetInstance()->AddComponent(new MeshRender::MeshRenderComponent(i_id, mesh, effect,texture,color));
 		}
 	);
 #pragma endregion
