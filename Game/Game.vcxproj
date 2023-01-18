@@ -131,9 +131,7 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>copy "$(TargetPath)" "$(GameInstallDir)$(TargetFileName)" /y
-copy "$(OutputDir)PixelShader.cso" "$(GameInstallDir)PixelShader" /y
-copy "$(OutputDir)VertexShader.cso" "$(GameInstallDir)VertexShader" /y</Command>
+      <Command>copy "$(TargetPath)" "$(GameInstallDir)$(TargetFileName)" /y</Command>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -153,9 +151,7 @@ copy "$(OutputDir)VertexShader.cso" "$(GameInstallDir)VertexShader" /y</Command>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>copy "$(TargetPath)" "$(GameInstallDir)$(TargetFileName)" /y
-copy "$(OutputDir)PixelShader.cso" "$(GameInstallDir)PixelShader" /y
-copy "$(OutputDir)VertexShader.cso" "$(GameInstallDir)VertexShader" /y</Command>
+      <Command>copy "$(TargetPath)" "$(GameInstallDir)$(TargetFileName)" /y</Command>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>

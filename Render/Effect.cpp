@@ -33,7 +33,7 @@ void Rain::Render::Effect::Initialize(const char* i_vertexShaderPath, const char
 	vertexPath.append(suffix);
 	temp = std::wstring(vertexPath.begin(), vertexPath.end());
 	LPCWSTR vertexFilename = temp.c_str();
-	if (FAILED(D3DReadFileToBlob(L"VertexShader", &pVertexBlob))) {
+	if (FAILED(D3DReadFileToBlob(vertexFilename, &pVertexBlob))) {
 
 	}
 	if (FAILED(Graphics::pDevice->CreateVertexShader(pVertexBlob->GetBufferPointer(), pVertexBlob->GetBufferSize(), nullptr, &m_VertexShader))) {
