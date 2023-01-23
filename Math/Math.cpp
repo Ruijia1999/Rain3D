@@ -61,8 +61,8 @@ Rain::Math::Matrix Rain::Math::CreateCameraToProjectedTransform_perspective(cons
 //
 //}
 
-Rain::Math::Matrix Rain::Math::CreateLocalToWorldTransform(const Quaternion& i_ObjectOrientation, const Vector3& i_ObjectPosition) {
-	return Matrix(i_ObjectOrientation, i_ObjectPosition);
+Rain::Math::Matrix Rain::Math::CreateLocalToWorldTransform(const Quaternion& i_ObjectOrientation, const Vector3& i_ObjectPosition, const Vector3& i_ObjectScale) {
+	return Matrix(i_ObjectOrientation, i_ObjectPosition, i_ObjectScale);
 }
 
 float Rain::Math::Distance(Math::Vector2 i_vtc0, Math::Vector2 i_vtc1) {

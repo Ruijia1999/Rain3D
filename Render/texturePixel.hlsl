@@ -16,7 +16,8 @@ struct VertexOut {
 };
 float4 main(VertexOut input) : SV_TARGET
 {
-	float rate = 0.3 + max(0, dot(-1 * input.nml, float3(0.5, -0.707, 0.5))) * 0.7;
+	float3 nml = normalize(input.nml);
+	float rate = 0.3 + max(0, dot(-1 * nml, float3(0.5, -0.707, 0.5))) * 0.7;
     float4 col = colorMap.Sample(colorSampler, input.uv);
 	return float4(rate* col[0], rate * col[1], rate * col[2],1);
 }

@@ -25,7 +25,7 @@ Rain::Math::Matrix::Matrix(
 
 }
 
-Rain::Math::Matrix::Matrix(const Quaternion& i_rotation, const Vector3& i_translation)
+Rain::Math::Matrix::Matrix(const Quaternion& i_rotation, const Vector3& i_translation, const Vector3& i_scale)
 {
 	m30 = 0;
 	m31 = 0;
@@ -59,6 +59,47 @@ Rain::Math::Matrix::Matrix(const Quaternion& i_rotation, const Vector3& i_transl
 	m20= _2xz - _2yw;
 	m21 = _2yz + _2xw;
 	m22 = 1.0f - _2xx - _2yy;
+
+	m00 *= i_scale.x;
+	m11 *= i_scale.y;
+	m22 *= i_scale.z;
+}
+
+Rain::Math::Matrix::Matrix(const Quaternion& i_rotation, const Vector3& i_translation)
+{
+	m30 = 0;
+	m31 = 0;
+	m32 = 0;
+	m03 = i_translation.x;
+	m13 = i_translation.y;
+	m23 = i_translation.z;
+	m33 = 1;
+
+	const auto _2x = i_rotation.x + i_rotation.x;
+	const auto _2y = i_rotation.y + i_rotation.y;
+	const auto _2z = i_rotation.z + i_rotation.z;
+	const auto _2xx = i_rotation.x * _2x;
+	const auto _2xy = _2x * i_rotation.y;
+	const auto _2xz = _2x * i_rotation.z;
+	const auto _2xw = _2x * i_rotation.w;
+	const auto _2yy = _2y * i_rotation.y;
+	const auto _2yz = _2y * i_rotation.z;
+	const auto _2yw = _2y * i_rotation.w;
+	const auto _2zz = _2z * i_rotation.z;
+	const auto _2zw = _2z * i_rotation.w;
+
+	m00 = 1.0f - _2yy - _2zz;
+	m01 = _2xy - _2zw;
+	m02 = _2xz + _2yw;
+
+	m10 = _2xy + _2zw;
+	m11 = 1.0f - _2xx - _2zz;
+	m12 = _2yz - _2xw;
+
+	m20 = _2xz - _2yw;
+	m21 = _2yz + _2xw;
+	m22 = 1.0f - _2xx - _2yy;
+
 }
 
 Rain::Math::Matrix& Rain::Math::Matrix::operator=(const Matrix& i_matrix4) {
