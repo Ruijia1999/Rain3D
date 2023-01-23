@@ -38,7 +38,7 @@ void Rain::Render::Mesh::Initialize(const char* i_filePath) {
 	// Index Buffer
 	{
 		const auto bufferSize = sizeof(indexData[0]) * indexCount;
-
+		const auto indexDataSize = sizeof(indexData[0]);
 		const auto indexBufferDescription = [bufferSize]
 		{
 			D3D11_BUFFER_DESC indexBufferDescription{};
@@ -116,7 +116,7 @@ void Rain::Render::Mesh::Draw() const {
 	// Bind the index format
 	{
 
-		constexpr DXGI_FORMAT indexFormat = DXGI_FORMAT_R16_UINT;
+		constexpr DXGI_FORMAT indexFormat = DXGI_FORMAT_R32_UINT;
 		// The indices start at the beginning of the buffer
 		constexpr unsigned int offset = 0;
 		Graphics::pContext->IASetIndexBuffer(m_indexBuffer, indexFormat, offset);

@@ -12,7 +12,7 @@ namespace Rain {
 			FLOAT u,v;
 		};
 		struct IndexFormat {
-			INT16 x, y, z;
+			INT32 x, y, z;
 		};
 
 		class Mesh
