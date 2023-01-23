@@ -130,7 +130,9 @@ void Rain::Render::Mesh::Draw() const {
 
 void Rain::Render::Mesh::Load(int& i_vertexCount, int& i_indexCount, VertexFormat*& i_vertexData, IndexFormat*& i_indexData) {
 	lua_State* L = luaL_newstate();
-	auto ret = luaL_dofile(L, m_name.c_str());
+	std::string filePath = "meshes/";
+	filePath.append(m_name);
+	auto ret = luaL_dofile(L, filePath.c_str());
 	lua_getglobal(L, "vertexCount");
 	i_vertexCount = lua_tointeger(L, -1);
 	lua_pop(L, 1);
@@ -170,6 +172,16 @@ void Rain::Render::Mesh::Load(int& i_vertexCount, int& i_indexCount, VertexForma
 		lua_pop(L, 1);
 		lua_rawgeti(L, -1, 8);
 		i_vertexData[i - 1].v = lua_tonumber(L, -1);
+		lua_pop(L, 1);
+		//tangent
+		lua_rawgeti(L, -1, 9);
+		i_vertexData[i - 1].tx = lua_tonumber(L, -1);
+		lua_pop(L, 1);
+		lua_rawgeti(L, -1, 10);
+		i_vertexData[i - 1].ty = lua_tonumber(L, -1);
+		lua_pop(L, 1);
+		lua_rawgeti(L, -1, 11);
+		i_vertexData[i - 1].tz = lua_tonumber(L, -1);
 		lua_pop(L, 1);
 
 		lua_pop(L, 1);

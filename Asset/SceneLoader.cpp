@@ -202,7 +202,18 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 			texture = MeshRender::MeshRenderSystem::GetInstance()->textures.find(texture_name)->second;
 		}
 
-		
+		std::shared_ptr< Render::Texture> normalMap;
+		lua_pushstring(i_luaState, "normalMap");
+		lua_gettable(i_luaState, -2);
+		std::string normal_name = lua_tostring(i_luaState, -1);
+		lua_pop(i_luaState, 1);
+		if (MeshRender::MeshRenderSystem::GetInstance()->textures.find(normal_name) == MeshRender::MeshRenderSystem::GetInstance()->textures.end()) {
+			normalMap = MeshRender::MeshRenderSystem::GetInstance()->InitializeTexture(normal_name.c_str());
+		}
+		else {
+			normalMap = MeshRender::MeshRenderSystem::GetInstance()->textures.find(normal_name)->second;
+		}
+
 		Math::Vector4 color;
 		lua_pushstring(i_luaState, "color");
 		lua_gettable(i_luaState, -2);
@@ -213,7 +224,7 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		}
 		lua_pop(i_luaState, 1);
 
-		MeshRender::MeshRenderSystem::GetInstance()->AddComponent(new MeshRender::MeshRenderComponent(i_id, mesh, effect,texture,color));
+		MeshRender::MeshRenderSystem::GetInstance()->AddComponent(new MeshRender::MeshRenderComponent(i_id, mesh, effect,texture,normalMap,color));
 		}
 	);
 #pragma endregion

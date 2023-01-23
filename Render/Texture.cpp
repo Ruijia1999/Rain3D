@@ -7,13 +7,12 @@ void Rain::Render::Texture::Initialize(const char* i_fileName) {
 	const char* suffix = ".dds";
 
 	std::string texturePath;
+	texturePath.append("textures/");
 	texturePath.append(i_fileName);
 	texturePath.append(suffix);
 	std::wstring temp = std::wstring(texturePath.begin(), texturePath.end());
 	LPCWSTR filename = temp.c_str();
 
-	//wchar_t ext[_MAX_EXT] = {};
-	//_wsplitpath_s(filename, nullptr, 0, nullptr, 0, nullptr, 0, ext, _MAX_EXT);
 	ScratchImage image;
 	LoadFromDDSFile(filename, DDS_FLAGS_NONE, nullptr, image);
 	HRESULT res = CreateShaderResourceView(Graphics::pDevice, image.GetImages(), image.GetImageCount(), image.GetMetadata(), &pShaderResourceView);
@@ -33,7 +32,7 @@ void Rain::Render::Texture::Initialize(const char* i_fileName) {
 
 
 }
-void Rain::Render::Texture::Draw() {
-	Graphics::pContext->PSSetShaderResources(0, 1, &pShaderResourceView);
-	Graphics::pContext->PSSetSamplers(0, 1, &pSamplerState);
+void Rain::Render::Texture::Draw(int slot) {
+	Graphics::pContext->PSSetShaderResources(slot, 1, &pShaderResourceView);
+	Graphics::pContext->PSSetSamplers(slot, 1, &pSamplerState);
 }

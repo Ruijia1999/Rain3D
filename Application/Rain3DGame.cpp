@@ -141,7 +141,7 @@ void Rain::Rain3DGame::Update() {
 
             MeshRender::MeshRenderComponent* meshRender = MeshRender::MeshRenderSystem::GetInstance()->GetComponent<MeshRender::MeshRenderComponent>(go->id);
             vsConstantBuffer.color = meshRender->color;
-            RenderData.push_back(Render::RenderData(meshRender->mesh, meshRender->effect, meshRender->texture, vsConstantBuffer));
+            RenderData.push_back(Render::RenderData(meshRender->mesh, meshRender->effect, meshRender->texture, meshRender->normalMap, vsConstantBuffer));
 
         }
     }

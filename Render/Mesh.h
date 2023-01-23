@@ -9,6 +9,7 @@ namespace Rain {
 		struct VertexFormat {
 			FLOAT x, y, z;
 			FLOAT nx, ny, nz;
+			FLOAT tx, ty, tz;
 			FLOAT u,v;
 		};
 		struct IndexFormat {

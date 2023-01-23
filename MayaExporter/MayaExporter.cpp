@@ -831,7 +831,7 @@ namespace
 					for (int i = 0; i < vertexCount; i++) {
 						fout << "	{" << i_vertexArray[i].vertex.x << "," << i_vertexArray[i].vertex.y << "," << -1*i_vertexArray[i].vertex.z <<","
 							 << i_vertexArray[i].vertex.nx << "," << i_vertexArray[i].vertex.ny << "," << i_vertexArray[i].vertex.nz <<","
-							 << i_vertexArray[i].vertex.u << "," << i_vertexArray[i].vertex.v<< "},""\n";
+							 << i_vertexArray[i].vertex.u << "," << i_vertexArray[i].vertex.v<< "," << i_vertexArray[i].vertex.tx<<","<<i_vertexArray[i].vertex.ty<<"," << i_vertexArray[i].vertex.tz<< "},""\n";
 					}
 				}
 				fout << "}""\n";

@@ -12,6 +12,7 @@ void Rain::Render::Effect::Initialize(const char* i_vertexShaderPath, const char
 	const char* suffix = ".cso";
 
 	std::string pixelPath;
+	pixelPath.append("shaders/pixelShader/");
 	pixelPath.append(i_pixelShaderPath);
 	pixelPath.append(suffix);
 	std::wstring temp = std::wstring(pixelPath.begin(), pixelPath.end());
@@ -29,6 +30,7 @@ void Rain::Render::Effect::Initialize(const char* i_vertexShaderPath, const char
 	ID3DBlob* pVertexBlob;
 
 	std::string vertexPath;
+	vertexPath.append("shaders/vertexShader/");
 	vertexPath.append(i_vertexShaderPath);
 	vertexPath.append(suffix);
 	temp = std::wstring(vertexPath.begin(), vertexPath.end());
@@ -42,7 +44,7 @@ void Rain::Render::Effect::Initialize(const char* i_vertexShaderPath, const char
 
 	//Set the input layout
 
-	D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
+	D3D11_INPUT_ELEMENT_DESC polygonLayout[4];
 	polygonLayout[0].SemanticName = "POSITION";
 	polygonLayout[0].SemanticIndex = 0;
 	polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -59,17 +61,25 @@ void Rain::Render::Effect::Initialize(const char* i_vertexShaderPath, const char
 	polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	polygonLayout[1].InstanceDataStepRate = 0;
 
-	polygonLayout[2].SemanticName = "TEXCOORD";
+	polygonLayout[2].SemanticName = "TANGENT";
 	polygonLayout[2].SemanticIndex = 0;
-	polygonLayout[2].Format = DXGI_FORMAT_R32G32_FLOAT;
+	polygonLayout[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 	polygonLayout[2].InputSlot = 0;
 	polygonLayout[2].AlignedByteOffset = 24;
 	polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	polygonLayout[2].InstanceDataStepRate = 0;
 
+	polygonLayout[3].SemanticName = "TEXCOORD";
+	polygonLayout[3].SemanticIndex = 0;
+	polygonLayout[3].Format = DXGI_FORMAT_R32G32_FLOAT;
+	polygonLayout[3].InputSlot = 0;
+	polygonLayout[3].AlignedByteOffset = 36;
+	polygonLayout[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	polygonLayout[3].InstanceDataStepRate = 0;
+
 	HRESULT result;
 	if (FAILED(result = Graphics::pDevice->CreateInputLayout(
-		polygonLayout, (UINT)3,
+		polygonLayout, (UINT)4,
 		pVertexBlob->GetBufferPointer(),
 		pVertexBlob->GetBufferSize(),
 		&m_InputLayout
@@ -82,16 +92,18 @@ void Rain::Render::Effect::Initialize(const char* i_vertexShaderPath, const char
 
 void Rain::Render::Effect::Bind() const {
 
-	//Set input layout
-	Graphics::pContext->IASetInputLayout(m_InputLayout);
-	//Bind vertexShader
-	Graphics::pContext->VSSetShader(m_VertexShader, 0, 0);
-	//Bind pixelShader
-	Graphics::pContext->PSSetShader(m_PixelShader, 0, 0);
-	// bind depth state
-	Graphics::pContext->OMSetDepthStencilState(Graphics::pDSState, 0u);
-	// Now set the rasterizer state.
-	Graphics::pContext->RSSetState(Graphics::pRasterState);
+	if (Graphics::pContext != nullptr) {
+		//Set input layout
+		Graphics::pContext->IASetInputLayout(m_InputLayout);
+		//Bind vertexShader
+		Graphics::pContext->VSSetShader(m_VertexShader, 0, 0);
+		//Bind pixelShader
+		Graphics::pContext->PSSetShader(m_PixelShader, 0, 0);
+		// bind depth state
+		Graphics::pContext->OMSetDepthStencilState(Graphics::pDSState, 0u);
+		// Now set the rasterizer state.
+		Graphics::pContext->RSSetState(Graphics::pRasterState);
+	}
 
 }
 

@@ -17,11 +17,9 @@ struct VertexOut {
 	float4 pos:SV_POSITION;
 	float2 uv:TEXCOORD0;
 	float3 nml:TEXCOORD1;
-	float3 tan:TEXCOORD2;
 	float4 color:COLOR;
 };
 Texture2D colorMap : register(t0);
-Texture2D normalMap : register(t1);
 SamplerState colorSampler: register(s0);
 SamplerState normalSampler: register(s1);
 
@@ -42,15 +40,9 @@ VertexOut main(VertexIn input)
 
 	float4 normal_world = mul(transform_localToWorld, normal_local);
 
-	//tangent
-	float4 tangent_local = float4(input.tan, 0.0);
-
-	float4 tangent_world = mul(transform_localToWorld, tangent_local);
-
 	output.pos = vertexPosition_projected / vertexPosition_projected[3];
 	output.uv = float2(input.uv[0],1-input.uv[1]);
 	output.nml = float3(normal_world[0], normal_world[1], normal_world[2]) ;
-	output.tan = float3(tangent_world[0], tangent_world[1], tangent_world[2]);
 	output.color = color;
 	return output;
 }

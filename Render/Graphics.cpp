@@ -60,7 +60,10 @@ void Rain::Render::Graphics::DoFrame() {
 		pContext->VSSetConstantBuffers(0, 1, &pVSConstantBuffer);
 		renderData.effect->Bind();
 		if (renderData.texture != nullptr) {
-			renderData.texture->Draw();
+			renderData.texture->Draw(0);
+		}
+		if (renderData.normalMap!= nullptr) {
+			renderData.normalMap->Draw(1);
 		}
 		renderData.mesh->Draw();
 

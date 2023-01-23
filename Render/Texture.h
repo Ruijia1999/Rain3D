@@ -13,7 +13,7 @@ namespace Rain {
 			ID3D11ShaderResourceView* pShaderResourceView = nullptr;
 			ID3D11SamplerState* pSamplerState = nullptr;
 			void Initialize(const char* i_fileName);
-			void Draw();
+			void Draw(int slot);
 		};
 
 
