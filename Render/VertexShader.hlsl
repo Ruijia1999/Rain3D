@@ -35,7 +35,7 @@ VertexOut main(VertexIn input)
 	float4 vertexPosition_world = mul(transform_localToWorld,vertexPosition_local);
 	
     float4 vertexPosition_camera = mul(transform_worldToCamera, vertexPosition_world);
-		
+
 	float4 vertexPosition_projected = mul(transform_cameraToProjected, vertexPosition_camera);
 	//normal
 	float4 normal_local = float4(input.nml, 0.0);
@@ -46,8 +46,17 @@ VertexOut main(VertexIn input)
 	float4 tangent_local = float4(input.tan, 0.0);
 
 	float4 tangent_world = mul(transform_localToWorld, tangent_local);
-
-	output.pos = vertexPosition_projected / vertexPosition_projected[3];
+	float z = vertexPosition_projected[3];
+	if (z < 0) {
+		output.pos = vertexPosition_projected / (-1*vertexPosition_projected[3]);
+	}
+	else if (z > 0) {
+		output.pos = vertexPosition_projected / vertexPosition_projected[3];
+	}
+	else {
+		output.pos = float4(0, 0, 0, 1);
+	}
+	
 	output.uv = float2(input.uv[0],1-input.uv[1]);
 	output.nml = float3(normal_world[0], normal_world[1], normal_world[2]) ;
 	output.tan = float3(tangent_world[0], tangent_world[1], tangent_world[2]);

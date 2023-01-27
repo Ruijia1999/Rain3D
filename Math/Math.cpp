@@ -24,7 +24,7 @@ Rain::Math::Matrix Rain::Math::CreateCameraToProjectedTransform_perspective(cons
     const float far_plane,  // Distance to far clipping 
                             // plane
     const float fov_horiz,  // Horizontal field of view 
-                            // angle, in radians
+                            // angle, in radians`   
     const float fov_vert)   // Vertical field of view 
                             // angle, in radians
 {
