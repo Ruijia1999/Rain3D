@@ -6,6 +6,9 @@
 namespace {
 	ID3D11Buffer* pVSConstantBuffer = nullptr;
 	D3D11_BUFFER_DESC constDesc;
+
+	ID3D11Buffer* pWaterConstantBuffer = nullptr;
+	D3D11_BUFFER_DESC waterConstDesc;
 }
 
 std::vector<Rain::Render::RenderData> Rain::Render::Graphics::NextRenderData;
@@ -29,6 +32,13 @@ void Rain::Render::Graphics::Initialize(HWND hWnd, int width, int height) {
 	constDesc.MiscFlags = 0;
 	constDesc.StructureByteStride = 0;
 
+	waterConstDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	waterConstDesc.ByteWidth = sizeof(ConstantBuffer::WaterConstantBuffer);
+	waterConstDesc.Usage = D3D11_USAGE_DYNAMIC;
+	waterConstDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	waterConstDesc.MiscFlags = 0;
+	waterConstDesc.StructureByteStride = 0;
+
 
 }
 void Rain::Render::Graphics::DoFrame() {
@@ -36,6 +46,10 @@ void Rain::Render::Graphics::DoFrame() {
 	D3D11_SUBRESOURCE_DATA InitData;
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
+
+	D3D11_SUBRESOURCE_DATA InitData2;
+	InitData2.SysMemPitch = 0;
+	InitData2.SysMemSlicePitch = 0;
 
 	const float bgColor[] = { 135/255.0f, 206/255.0f, 250/255.0f, 1.0f };
 	if (pTarget != nullptr) {
@@ -50,14 +64,26 @@ void Rain::Render::Graphics::DoFrame() {
 	for (auto renderData : NextRenderData) {
 		// Fill in the subresource data.
 		
-		InitData.pSysMem = &(renderData.constantBuffer);
+		
 		if (pDevice != nullptr) {
+			
+			InitData.pSysMem = &(renderData.constantBuffer);
 			if (FAILED(pDevice->CreateBuffer(&constDesc, &InitData, &pVSConstantBuffer))) {
+				int j = 0;
 			}
+
+			InitData2.pSysMem = &(renderData.waterBuffer);
+			HRESULT rsl = pDevice->CreateBuffer(&constDesc, &InitData, &pWaterConstantBuffer);
+			if (FAILED(rsl)) {
+				int j = 0;
+			}
+
 		}
 
 		if(pContext!=nullptr)
 		pContext->VSSetConstantBuffers(0, 1, &pVSConstantBuffer);
+		pContext->PSSetConstantBuffers(1, 1, &pWaterConstantBuffer);
+
 		renderData.effect->Bind();
 		if (renderData.texture != nullptr) {
 			renderData.texture->Draw(0);
@@ -71,6 +97,8 @@ void Rain::Render::Graphics::DoFrame() {
 
 	pSwapChain->Present(0, 0);
 	pVSConstantBuffer = nullptr;
+	pWaterConstantBuffer = nullptr;
+
 	Semaphore::Signal(DATA_RENDER_COMPLETED);
 }
 void Rain::Render::Graphics::ClearUp(){

@@ -3,7 +3,7 @@
 
 
 #include "windows/windows.h"
-
+#include <string>
 namespace Rain {
 	namespace Render {
 		class Effect
@@ -22,7 +22,7 @@ namespace Rain {
 			     m_VertexShader = nullptr;
 				m_InputLayout = nullptr;
 			}
-			const char* m_name;
+			std::string m_name;
 		};
 	}
 }

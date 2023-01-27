@@ -14,6 +14,14 @@ namespace Rain {
 				Math::Matrix transform_cameraToProjected;
 				Math::Vector4 color;
 			};
+
+			struct WaterConstantBuffer {
+				WaterConstantBuffer();
+				WaterConstantBuffer& operator=(const WaterConstantBuffer& i_constantBuffer);
+				WaterConstantBuffer(const WaterConstantBuffer& i_constantBuffer);
+				Math::Vector2 speed;
+				float time;
+			};
 		};
 	}
 }

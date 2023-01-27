@@ -84,6 +84,7 @@
     <FxCompile Include="VertexShader.hlsl" />
     <FxCompile Include="PixelShader.hlsl" />
     <FxCompile Include="texturePixel.hlsl" />
+    <FxCompile Include="waterPixel.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

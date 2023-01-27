@@ -23,6 +23,7 @@ namespace {
     std::vector<Rain::Render::RenderData> RenderData;
     std::vector<Rain::ECS::Entity*> entities;
     uint64_t timeLastFrame;
+    uint64_t timeStart;
     bool stop;
     Math::Vector3 cameraPos;
     Math::Quaternion cameraRot;
@@ -44,7 +45,7 @@ Rain::ECS::Entity* Rain::Rain3DGame::GetEntity(int i_id) {
 
 
 void Rain::Rain3DGame::StartGameThread() {
-
+    timeStart = Time::GetCurrentSystemTimeTickCount();
     while (!stop) {
         Update();
     }
@@ -142,7 +143,12 @@ void Rain::Rain3DGame::Update() {
 
             MeshRender::MeshRenderComponent* meshRender = MeshRender::MeshRenderSystem::GetInstance()->GetComponent<MeshRender::MeshRenderComponent>(go->id);
             vsConstantBuffer.color = meshRender->color;
-            RenderData.push_back(Render::RenderData(meshRender->mesh, meshRender->effect, meshRender->texture, meshRender->normalMap, vsConstantBuffer));
+
+            Render::ConstantBuffer::WaterConstantBuffer waterConstantBuffer;
+            waterConstantBuffer.time = Time::ConvertTicksToSeconds(Time::GetCurrentSystemTimeTickCount()-timeStart);
+            waterConstantBuffer.speed.x = 2;
+            waterConstantBuffer.speed.y = 2;
+            RenderData.push_back(Render::RenderData(meshRender->mesh, meshRender->effect, meshRender->texture, meshRender->normalMap, vsConstantBuffer, waterConstantBuffer));
 
         }
     }
