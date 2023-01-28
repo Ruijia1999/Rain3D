@@ -6,6 +6,7 @@
 #include <string>
 #include <thread>
 #include <mutex>
+#include <corecrt_math_defines.h>
 #include "GameObject/GameObjectSystem.h"
 #include "Transform/TransformSystem.h"
 #include "Render/RenderData.h"
@@ -27,6 +28,9 @@ namespace {
     bool stop;
     Math::Vector3 cameraPos;
     Math::Quaternion cameraRot;
+    Math::Vector4 lightColor;
+    Math::Vector3 lightDir;
+
     std::thread* mainGameThread;
     std::thread* renderThread;
 }
@@ -61,9 +65,13 @@ void Rain::Rain3DGame::StartRenderThread() {
     Render::RenderSystem::CleanUp();
 
 }
-void Rain::Rain3DGame::InitializeSettings(Math::Vector3 ligthDirection, Math::Quaternion i_cameraRot, Math::Vector3 i_cameraPos) {
+void Rain::Rain3DGame::InitializeSettings(Math::Vector4 i_lightColor, Math::Vector3 i_ligthDirection, Math::Quaternion i_cameraRot, Math::Vector3 i_cameraPos) {
     cameraPos = i_cameraPos;
     cameraRot = i_cameraRot;
+    lightColor = i_lightColor;
+    i_ligthDirection.Normalize();
+    lightDir = i_ligthDirection;
+
 }
 void Rain::Rain3DGame::Initialize(HWND hWnd, int width, int height) {
 
@@ -132,7 +140,7 @@ void Rain::Rain3DGame::Update() {
 
             Render::ConstantBuffer::VSConstantBuffer vsConstantBuffer;
             Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(go->id);
-            vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1, 200, 1.57079632, 1.02477892);
+            vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1, 200, 90*M_PI/180.0, 60 * M_PI / 180.0);
             //vsConstantBuffer.transform_cameraToProjected.Inverse();
             vsConstantBuffer.transform_localToWorld = Math::CreateLocalToWorldTransform(transform->rotation, transform->position, transform->scale);
             vsConstantBuffer.transform_localToWorld.Inverse();
@@ -144,11 +152,14 @@ void Rain::Rain3DGame::Update() {
             MeshRender::MeshRenderComponent* meshRender = MeshRender::MeshRenderSystem::GetInstance()->GetComponent<MeshRender::MeshRenderComponent>(go->id);
             vsConstantBuffer.color = meshRender->color;
 
-            Render::ConstantBuffer::WaterConstantBuffer waterConstantBuffer;
-            waterConstantBuffer.time = Time::ConvertTicksToSeconds(Time::GetCurrentSystemTimeTickCount()-timeStart);
-            waterConstantBuffer.speed.x = 2;
-            waterConstantBuffer.speed.y = 2;
-            RenderData.push_back(Render::RenderData(meshRender->mesh, meshRender->effect, meshRender->texture, meshRender->normalMap, vsConstantBuffer, waterConstantBuffer));
+            
+            Render::ConstantBuffer::FrameConstantBuffer frameConstantBuffer;
+            frameConstantBuffer.time = Time::ConvertTicksToSeconds(Time::GetCurrentSystemTimeTickCount() - timeStart);
+            frameConstantBuffer.cameraForward = Math::Vector3(0, 0, 1);
+            frameConstantBuffer.cameraPos = cameraPos;
+            frameConstantBuffer.lightColor = lightColor;
+            frameConstantBuffer.lightDirection = lightDir;
+            RenderData.push_back(Render::RenderData(meshRender->mesh, meshRender->effect, meshRender->texture, meshRender->normalMap, vsConstantBuffer, frameConstantBuffer));
 
         }
     }

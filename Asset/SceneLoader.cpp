@@ -38,7 +38,8 @@ void Rain::Asset::SceneLoader::LoadScene(const char* i_filePath) {
 void Rain::Asset::SceneLoader::LoadSettings(lua_State* i_luaState) {
 	Math::Vector3 cameraPos;
 	Math::Quaternion cameraRot;
-	
+	Math::Vector3 lightDirection;
+	Math::Vector4 lightColor;
 
 	lua_pushstring(i_luaState, "camera");
 	lua_gettable(i_luaState, -2);
@@ -59,8 +60,29 @@ void Rain::Asset::SceneLoader::LoadSettings(lua_State* i_luaState) {
 		lua_pop(i_luaState, 1);
 	}
 	lua_pop(i_luaState, 1);
+	lua_pop(i_luaState, 1);
 
-	Rain::Rain3DGame::InitializeSettings(cameraPos, cameraRot, cameraPos);
+	lua_pushstring(i_luaState, "light");
+	lua_gettable(i_luaState, -2);
+	lua_pushstring(i_luaState, "direction");
+	lua_gettable(i_luaState, -2);
+	for (int i = 1; i <= 3; ++i) {
+		lua_rawgeti(i_luaState, -1, i);
+		lightDirection[i - 1] = lua_tonumber(i_luaState, -1);
+		lua_pop(i_luaState, 1);
+	}
+	lua_pop(i_luaState, 1);
+
+	lua_pushstring(i_luaState, "color");
+	lua_gettable(i_luaState, -2);
+	for (int i = 1; i <= 4; ++i) {
+		lua_rawgeti(i_luaState, -1, i);
+		lightColor[i - 1] = lua_tonumber(i_luaState, -1);
+		lua_pop(i_luaState, 1);
+	}
+	lua_pop(i_luaState, 1);
+	lua_pop(i_luaState, 1);
+	Rain::Rain3DGame::InitializeSettings(lightColor,lightDirection, cameraRot, cameraPos);
 }
 
 void Rain::Asset::SceneLoader::LoadEntity(lua_State* i_luaState) {

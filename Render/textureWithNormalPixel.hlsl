@@ -9,6 +9,16 @@ cbuffer VSConstantBuffer : register(b0)
 	matrix transform_cameraToProjected;
 	float4 color;
 }
+cbuffer frameConstantBuffer : register(b1)
+{
+
+	float time;
+	float3 lightDirection;
+	float3 cameraPos;
+	float3 cameraForward;
+	float4 lightColor;
+
+}
 struct VertexOut {
 	float4 pos:SV_POSITION;
 	float2 uv:TEXCOORD0;
@@ -44,7 +54,7 @@ float4 main(VertexOut input) : SV_TARGET
 	float3 unitNormal = normalize(input.nml);
 	float3 unitTangent = normalize(input.tan);
 	float3 normal = NormalSampleToWorldSpace(normalSample, unitNormal, unitTangent);
-	float rate = 0.3 + max(0, dot(-1 * normal, float3(0.5, -0.707, 0.5))) * 0.7;
-	return float4(rate* col[0], rate * col[1], rate * col[2],1);
+	float rate = 0.3 + max(0, dot(-1 * normal, lightDirection)) * 0.7;
+	return float4(rate* col[0], rate * col[1], rate * col[2], input.color[3]);
 }
 

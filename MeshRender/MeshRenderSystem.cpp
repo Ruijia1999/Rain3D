@@ -32,11 +32,11 @@ void Rain::MeshRender::MeshRenderSystem::Initialize() {
 	effects.insert(std::pair<std::string, std::shared_ptr<Render::Effect>>("default", new Render::Effect()));
 	effects.find("default")->second->Initialize("defaultVertex", "defaultPixel");
 	effects.insert(std::pair<std::string, std::shared_ptr<Render::Effect>>("texture", new Render::Effect()));
-	effects.find("texture")->second->Initialize("defaultVertex", "texturePixel");
+	effects.find("texture")->second->Initialize("textureVertex", "texturePixel");
 	effects.insert(std::pair<std::string, std::shared_ptr<Render::Effect>>("textureWithNormal", new Render::Effect()));
-	effects.find("textureWithNormal")->second->Initialize("VertexShader", "PixelShader");
+	effects.find("textureWithNormal")->second->Initialize("textureWithNormalVertex", "textureWithNormalPixel");
 	effects.insert(std::pair<std::string, std::shared_ptr<Render::Effect>>("water", new Render::Effect()));
-	effects.find("water")->second->Initialize("VertexShader", "waterPixel");
+	effects.find("water")->second->Initialize("waterVertex", "waterPixel");
 }
 
 Rain::MeshRender::MeshRenderSystem::MeshRenderSystem() {

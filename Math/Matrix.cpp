@@ -65,14 +65,14 @@ Rain::Math::Matrix::Matrix(const Quaternion& i_rotation, const Vector3& i_transl
 	m22 *= i_scale.z;
 }
 
-Rain::Math::Matrix::Matrix(const Quaternion& i_rotation, const Vector3& i_translation)
+Rain::Math::Matrix::Matrix(const Quaternion& i_rotation)
 {
 	m30 = 0;
 	m31 = 0;
 	m32 = 0;
-	m03 = i_translation.x;
-	m13 = i_translation.y;
-	m23 = i_translation.z;
+	m03 = 0;
+	m13 = 0;
+	m23 = 0;
 	m33 = 1;
 
 	const auto _2x = i_rotation.x + i_rotation.x;
@@ -99,6 +99,29 @@ Rain::Math::Matrix::Matrix(const Quaternion& i_rotation, const Vector3& i_transl
 	m20 = _2xz - _2yw;
 	m21 = _2yz + _2xw;
 	m22 = 1.0f - _2xx - _2yy;
+
+}
+Rain::Math::Matrix::Matrix(const Vector3& i_translation)
+{
+	m30 = 0;
+	m31 = 0;
+	m32 = 0;
+	m03 = i_translation.x;
+	m13 = i_translation.y;
+	m23 = i_translation.z;
+	m33 = 1;
+
+	m00 = 1;
+	m01 = 0;
+	m02 = 0;
+
+	m10 = 0;
+	m11 = 1;
+	m12 = 0;
+
+	m20 = 0;
+	m21 = 0;
+	m22 = 1;
 
 }
 
@@ -137,7 +160,7 @@ void Rain::Math::Matrix::Inverse() {
 	
 }
 
-Rain::Math::Matrix& Rain::Math::Matrix::operator/(const float i)const {
+Rain::Math::Matrix Rain::Math::Matrix::operator/(const float i)const {
 	static Matrix matrix;
 	return matrix;
 }
@@ -150,12 +173,26 @@ Rain::Math::Vector4 Rain::Math::Matrix::operator*(const Vector4& i_vec4){
 	outcome.w = i_vec4.x * m03 + i_vec4.y * m13 + i_vec4.z * m23 + i_vec4.w * m33;
 	return outcome;
 }
-//Rain::Math::Vector4 Rain::Math::Matrix::operator*(const Vector4& i_vec4) const {
-//	Vector4 outcome;
-//	int i = this->matrix[0][1];
-//	outcome.x = i_vec4.x * matrix[0][0] + i_vec4.y * matrix[1][0] + i_vec4.z * matrix[2][0] + i_vec4.w * matrix[3][0];
-//	outcome.y = i_vec4.x * matrix[0][1] + i_vec4.y * matrix[1][1] + i_vec4.z * matrix[2][1] + i_vec4.w * matrix[3][1];
-//	outcome.z = i_vec4.x * matrix[0][2] + i_vec4.y * matrix[1][2] + i_vec4.z * matrix[2][2] + i_vec4.w * matrix[3][2];
-//	outcome.w = i_vec4.x * matrix[0][3] + i_vec4.y * matrix[1][3] + i_vec4.z * matrix[2][3] + i_vec4.w * matrix[3][3];
-//	return outcome;
-//}
+Rain::Math::Matrix Rain::Math::Matrix::operator*(const Matrix& i_max) const {
+	Matrix outcome;
+	outcome.m00 = m00 * i_max.m00 + m01 * i_max.m10 + m02 * i_max.m20 + m03 * i_max.m30;
+	outcome.m01 = m00 * i_max.m01 + m01 * i_max.m11 + m02 * i_max.m21 + m03 * i_max.m31;
+	outcome.m02 = m00 * i_max.m02 + m01 * i_max.m12 + m02 * i_max.m22 + m03 * i_max.m32;
+	outcome.m03 = m00 * i_max.m03 + m01 * i_max.m13 + m02 * i_max.m23 + m03 * i_max.m33;
+
+	outcome.m10 = m10 * i_max.m00 + m11 * i_max.m10 + m12 * i_max.m20 + m13 * i_max.m30;
+	outcome.m11 = m10 * i_max.m01 + m11 * i_max.m11 + m12 * i_max.m21 + m13 * i_max.m31;
+	outcome.m12 = m10 * i_max.m02 + m11 * i_max.m12 + m12 * i_max.m22 + m13 * i_max.m32;
+	outcome.m13 = m10 * i_max.m03 + m11 * i_max.m13 + m12 * i_max.m23 + m13 * i_max.m33;
+	
+	outcome.m20 = m20 * i_max.m00 + m21 * i_max.m10 + m22 * i_max.m20 + m23 * i_max.m30;
+	outcome.m21 = m20 * i_max.m01 + m21 * i_max.m11 + m22 * i_max.m21 + m23 * i_max.m31;
+	outcome.m22 = m20 * i_max.m02 + m21 * i_max.m12 + m22 * i_max.m22 + m23 * i_max.m32;
+	outcome.m23 = m20 * i_max.m03 + m21 * i_max.m13 + m22 * i_max.m23 + m23 * i_max.m33;
+
+	outcome.m30 = m30 * i_max.m00 + m31 * i_max.m10 + m32 * i_max.m20 + m33 * i_max.m30;
+	outcome.m31 = m30 * i_max.m01 + m31 * i_max.m11 + m32 * i_max.m21 + m33 * i_max.m31;
+	outcome.m32 = m30 * i_max.m02 + m31 * i_max.m12 + m32 * i_max.m22 + m33 * i_max.m32;
+	outcome.m33 = m30 * i_max.m03 + m31 * i_max.m13 + m32 * i_max.m23 + m33 * i_max.m33;
+	return outcome;
+}

@@ -17,7 +17,9 @@ Rain::Math::Vector3 Rain::Math::Cross(const Vector3& i_lhs, const Vector3& i_rhs
 Rain::Math::Matrix Rain::Math::CreateWorldToCameraTransform(
 	const Quaternion& i_cameraOrientation, const Vector3& i_cameraPosition)
 {
-	return Matrix(i_cameraOrientation, i_cameraPosition*-1);
+    Matrix rot = Matrix(i_cameraOrientation);
+    Matrix tra = Matrix(i_cameraPosition * -1);
+	return rot*tra;
 }
 Rain::Math::Matrix Rain::Math::CreateCameraToProjectedTransform_perspective(const float near_plane, // Distance to near clipping 
                                          // plane

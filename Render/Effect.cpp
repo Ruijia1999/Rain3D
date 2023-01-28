@@ -103,6 +103,7 @@ void Rain::Render::Effect::Bind() const {
 		Graphics::pContext->OMSetDepthStencilState(Graphics::pDSState, 0u);
 		// Now set the rasterizer state.
 		Graphics::pContext->RSSetState(Graphics::pRasterState);
+		Graphics::pContext->OMSetBlendState(Graphics::pBlendState, nullptr, 0xFFFFFFFF);
 	}
 
 }

@@ -15,13 +15,18 @@ namespace Rain {
 				Math::Vector4 color;
 			};
 
-			struct WaterConstantBuffer {
-				WaterConstantBuffer();
-				WaterConstantBuffer& operator=(const WaterConstantBuffer& i_constantBuffer);
-				WaterConstantBuffer(const WaterConstantBuffer& i_constantBuffer);
-				Math::Vector2 speed;
+			struct FrameConstantBuffer {
+				FrameConstantBuffer();
+				FrameConstantBuffer& operator=(const FrameConstantBuffer& i_constantBuffer);
+				FrameConstantBuffer(const FrameConstantBuffer& i_constantBuffer);
 				float time;
+				Math::Vector3 lightDirection;
+				Math::Vector3 cameraPos;
+				Math::Vector3 cameraForward;
+				Math::Vector4 lightColor;
+				Math::Vector2 padding;
 			};
+
 		};
 	}
 }

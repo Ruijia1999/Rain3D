@@ -15,6 +15,10 @@ Rain::Render::ConstantBuffer::VSConstantBuffer& Rain::Render::ConstantBuffer::VS
 	return *this;
 }
 
+Rain::Render::ConstantBuffer::FrameConstantBuffer::FrameConstantBuffer() {
+
+}
+
 Rain::Render::ConstantBuffer::VSConstantBuffer::VSConstantBuffer(const VSConstantBuffer& i_constantBuffer) {
 	transform_localToWorld = i_constantBuffer.transform_localToWorld;
 	transform_worldToCamera = i_constantBuffer.transform_worldToCamera;
@@ -22,20 +26,22 @@ Rain::Render::ConstantBuffer::VSConstantBuffer::VSConstantBuffer(const VSConstan
 	color = i_constantBuffer.color;
 }
 
-Rain::Render::ConstantBuffer::WaterConstantBuffer::WaterConstantBuffer() {
-	int j = 90;
+Rain::Render::ConstantBuffer::FrameConstantBuffer::FrameConstantBuffer(const FrameConstantBuffer& i_constantBuffer) {
+	time = i_constantBuffer.time;
+	lightDirection = i_constantBuffer.lightDirection;
+	cameraPos = i_constantBuffer.cameraPos;
+	cameraForward = i_constantBuffer.cameraForward;
+	lightColor = i_constantBuffer.lightColor;
 }
 
-Rain::Render::ConstantBuffer::WaterConstantBuffer& Rain::Render::ConstantBuffer::WaterConstantBuffer::operator=(const WaterConstantBuffer& i_constantBuffer) {
+Rain::Render::ConstantBuffer::FrameConstantBuffer& Rain::Render::ConstantBuffer::FrameConstantBuffer::operator=(const FrameConstantBuffer& i_constantBuffer) {
 	if (this != &i_constantBuffer) {
-		speed = i_constantBuffer.speed;
 		time = i_constantBuffer.time;
+		lightDirection = i_constantBuffer.lightDirection;
+		cameraPos = i_constantBuffer.cameraPos;
+		cameraForward = i_constantBuffer.cameraForward;
+		lightColor = i_constantBuffer.lightColor;
 	}
 
-	return *this;
-}
-
-Rain::Render::ConstantBuffer::WaterConstantBuffer::WaterConstantBuffer(const WaterConstantBuffer& i_constantBuffer) {
-	speed = i_constantBuffer.speed;
-	time = i_constantBuffer.time;
+	return *this; 
 }

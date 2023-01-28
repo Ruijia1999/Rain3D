@@ -20,9 +20,11 @@ namespace Rain {
 			static ID3D11DepthStencilView* pDSV;
 			static ID3D11DepthStencilState* pDSState;
 			static ID3D11RasterizerState* pRasterState;
+			static ID3D11BlendState* pBlendState;
 			static DirectX::XMMATRIX m_projectionMatrix;
 			static DirectX::XMMATRIX m_worldMatrix;
 			static DirectX::XMMATRIX m_orthoMatrix;
+
 
 			static void Initialize(HWND hwnd, int width, int height);
 			static void DoFrame();

@@ -7,8 +7,8 @@ namespace {
 	ID3D11Buffer* pVSConstantBuffer = nullptr;
 	D3D11_BUFFER_DESC constDesc;
 
-	ID3D11Buffer* pWaterConstantBuffer = nullptr;
-	D3D11_BUFFER_DESC waterConstDesc;
+	ID3D11Buffer* pFrameConstantBuffer = nullptr;
+	D3D11_BUFFER_DESC frameConstDesc;
 }
 
 std::vector<Rain::Render::RenderData> Rain::Render::Graphics::NextRenderData;
@@ -20,6 +20,7 @@ ID3D11RenderTargetView* Rain::Render::Graphics::pTarget;
 ID3D11DepthStencilView* Rain::Render::Graphics::pDSV;
 ID3D11DepthStencilState* Rain::Render::Graphics::pDSState;
 ID3D11RasterizerState* Rain::Render::Graphics::pRasterState;
+ID3D11BlendState* Rain::Render::Graphics::pBlendState;
 
 void Rain::Render::Graphics::Initialize(HWND hWnd, int width, int height) {
 	InitializeGraphics(hWnd, width, height);
@@ -32,12 +33,12 @@ void Rain::Render::Graphics::Initialize(HWND hWnd, int width, int height) {
 	constDesc.MiscFlags = 0;
 	constDesc.StructureByteStride = 0;
 
-	waterConstDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	waterConstDesc.ByteWidth = sizeof(ConstantBuffer::WaterConstantBuffer);
-	waterConstDesc.Usage = D3D11_USAGE_DYNAMIC;
-	waterConstDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	waterConstDesc.MiscFlags = 0;
-	waterConstDesc.StructureByteStride = 0;
+	frameConstDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	frameConstDesc.ByteWidth = sizeof(ConstantBuffer::FrameConstantBuffer);
+	frameConstDesc.Usage = D3D11_USAGE_DYNAMIC;
+	frameConstDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	frameConstDesc.MiscFlags = 0;
+	frameConstDesc.StructureByteStride = 0;
 
 
 }
@@ -47,11 +48,8 @@ void Rain::Render::Graphics::DoFrame() {
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
 
-	D3D11_SUBRESOURCE_DATA InitData2;
-	InitData2.SysMemPitch = 0;
-	InitData2.SysMemSlicePitch = 0;
 
-	const float bgColor[] = { 135/255.0f, 206/255.0f, 250/255.0f, 1.0f };
+	const float bgColor[] = { 0, 0, 0, 1.0f };
 	if (pTarget != nullptr) {
 		pContext->ClearRenderTargetView(pTarget, bgColor);
 	}
@@ -72,18 +70,20 @@ void Rain::Render::Graphics::DoFrame() {
 				int j = 0;
 			}
 
-			InitData2.pSysMem = &(renderData.waterBuffer);
-			HRESULT rsl = pDevice->CreateBuffer(&constDesc, &InitData, &pWaterConstantBuffer);
-			if (FAILED(rsl)) {
+			InitData.pSysMem = &(renderData.frameBuffer);
+			if (FAILED(pDevice->CreateBuffer(&frameConstDesc, &InitData, &pFrameConstantBuffer))) {
 				int j = 0;
 			}
 
 		}
 
-		if(pContext!=nullptr)
-		pContext->VSSetConstantBuffers(0, 1, &pVSConstantBuffer);
-		pContext->PSSetConstantBuffers(1, 1, &pWaterConstantBuffer);
+		if (pContext != nullptr) {
+			pContext->VSSetConstantBuffers(0, 1, &pVSConstantBuffer);
+			pContext->VSSetConstantBuffers(1, 1, &pFrameConstantBuffer);
+			pContext->PSSetConstantBuffers(1, 1, &pFrameConstantBuffer);
+		}
 
+	
 		renderData.effect->Bind();
 		if (renderData.texture != nullptr) {
 			renderData.texture->Draw(0);
@@ -97,17 +97,12 @@ void Rain::Render::Graphics::DoFrame() {
 
 	pSwapChain->Present(0, 0);
 	pVSConstantBuffer = nullptr;
-	pWaterConstantBuffer = nullptr;
+	pFrameConstantBuffer = nullptr;
 
 	Semaphore::Signal(DATA_RENDER_COMPLETED);
 }
 void Rain::Render::Graphics::ClearUp(){
-	//for (auto renderData : NextRenderData) {
-	//	renderData.~RenderData();
-	//}
-	//for (auto renderData : CurrentRenderData) {
-	//	renderData.~RenderData();
-	//}
+
 	pDevice = nullptr;
 	pSwapChain = nullptr;
 	pContext = nullptr;
@@ -115,6 +110,7 @@ void Rain::Render::Graphics::ClearUp(){
 	pDSV = nullptr;
 	pDSState = nullptr;
 	pRasterState = nullptr;
+	pBlendState = nullptr;
 
 }
 void Rain::Render::Graphics::InitializeGraphics(HWND hWnd, int width, int height) {
@@ -235,6 +231,27 @@ void Rain::Render::Graphics::InitializeGraphics(HWND hWnd, int width, int height
 	vp.TopLeftY = 0.0f;
 	pContext->RSSetViewports(1u, &vp);
 
+	//Blend State
+	D3D11_BLEND_DESC blendDesc;
+
+
+	blendDesc.AlphaToCoverageEnable = false;
+	blendDesc.IndependentBlendEnable = false;
+
+
+	blendDesc.RenderTarget[0].BlendEnable = true;
+	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	HRESULT hr= pDevice->CreateBlendState(&blendDesc, &pBlendState);
+	if (FAILED(hr)) {
+		int j = 1;
+	}
 
 }
 

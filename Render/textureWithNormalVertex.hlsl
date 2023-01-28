@@ -6,7 +6,16 @@ cbuffer VSConstantBuffer : register(b0)
 	matrix transform_cameraToProjected;
 	float4 color;
 }
+cbuffer frameConstantBuffer : register(b1)
+{
 
+	float time;
+	float3 lightDirection;
+	float3 cameraPos;
+	float3 cameraForward;
+	float4 lightColor;
+
+}
 struct VertexIn {
 	float3 pos:POSITION;
 	float3 nml:NORMAL;
