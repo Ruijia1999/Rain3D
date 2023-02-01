@@ -93,16 +93,16 @@ void Rain::Rain3DGame::Initialize(HWND hWnd, int width, int height) {
     timeLastFrame = 0;
     //Move the camera.
     Rain::Input::KeyBoard::BindEvent(0x25, KEYSTAY, [](Rain::Input::KeyBoard::KeyInfo info) {
-        cameraPos.x -= 0.01f;
+        cameraPos.x -= 0.01;
         });
     Rain::Input::KeyBoard::BindEvent(0x27, KEYSTAY, [](Rain::Input::KeyBoard::KeyInfo info) {
-        cameraPos.x += 0.01f;
+        cameraPos.x +=0.01;
         });
     Rain::Input::KeyBoard::BindEvent(0x26, KEYSTAY, [](Rain::Input::KeyBoard::KeyInfo info) {
-        cameraPos.z += 0.01f;
+        cameraPos.z += 0.01;
         });
     Rain::Input::KeyBoard::BindEvent(0x28, KEYSTAY, [](Rain::Input::KeyBoard::KeyInfo info) {
-        cameraPos.z -= 0.01f;
+        cameraPos.z -= 0.01;
         });
     stop = false;
     mainGameThread = new std::thread( StartGameThread);
@@ -140,7 +140,7 @@ void Rain::Rain3DGame::Update() {
 
             Render::ConstantBuffer::VSConstantBuffer vsConstantBuffer;
             Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(go->id);
-            vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1, 200, 90*M_PI/180.0, 60 * M_PI / 180.0);
+            vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1, 5000, 90*M_PI/180.0, 60 * M_PI / 180.0);
             //vsConstantBuffer.transform_cameraToProjected.Inverse();
             vsConstantBuffer.transform_localToWorld = Math::CreateLocalToWorldTransform(transform->rotation, transform->position, transform->scale);
             vsConstantBuffer.transform_localToWorld.Inverse();

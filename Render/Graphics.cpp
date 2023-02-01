@@ -49,7 +49,7 @@ void Rain::Render::Graphics::DoFrame() {
 	InitData.SysMemSlicePitch = 0;
 
 
-	const float bgColor[] = { 0, 0, 0, 1.0f };
+	const float bgColor[] = { 1, 1, 1, 1.0f };
 	if (pTarget != nullptr) {
 		pContext->ClearRenderTargetView(pTarget, bgColor);
 	}
