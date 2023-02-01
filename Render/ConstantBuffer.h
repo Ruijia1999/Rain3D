@@ -2,30 +2,35 @@
 #define RAIN_RENDER_CONSTANTBUFFER
 
 #include "Math/Math.h"
+#include "windows\windows.h"
+
 namespace Rain {
 	namespace Render {
-		namespace ConstantBuffer {
-			struct VSConstantBuffer {
-				VSConstantBuffer();
-				VSConstantBuffer& operator=(const VSConstantBuffer& i_constantBuffer);
-				VSConstantBuffer(const VSConstantBuffer& i_constantBuffer);
-				Math::Matrix transform_localToWorld;
-				Math::Matrix transform_worldToCamera;
-				Math::Matrix transform_cameraToProjected;
-				Math::Vector4 color;
-			};
+		enum class ConstantBufferTypes : uint8_t {
+			Object = 0,
+			GameScene = 1,
+			Count,
+			Invalid = Count,
+		};
+		class ConstantBuffer {
+		public:
+			void Bind() const;
+			void Update(const void* const i_data);
 
-			struct FrameConstantBuffer {
-				FrameConstantBuffer();
-				FrameConstantBuffer& operator=(const FrameConstantBuffer& i_constantBuffer);
-				FrameConstantBuffer(const FrameConstantBuffer& i_constantBuffer);
-				float time;
-				Math::Vector3 lightDirection;
-				Math::Vector3 cameraPos;
-				Math::Vector3 cameraForward;
-				Math::Vector4 lightColor;
-				Math::Vector2 padding;
-			};
+			// Initialize / Clean Up
+			//----------------------
+
+			void Initialize(const void* const i_initialData = nullptr);
+			void CleanUp();
+
+			ConstantBuffer(const ConstantBufferTypes i_type);
+			~ConstantBuffer();
+
+		private:
+			size_t m_size = 0;
+			const ConstantBufferTypes m_type = ConstantBufferTypes::Invalid;
+			ID3D11Buffer* m_buffer = nullptr;
+
 
 		};
 	}

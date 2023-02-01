@@ -4,11 +4,8 @@
 #include "ConstantBuffer.h"
 #include "Multithreading/Semaphore.h"
 namespace {
-	ID3D11Buffer* pVSConstantBuffer = nullptr;
-	D3D11_BUFFER_DESC constDesc;
+	Rain::Render::ConstantBuffer object;
 
-	ID3D11Buffer* pFrameConstantBuffer = nullptr;
-	D3D11_BUFFER_DESC frameConstDesc;
 }
 
 std::vector<Rain::Render::RenderData> Rain::Render::Graphics::NextRenderData;
@@ -25,28 +22,10 @@ ID3D11BlendState* Rain::Render::Graphics::pBlendState;
 void Rain::Render::Graphics::Initialize(HWND hWnd, int width, int height) {
 	InitializeGraphics(hWnd, width, height);
 
-	
-	constDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	constDesc.ByteWidth = sizeof(ConstantBuffer::VSConstantBuffer);
-	constDesc.Usage = D3D11_USAGE_DYNAMIC;
-	constDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	constDesc.MiscFlags = 0;
-	constDesc.StructureByteStride = 0;
-
-	frameConstDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	frameConstDesc.ByteWidth = sizeof(ConstantBuffer::FrameConstantBuffer);
-	frameConstDesc.Usage = D3D11_USAGE_DYNAMIC;
-	frameConstDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	frameConstDesc.MiscFlags = 0;
-	frameConstDesc.StructureByteStride = 0;
-
-
 }
 void Rain::Render::Graphics::DoFrame() {
 	Semaphore::Wait(NEW_RENDERDATA_PREPARED);
-	D3D11_SUBRESOURCE_DATA InitData;
-	InitData.SysMemPitch = 0;
-	InitData.SysMemSlicePitch = 0;
+
 
 
 	const float bgColor[] = { 1, 1, 1, 1.0f };
@@ -63,19 +42,7 @@ void Rain::Render::Graphics::DoFrame() {
 		// Fill in the subresource data.
 		
 		
-		if (pDevice != nullptr) {
-			
-			InitData.pSysMem = &(renderData.constantBuffer);
-			if (FAILED(pDevice->CreateBuffer(&constDesc, &InitData, &pVSConstantBuffer))) {
-				int j = 0;
-			}
 
-			InitData.pSysMem = &(renderData.frameBuffer);
-			if (FAILED(pDevice->CreateBuffer(&frameConstDesc, &InitData, &pFrameConstantBuffer))) {
-				int j = 0;
-			}
-
-		}
 
 		if (pContext != nullptr) {
 			pContext->VSSetConstantBuffers(0, 1, &pVSConstantBuffer);
@@ -252,6 +219,7 @@ void Rain::Render::Graphics::InitializeGraphics(HWND hWnd, int width, int height
 	if (FAILED(hr)) {
 		int j = 1;
 	}
+
 
 }
 
