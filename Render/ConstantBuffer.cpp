@@ -1,47 +1,77 @@
 #include "ConstantBuffer.h"
+#include "ConstantBufferFormats.h"
+#include "Graphics.h"
+void Rain::Render::ConstantBuffer::Bind() const {
 
-Rain::Render::ConstantBuffer::VSConstantBuffer::VSConstantBuffer(){
-	int j = 90;
 }
+void Rain::Render::ConstantBuffer::Update(const void* const i_data) {
 
-Rain::Render::ConstantBuffer::VSConstantBuffer& Rain::Render::ConstantBuffer::VSConstantBuffer::operator=(const VSConstantBuffer& i_constantBuffer) {
-	if (this != &i_constantBuffer) {
-		transform_localToWorld = i_constantBuffer.transform_localToWorld;
-		transform_worldToCamera = i_constantBuffer.transform_worldToCamera;
-		transform_cameraToProjected = i_constantBuffer.transform_cameraToProjected;
-		color = i_constantBuffer.color;
+	
+	auto mustConstantBufferBeUnmapped = false;
+
+	unsigned int noSubResources = 0;
+	Graphics::pContext->Unmap(m_buffer, noSubResources);
+
+	void* memoryToWriteTo;
+	D3D11_MAPPED_SUBRESOURCE mappedSubResource;
+	// Discard previous contents when writing
+	constexpr unsigned int noSubResources = 0;
+	constexpr D3D11_MAP mapType = D3D11_MAP_WRITE_DISCARD;
+	constexpr unsigned int noFlags = 0;
+	const auto d3dResult = Graphics::pContext->Map(m_buffer, noSubResources, mapType, noFlags, &mappedSubResource);
+
+	if (SUCCEEDED(d3dResult))
+	{
+		mustConstantBufferBeUnmapped = true;
 	}
+	memoryToWriteTo = mappedSubResource.pData;
 
-	return *this;
+	memcpy(memoryToWriteTo, i_data, m_size);
 }
 
-Rain::Render::ConstantBuffer::FrameConstantBuffer::FrameConstantBuffer() {
 
-}
 
-Rain::Render::ConstantBuffer::VSConstantBuffer::VSConstantBuffer(const VSConstantBuffer& i_constantBuffer) {
-	transform_localToWorld = i_constantBuffer.transform_localToWorld;
-	transform_worldToCamera = i_constantBuffer.transform_worldToCamera;
-	transform_cameraToProjected = i_constantBuffer.transform_cameraToProjected;
-	color = i_constantBuffer.color;
-}
+void Rain::Render::ConstantBuffer::Initialize(const void* const i_initialData = nullptr) {
 
-Rain::Render::ConstantBuffer::FrameConstantBuffer::FrameConstantBuffer(const FrameConstantBuffer& i_constantBuffer) {
-	time = i_constantBuffer.time;
-	lightDirection = i_constantBuffer.lightDirection;
-	cameraPos = i_constantBuffer.cameraPos;
-	cameraForward = i_constantBuffer.cameraForward;
-	lightColor = i_constantBuffer.lightColor;
-}
+	if (m_type < ConstantBufferTypes::Count)
+	{
+		// Find the size of the type's struct
+		{
+			switch (m_type)
+			{
+			case ConstantBufferTypes::Object: m_size = sizeof(ConstantBufferFormats::VSConstantBuffer); break;
+				//				case ConstantBufferTypes::Material: m_size = sizeof( ConstantBufferFormats::sMaterial ); break;
+			case ConstantBufferTypes::GameScene : m_size = sizeof(ConstantBufferFormats::FrameConstantBuffer); break;
 
-Rain::Render::ConstantBuffer::FrameConstantBuffer& Rain::Render::ConstantBuffer::FrameConstantBuffer::operator=(const FrameConstantBuffer& i_constantBuffer) {
-	if (this != &i_constantBuffer) {
-		time = i_constantBuffer.time;
-		lightDirection = i_constantBuffer.lightDirection;
-		cameraPos = i_constantBuffer.cameraPos;
-		cameraForward = i_constantBuffer.cameraForward;
-		lightColor = i_constantBuffer.lightColor;
+				// This should never happen
+			}
+		
+		}
+
 	}
+	
+	D3D11_BUFFER_DESC bufferDescription;
 
-	return *this; 
+	bufferDescription.Usage = D3D11_USAGE_DYNAMIC;	// The CPU must be able to update the buffer
+	bufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	bufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;	// The CPU must write, but doesn't read
+	bufferDescription.MiscFlags = 0;
+	bufferDescription.StructureByteStride = 0;	// Not used
+
+
+	D3D11_SUBRESOURCE_DATA initialData;
+	initialData.SysMemPitch = 0;
+	initialData.SysMemSlicePitch = 0;
+	initialData.pSysMem = i_initialData;
+
+
+	Graphics::pDevice->CreateBuffer(&bufferDescription, &initialData, &m_buffer);
+
+}
+void Rain::Render::ConstantBuffer::CleanUp() {
+
+}
+
+Rain::Render::ConstantBuffer::ConstantBuffer(const ConstantBufferTypes i_type):m_type(i_type) {
+
 }

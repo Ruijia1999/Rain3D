@@ -17,8 +17,8 @@ namespace Rain {
 			const std::shared_ptr <Effect> effect;
 			const std::shared_ptr <Texture> texture;
 			const std::shared_ptr <Texture> normalMap;
-			ConstantBuffer::VSConstantBuffer constantBuffer;
-			ConstantBuffer::FrameConstantBuffer frameBuffer;
+			ConstantBuffer constantBuffer;
+			ConstantBuffer frameBuffer;
 		};
 	}
 }
