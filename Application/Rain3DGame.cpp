@@ -18,6 +18,7 @@
 #include "Render/RenderSystem.h"
 #include "Collision/ColliderSystem.h"
 #include "Multithreading\Semaphore.h"
+#include "Render\ConstantBufferFormats.h"
 using namespace std::placeholders;
 using namespace Rain;
 namespace {
@@ -60,6 +61,7 @@ void Rain::Rain3DGame::StartGameThread() {
 void Rain::Rain3DGame::StartRenderThread() {
     Semaphore::Signal(NEW_RENDERDATA_PREPARED);
     while (!stop) {
+        Sleep(16.667);
         Rain::Render::RenderSystem::Update();
     }
     Render::RenderSystem::CleanUp();
@@ -93,16 +95,16 @@ void Rain::Rain3DGame::Initialize(HWND hWnd, int width, int height) {
     timeLastFrame = 0;
     //Move the camera.
     Rain::Input::KeyBoard::BindEvent(0x25, KEYSTAY, [](Rain::Input::KeyBoard::KeyInfo info) {
-        cameraPos.x -= 0.01;
+        cameraPos.x -= 1;
         });
     Rain::Input::KeyBoard::BindEvent(0x27, KEYSTAY, [](Rain::Input::KeyBoard::KeyInfo info) {
-        cameraPos.x +=0.01;
+        cameraPos.x +=1;
         });
     Rain::Input::KeyBoard::BindEvent(0x26, KEYSTAY, [](Rain::Input::KeyBoard::KeyInfo info) {
-        cameraPos.z += 0.01;
+        cameraPos.z += 1;
         });
     Rain::Input::KeyBoard::BindEvent(0x28, KEYSTAY, [](Rain::Input::KeyBoard::KeyInfo info) {
-        cameraPos.z -= 0.01;
+        cameraPos.z -= 1;
         });
     stop = false;
     mainGameThread = new std::thread( StartGameThread);
@@ -138,7 +140,7 @@ void Rain::Rain3DGame::Update() {
         GameObject::GameObjectComponent* go = gameobjects[i];
         if (go->isActive) {
 
-            Render::ConstantBuffer::VSConstantBuffer vsConstantBuffer;
+            Render::ConstantBufferFormats::VSConstantBuffer vsConstantBuffer;
             Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(go->id);
             vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1, 5000, 90*M_PI/180.0, 60 * M_PI / 180.0);
             //vsConstantBuffer.transform_cameraToProjected.Inverse();
@@ -153,7 +155,7 @@ void Rain::Rain3DGame::Update() {
             vsConstantBuffer.color = meshRender->color;
 
             
-            Render::ConstantBuffer::FrameConstantBuffer frameConstantBuffer;
+            Render::ConstantBufferFormats::FrameConstantBuffer frameConstantBuffer;
             frameConstantBuffer.time = Time::ConvertTicksToSeconds(Time::GetCurrentSystemTimeTickCount() - timeStart);
             frameConstantBuffer.cameraForward = Math::Vector3(0, 0, 1);
             frameConstantBuffer.cameraPos = cameraPos;

@@ -2,23 +2,24 @@
 #include "ConstantBufferFormats.h"
 #include "Graphics.h"
 void Rain::Render::ConstantBuffer::Bind() const {
-
+	Graphics::pContext->VSSetConstantBuffers(static_cast<unsigned int>(m_type), 1, &m_buffer);
+	Graphics::pContext->PSSetConstantBuffers(static_cast<unsigned int>(m_type), 1, &m_buffer);
 }
 void Rain::Render::ConstantBuffer::Update(const void* const i_data) {
 
 	
 	auto mustConstantBufferBeUnmapped = false;
 
-	unsigned int noSubResources = 0;
-	Graphics::pContext->Unmap(m_buffer, noSubResources);
+
+	Graphics::pContext->Unmap(m_buffer, 0);
 
 	void* memoryToWriteTo;
 	D3D11_MAPPED_SUBRESOURCE mappedSubResource;
 	// Discard previous contents when writing
-	constexpr unsigned int noSubResources = 0;
+
 	constexpr D3D11_MAP mapType = D3D11_MAP_WRITE_DISCARD;
 	constexpr unsigned int noFlags = 0;
-	const auto d3dResult = Graphics::pContext->Map(m_buffer, noSubResources, mapType, noFlags, &mappedSubResource);
+	const auto d3dResult = Graphics::pContext->Map(m_buffer, 0, mapType, noFlags, &mappedSubResource);
 
 	if (SUCCEEDED(d3dResult))
 	{
@@ -31,7 +32,7 @@ void Rain::Render::ConstantBuffer::Update(const void* const i_data) {
 
 
 
-void Rain::Render::ConstantBuffer::Initialize(const void* const i_initialData = nullptr) {
+void Rain::Render::ConstantBuffer::Initialize(const void* const i_initialData) {
 
 	if (m_type < ConstantBufferTypes::Count)
 	{
@@ -57,7 +58,7 @@ void Rain::Render::ConstantBuffer::Initialize(const void* const i_initialData = 
 	bufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;	// The CPU must write, but doesn't read
 	bufferDescription.MiscFlags = 0;
 	bufferDescription.StructureByteStride = 0;	// Not used
-
+	bufferDescription.ByteWidth = m_size;
 
 	D3D11_SUBRESOURCE_DATA initialData;
 	initialData.SysMemPitch = 0;
@@ -65,7 +66,10 @@ void Rain::Render::ConstantBuffer::Initialize(const void* const i_initialData = 
 	initialData.pSysMem = i_initialData;
 
 
-	Graphics::pDevice->CreateBuffer(&bufferDescription, &initialData, &m_buffer);
+	
+	if (FAILED(Graphics::pDevice->CreateBuffer(&bufferDescription, i_initialData ? &initialData : nullptr, &m_buffer))) {
+		int j = 0;
+	}
 
 }
 void Rain::Render::ConstantBuffer::CleanUp() {

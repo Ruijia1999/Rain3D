@@ -4,8 +4,8 @@
 #include "ConstantBuffer.h"
 #include "Multithreading/Semaphore.h"
 namespace {
-	Rain::Render::ConstantBuffer object;
-
+	Rain::Render::ConstantBuffer* objectBuffer;
+	Rain::Render::ConstantBuffer* gameSceneBuffer;
 }
 
 std::vector<Rain::Render::RenderData> Rain::Render::Graphics::NextRenderData;
@@ -21,14 +21,15 @@ ID3D11BlendState* Rain::Render::Graphics::pBlendState;
 
 void Rain::Render::Graphics::Initialize(HWND hWnd, int width, int height) {
 	InitializeGraphics(hWnd, width, height);
-
+	objectBuffer = new Rain::Render::ConstantBuffer(Rain::Render::ConstantBufferTypes::Object);
+	objectBuffer->Initialize();
+	gameSceneBuffer = new Rain::Render::ConstantBuffer(Rain::Render::ConstantBufferTypes::GameScene);
+	gameSceneBuffer->Initialize();
 }
 void Rain::Render::Graphics::DoFrame() {
 	Semaphore::Wait(NEW_RENDERDATA_PREPARED);
 
-
-
-	const float bgColor[] = { 1, 1, 1, 1.0f };
+	const float bgColor[] = { 0, 0, 0, 1.0f };
 	if (pTarget != nullptr) {
 		pContext->ClearRenderTargetView(pTarget, bgColor);
 	}
@@ -42,14 +43,11 @@ void Rain::Render::Graphics::DoFrame() {
 		// Fill in the subresource data.
 		
 		
+		objectBuffer->Update(&renderData.constantBuffer);
+		gameSceneBuffer->Update(&renderData.frameBuffer);
 
-
-		if (pContext != nullptr) {
-			pContext->VSSetConstantBuffers(0, 1, &pVSConstantBuffer);
-			pContext->VSSetConstantBuffers(1, 1, &pFrameConstantBuffer);
-			pContext->PSSetConstantBuffers(1, 1, &pFrameConstantBuffer);
-		}
-
+		objectBuffer->Bind();
+		gameSceneBuffer->Bind();
 	
 		renderData.effect->Bind();
 		if (renderData.texture != nullptr) {
@@ -63,9 +61,6 @@ void Rain::Render::Graphics::DoFrame() {
 	}
 
 	pSwapChain->Present(0, 0);
-	pVSConstantBuffer = nullptr;
-	pFrameConstantBuffer = nullptr;
-
 	Semaphore::Signal(DATA_RENDER_COMPLETED);
 }
 void Rain::Render::Graphics::ClearUp(){

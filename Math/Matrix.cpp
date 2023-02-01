@@ -63,15 +63,12 @@ Rain::Math::Matrix::Matrix(const Quaternion& i_rotation, const Vector3& i_transl
 	m00 *= i_scale.x;
 	m01 *= i_scale.x;
 	m02 *= i_scale.x;
-	m03 *= i_scale.x;
 	m10 *= i_scale.y;
 	m11 *= i_scale.y;
 	m12 *= i_scale.y;
-	m13 *= i_scale.y;
 	m20 *= i_scale.z;
 	m21 *= i_scale.z;
 	m22 *= i_scale.z;
-	m23 *= i_scale.z;
 }
 
 Rain::Math::Matrix::Matrix(const Quaternion& i_rotation)
