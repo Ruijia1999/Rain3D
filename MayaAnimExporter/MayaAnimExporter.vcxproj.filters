@@ -1,10 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="MayaExporter.cpp" />
+    <ClCompile Include="AnimExporter.cpp" />
     <ClCompile Include="EntryPoint.cpp" />
+    <ClCompile Include="MayaAnimationExporter.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MayaExporter.h" />
+    <ClInclude Include="AnimExporter.h" />
+    <ClInclude Include="MayaAnimationExporter.h" />
   </ItemGroup>
 </Project>

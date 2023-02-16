@@ -1,5 +1,4 @@
 #include "MayaExporter.h"
-#include "AnimationExporter.h"
 #include <algorithm>
 #include <cstdint>
 #include <fstream>
@@ -10,7 +9,8 @@
 #include <maya/MFloatVectorArray.h>
 #include <maya/MFnMesh.h>
 #include <maya/MFnIkJoint.h>
-#include <maya/MAnimControl.h>
+#include <maya/MFnAnimCurve.h>
+#include <maya/MAnimUtil.h>
 #include <maya/MGlobal.h>
 #include <maya/MIntArray.h>
 #include <maya/MItDag.h>
@@ -240,12 +240,6 @@ MStatus Rain::MayaExporter::writer(const MFileObject& i_file, const MString& i_o
 		}
 	}
 
-	// get start and end time
-	MTime start = MAnimControl::animationStartTime();
-	MTime end = MAnimControl::animationEndTime();
-
-	AnimationExporter::readSkinCluster();
-	std::vector<Animation::Joint> Joint;
 	// Write the mesh data to the requested file
 	{
 		const auto filePath = i_file.resolvedFullName();
@@ -278,60 +272,6 @@ namespace
 	{
 		MStatus status;
 
-		// Fill in the material info
-		{
-			const auto shadingGroupCount = i_shadingGroups.size();
-			o_materialInfo.resize(shadingGroupCount);
-			for (size_t i = 0; i < shadingGroupCount; ++i)
-			{
-				const auto& shadingGroup = i_shadingGroups[i];
-				const auto findNetworkedPlugIfPossible = true;
-				auto surfaceShaderPlug = MFnDependencyNode(shadingGroup).findPlug("surfaceShader", findNetworkedPlugIfPossible, &status);
-				if (status)
-				{
-					MPlugArray connections;
-					{
-						constexpr auto getConnectionsWithThisAsDestination = true;
-						constexpr auto dontGetConnectionsWithThisAsSource = false;
-						surfaceShaderPlug.connectedTo(connections, getConnectionsWithThisAsDestination, dontGetConnectionsWithThisAsSource, &status);
-						if (!status)
-						{
-							MGlobal::displayError(status.errorString());
-							return status;
-						}
-					}
-					if (connections.length() == 1)
-					{
-						// This is where you would put code to extract relevant information from the material
-						sMaterialInfo& o_material = o_materialInfo[i];
-
-						// For now this just gets the material node's name (which is useless),
-						// but this could be made more sophisticated
-						MFnDependencyNode materialNode(connections[0].node());
-						o_material.nodeName = materialNode.name();
-					}
-					else if (connections.length() == 0)
-					{
-						// This can happen if a material was assigned to a mesh,
-						// but then the material was deleted (while the shading group remained).
-						// This example code will still work with a missing material,
-						// but if you make the material handling more sophisticated
-						// you should make sure to handle this case.
-						o_materialInfo[i].nodeName = "UNASSIGNED";
-					}
-					else
-					{
-						MGlobal::displayError(MString("A shading group's surface shader had ") + connections.length() + " connections");
-						return MStatus::kFailure;
-					}
-				}
-				else
-				{
-					MGlobal::displayError(status.errorString());
-					return status;
-				}
-			}
-		}
 
 		// Fill the vertex buffer with the vertices
 		// and create a map from the unique key to the assigned index in the vertex buffer
@@ -436,9 +376,30 @@ namespace
 		MSelectionList selectionList;
 		if (status = MGlobal::getActiveSelectionList(selectionList))
 		{
+			MPlugArray animatedPlugs;
+	        MAnimUtil::findAnimatedPlugs(selectionList, animatedPlugs);
+			unsigned int numPlugs = animatedPlugs.length();
+
 			std::map<std::string, size_t> map_shadingGroupNamesToIndices;
 			for (MItSelectionList i(selectionList, MFn::kMesh); !i.isDone(); i.next())
 			{
+
+				MDagPath dagPath;
+				i.getDagPath(dagPath);
+				MPlugArray animatedPlugs;
+				MObject object;
+				i.getDependNode(object);
+				bool k = MAnimUtil::isAnimated(object);
+				MAnimUtil::findAnimatedPlugs(object, animatedPlugs);
+				unsigned int numPlugs = animatedPlugs.length();
+				if (!(status = ProcessSingleDagNode(dagPath, o_uniqueVertices, o_triangles, o_shadingGroups, map_shadingGroupNamesToIndices)))
+				{
+					return status;
+				}
+			}	
+			for (MItSelectionList i(selectionList, MFn::kCharacter); !i.isDone(); i.next())
+			{
+
 				MDagPath dagPath;
 				i.getDagPath(dagPath);
 
@@ -447,7 +408,6 @@ namespace
 					return status;
 				}
 			}
-			
 		}
 		else
 		{
@@ -464,7 +424,7 @@ namespace
 	{
 		// Get the mesh from the DAG path
 		MFnMesh mesh(i_dagPath);
-		
+		MStatus status = MS::kSuccess;
 		if (mesh.isIntermediateObject())
 		{
 			return MStatus::kSuccess;

@@ -10,11 +10,20 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AnimExporter.cpp" />
+    <ClCompile Include="EntryPoint.cpp" />
+    <ClCompile Include="MayaAnimationExporter.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AnimExporter.h" />
+    <ClInclude Include="MayaAnimationExporter.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{ec9f8416-e7e1-4470-9250-fa7206273e38}</ProjectGuid>
-    <RootNamespace>MayaExporter</RootNamespace>
+    <ProjectGuid>{0b53b502-ae9e-40a8-932e-5af748df3912}</ProjectGuid>
+    <RootNamespace>MayaAnimExporter</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -49,35 +58,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetExt>.mll</TargetExt>
-    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetExt>.mll</TargetExt>
-    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;MAYAEXPORTER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(DEVKIT_LOCATION)\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(DEVKIT_LOCATION)\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalOptions>/export:initializePlugin /export:uninitializePlugin %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>OpenMaya.lib;OpenMayaUI.lib;OpenMayaAnim.lib;OpenMayaFx.lib;OpenMayaRender.lib;Foundation.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>copy "$(TargetPath)" "$(MAYA_PLUG_IN_PATH)/$(TargetFileName)" /y</Command>
       <Message>Installing Maya Exporter</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
       <Outputs>$(MAYA_PLUG_IN_PATH)/$(TargetFileName)</Outputs>
-      <Inputs>$(TargetPath)</Inputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -86,38 +87,18 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;MAYAEXPORTER_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(DEVKIT_LOCATION)\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(DEVKIT_LOCATION)\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/export:initializePlugin /export:uninitializePlugin %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>OpenMaya.lib;OpenMayaUI.lib;OpenMayaAnim.lib;OpenMayaFx.lib;OpenMayaRender.lib;Foundation.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <CustomBuildStep>
-      <Command>copy "$(TargetPath)" "$(MAYA_PLUG_IN_PATH)/$(TargetFileName)" /y</Command>
-    </CustomBuildStep>
-    <CustomBuildStep>
-      <Message>Installing Maya Exporter</Message>
-    </CustomBuildStep>
-    <CustomBuildStep>
-      <Outputs>$(MAYA_PLUG_IN_PATH)/$(TargetFileName)</Outputs>
-      <Inputs>$(TargetPath)</Inputs>
-    </CustomBuildStep>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="MayaExporter.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="EntryPoint.cpp" />
-    <ClCompile Include="MayaExporter.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
