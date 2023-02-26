@@ -19,6 +19,7 @@
 #include "Collision/ColliderSystem.h"
 #include "Multithreading\Semaphore.h"
 #include "Render\ConstantBufferFormats.h"
+#include "Animation\AnimationSystem.h"
 using namespace std::placeholders;
 using namespace Rain;
 namespace {
@@ -86,6 +87,7 @@ void Rain::Rain3DGame::Initialize(HWND hWnd, int width, int height) {
     GameObject::GameObjectSystem::GetInstance()->Initialize();
     Transform::TransformSystem::GetInstance()->Initialize();
     MeshRender::MeshRenderSystem::GetInstance()->Initialize();
+    Animation::AnimationSystem::GetInstance()->Initialize();
     ColliderSystem::GetInstance()->Initialize();
     Rain::Asset::SceneLoader::RegisterComponentCreators();
     Rain::Asset::SceneLoader::LoadScene("test");

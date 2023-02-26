@@ -149,6 +149,9 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AnimationClip.h" />
+    <ClInclude Include="AnimationComponent.h" />
+    <ClInclude Include="AnimationImporter.h" />
+    <ClInclude Include="AnimationSystem.h" />
     <ClInclude Include="Joint.h" />
     <ClInclude Include="KeyFrame.h" />
     <ClInclude Include="SklChannel.h" />
@@ -156,6 +159,9 @@
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="AnimationClip.cpp" />
+    <ClCompile Include="AnimationComponent.cpp" />
+    <ClCompile Include="AnimationImporter.cpp" />
+    <ClCompile Include="AnimationSystem.cpp" />
     <ClCompile Include="Joint.cpp" />
     <ClCompile Include="KeyFrame.cpp" />
     <ClCompile Include="SklChannel.cpp" />

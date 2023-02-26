@@ -183,6 +183,7 @@ namespace {
 	}
 	MStatus write(std::ofstream& animFile, const MDagPath& path)
 	{
+		animFile << "pipeline = {\n";
 		// Walk through the dag breadth first
 		MItDag dagIt(MItDag::kDepthFirst);
 		dagIt.reset(path, MItDag::kDepthFirst);
@@ -207,12 +208,16 @@ namespace {
 			else {
 				// Otherwise write out each animation curve
 				//
-				animFile << fnNode.name().asChar() << "\n{";
+				
+
 				writeAnimatedPlugs(animFile, animatedPlugs, fnNode.name(), dagIt.depth(), thisPath.childCount());
-				animFile << "\n}";
+				
+				
 			}
-			return MStatus::kSuccess;
+			
 		}
+		animFile << "}";
+		return MStatus::kSuccess;
 	}
 	MStatus writeAnimatedPlugs(std::ofstream& animFile, const MPlugArray& animatedPlugs, const MString& nodeName,unsigned int depth,unsigned int childCount){
 		// Walk through each animated plug and write out the animation curve(s)
@@ -240,18 +245,25 @@ namespace {
 			}
 			attrObj = plug.attribute();
 			MFnAttribute fnLeafAttr(attrObj);
-			animFile << "\n    {"<<fnLeafAttr.name().asChar() << ", ";
+			animFile << "    {\n";
+			animFile << "        name = \"" << fnLeafAttr.name().asChar() << "\",\n";
 			unsigned int numCurves = animation.length();
+
+
 			// Write out each animation curve that animates the plug
 			//
+			
 			for (unsigned int j = 0; j < numCurves; j++) {
 				MObject animCurveNode = animation[j];
 				if (!animCurveNode.hasFn(MFn::kAnimCurve)) {
 					continue;
 				}
+			
 				writeAnimCurve(animFile, &animCurveNode);
+				
 			}
-			animFile << "}";
+			
+			animFile << "    },\n";
 		}
 		return MStatus::kSuccess;
 	}
@@ -316,6 +328,8 @@ namespace {
 		//
 	
 		unsigned numKeys = animCurve.numKeyframes();
+		animFile << "        frameCount = " << numKeys << ",\n";
+		animFile << "        frames = {\n           ";
 		for (unsigned i = 0; i < numKeys; i++) {
 			animFile << "{";
 			if (animCurve.isUnitlessInput()) {
@@ -324,25 +338,25 @@ namespace {
 			else {
 				animFile << animCurve.time(i).value();
 			}
-			animFile << " " << (conversion * animCurve.value(i));
+			animFile << "," << (conversion * animCurve.value(i));
 
 			double slope;
 			double intercept;
 			//in tangent
-			animCurve.getTangent(i, slope, intercept, true);
-			animFile << " " << slope;
-			animFile << " " << intercept;
+			//animCurve.getTangent(i, slope, intercept, true);
+			//animFile << " " << slope;
+			//animFile << " " << intercept;
 			//out tangent
-			animCurve.getTangent(i, slope, intercept, false);
-			animFile << " " << slope;
-			animFile << " " << intercept;
+			//animCurve.getTangent(i, slope, intercept, false);
+			//animFile << " " << slope;
+			//animFile << " " << intercept;
 			//animCurve.getTangent(i, angle, weight, false);
 			//animFile << " " << angle.as(MAngle::uiUnit());
 			//animFile << " " << weight;
 			
 			animFile << "},";
 		}
-	
+		animFile << "\n        },\n";
 		//animFile << kTwoSpace << kBraceRightChar << std::endl;
 		//animFile << kBraceRightChar << std::endl;
 		return MStatus::kSuccess;

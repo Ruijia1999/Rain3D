@@ -6,6 +6,13 @@
     <ClCompile Include="KeyFrame.cpp" />
     <ClCompile Include="SklChannel.cpp" />
     <ClCompile Include="AnimationClip.cpp" />
+    <ClCompile Include="AnimationSystem.cpp">
+      <Filter>ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationComponent.cpp">
+      <Filter>ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationImporter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -13,5 +20,17 @@
     <ClInclude Include="KeyFrame.h" />
     <ClInclude Include="SklChannel.h" />
     <ClInclude Include="AnimationClip.h" />
+    <ClInclude Include="AnimationSystem.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationComponent.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationImporter.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="ECS">
+      <UniqueIdentifier>{728d1f42-9fd2-4776-a4f6-22b99a0d7820}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

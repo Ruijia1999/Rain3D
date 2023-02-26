@@ -11,7 +11,7 @@ namespace Rain {
 			Math::Vector3 position;
 			Math::Vector3 scale;
 			Math::Quaternion rotation;
-
+			
 			void Initialize();
 			void Update(double i_timeSinceLastFrame);
 			void Destroy();

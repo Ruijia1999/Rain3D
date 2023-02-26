@@ -11,7 +11,7 @@
 #include "Collision/ColliderSystem.h"
 #include "Collision/ColliderBase.h"
 #include "Application/Rain3DGame.h"
-
+#include "Animation\AnimationSystem.h"
 namespace {
 	std::map<std::string, std::function<void(int, lua_State*)>> m_componentCreators;
 }
@@ -142,7 +142,33 @@ void Rain::Asset::SceneLoader::LoadComponent(int i_id, lua_State* i_luaState) {
 	m_componentCreators.find(component)->second(i_id, i_luaState);
 }
 void Rain::Asset::SceneLoader::RegisterComponentCreators() {
-	int j = 0;
+#pragma region Animation
+	RegisterComponentCreator("Animation", [](int i_id, lua_State* i_luaState) {
+
+		Animation::AnimationSystem* system = Animation::AnimationSystem::GetInstance();
+
+		lua_pushstring(i_luaState, "currentClip");
+		lua_gettable(i_luaState, -2);
+		std::string currentClip = lua_tostring(i_luaState, -1);
+		std::shared_ptr< Animation::AnimationClip> clip = system->GetClip(currentClip);
+		lua_pop(i_luaState, 1);
+		
+		
+		lua_pushstring(i_luaState, "autoPlay");
+		lua_gettable(i_luaState, -2);
+		bool autoPlay = lua_toboolean (i_luaState, -1);
+		lua_pop(i_luaState, 1);
+		
+		lua_pushstring(i_luaState, "loop");
+		lua_gettable(i_luaState, -2);
+		bool loop = lua_toboolean(i_luaState, -1);
+		lua_pop(i_luaState, 1);
+
+		system->AddComponent(new Animation::AnimationComponent(clip, autoPlay, loop));
+		
+		}
+	);
+#pragma endregion
 #pragma region GameObjectComponent
 	RegisterComponentCreator("GameObject", [](int i_id, lua_State* i_luaState) {
 
