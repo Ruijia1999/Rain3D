@@ -55,6 +55,8 @@ Rain::Math::Vector3 Rain::Math::Vector3::operator*(const float& i) const {
 	Vector3 outcome = Vector3(x*i, y*i, z*i);
 	return outcome;
 }
+
+
 Rain::Math::Vector3& Rain::Math::Vector3::operator^(const Vector3& i_vec) {
 	float h = y * i_vec.z - z * i_vec.y; 
 	float m = z * i_vec.x - x * i_vec.z;

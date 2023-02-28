@@ -4,6 +4,7 @@
 #include <string>
 #include "SklChannel.h"
 #include "Animation\KeyFrame.h"
+#include "Transform\TransformComponent.h"
 namespace Rain {
 	namespace Animation {
 		class AnimationClip {
@@ -20,7 +21,13 @@ namespace Rain {
 				pipelines = i_pipelines;
 			}
 			void Initialize();
-			void Update(double i_time);
+			bool Update(bool loop, int& i_frame, double& i_time, double i_timeSinceLastFrame, Math::Vector3& velTranslate, Math::Vector3& velScale, Transform::TransformComponent* transform);
+			float GetValue(bool loop, int i_frame, double i_time, AnimPipelineType i_type);
+			float GetSlope(bool loop, int i_frame, AnimPipelineType i_type);
+
+			//Helper----
+			int GetPipeline(AnimPipelineType i_type);
+			void UpdateTransform(bool loop, int i_frame, double i_time, Math::Vector3& velTranslate, Math::Vector3& velScale, Transform::TransformComponent* transform);
 		};
 	}
 }

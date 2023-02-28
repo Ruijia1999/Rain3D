@@ -15,6 +15,8 @@ Rain::Animation::AnimationSystem::AnimationSystem() {
 }
 void Rain::Animation::AnimationSystem::Initialize() {
 	InitializeClip("Bounce");
+	InitializeClip("Scale");
+	InitializeClip("BounceLoop");
 }
 void Rain::Animation::AnimationSystem::InitializeClip(const char* name) {
 	double time;

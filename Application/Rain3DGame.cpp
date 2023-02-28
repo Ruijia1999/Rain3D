@@ -84,13 +84,17 @@ void Rain::Rain3DGame::Initialize(HWND hWnd, int width, int height) {
     Rain::Time::Initialize();
     Rain::Render::RenderSystem::Initialize(hWnd,width, height);
 
+
     GameObject::GameObjectSystem::GetInstance()->Initialize();
     Transform::TransformSystem::GetInstance()->Initialize();
     MeshRender::MeshRenderSystem::GetInstance()->Initialize();
     Animation::AnimationSystem::GetInstance()->Initialize();
     ColliderSystem::GetInstance()->Initialize();
+
+
     Rain::Asset::SceneLoader::RegisterComponentCreators();
     Rain::Asset::SceneLoader::LoadScene("test");
+
     for (auto entity : entities) {
         entity->Initialize();
     }
@@ -133,6 +137,7 @@ void Rain::Rain3DGame::Update() {
     Input::Update(Time::ConvertTicksToSeconds(timeSinceLastFrame));
     GameObject::GameObjectSystem::GetInstance()->Update(timeSinceLastFrame);
     Transform::TransformSystem::GetInstance()->Update(timeSinceLastFrame);
+    Animation::AnimationSystem::GetInstance()->Update(timeSinceLastFrame);
     ColliderSystem::GetInstance()->Update(timeSinceLastFrame);
 
     //Init Constant Buffer

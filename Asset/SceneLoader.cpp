@@ -164,7 +164,7 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		bool loop = lua_toboolean(i_luaState, -1);
 		lua_pop(i_luaState, 1);
 
-		system->AddComponent(new Animation::AnimationComponent(clip, autoPlay, loop));
+		system->AddComponent(new Animation::AnimationComponent(i_id, clip, autoPlay, loop));
 		
 		}
 	);

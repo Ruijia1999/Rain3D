@@ -29,8 +29,6 @@ void Rain::Render::Texture::Initialize(const char* i_fileName) {
 	if (FAILED(Graphics::pDevice->CreateSamplerState(&sampDesc, &pSamplerState))) {
 		int j = 0;
 	}
-
-
 }
 void Rain::Render::Texture::Draw(int slot) {
 	Graphics::pContext->PSSetShaderResources(slot, 1, &pShaderResourceView);

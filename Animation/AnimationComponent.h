@@ -6,6 +6,7 @@
 #include "AnimationClip.h"
 #include <vector>
 #include <memory>
+#include "Math\Vector3.h"
 
 namespace Rain {
 	namespace Animation {
@@ -17,15 +18,11 @@ namespace Rain {
 			void Destroy();
 
 			void Play();
-			void Puase();
+			void Pause();
 			void Stop();
 
 			AnimationComponent();
-			AnimationComponent(std::shared_ptr<AnimationClip> i_clip, bool i_autoPlay, bool i_loop) {
-				currentClip = i_clip;
-				autoPlay = i_autoPlay;
-				loop = i_loop;
-			}
+			AnimationComponent(int i_id, std::shared_ptr<AnimationClip> i_clip, bool i_autoPlay, bool i_loop);
 			~AnimationComponent();
 			AnimationComponent& operator=(const AnimationComponent& i) {
 
@@ -37,9 +34,15 @@ namespace Rain {
 			std::shared_ptr<AnimationClip> currentClip;
 			bool autoPlay;
 			bool loop;
+			bool isPlaying;
 		private:
+			Math::Vector3 velTranslate;
+			Math::Vector3 velScale;
+			Math::Vector3 orgTranslate;
+			Math::Vector3 orgScale;
 			double currentTime;
-			double currentFrame;
+			int currentFrame;
+			
 		};
 
 	}

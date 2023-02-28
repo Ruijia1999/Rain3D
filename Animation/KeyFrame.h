@@ -18,11 +18,13 @@ namespace Rain {
 
 		class KeyFrame
 		{
+		public:
 			float value;
 			double time;
 
 		public:
 			KeyFrame() {
+		 
 				value = 0;
 				time = 0;
 			}
@@ -33,6 +35,7 @@ namespace Rain {
 		};
 		class KeyFramePipeline
 		{
+		public:
 			AnimPipelineType type;
 			int frameCount;
 			KeyFrame* keyFrames;

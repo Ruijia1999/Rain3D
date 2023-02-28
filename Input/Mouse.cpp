@@ -26,10 +26,10 @@ void Rain::Input::Mouse::OnMouseLeftDown() {
 	InputEventQueue::Push(MouseInfo(MOUSE_LEFT_DOWN, mousePosition));
 }
 void Rain::Input::Mouse::OnMouseRightDown() {
-	InputEventQueue::Push(MouseInfo(MOUSE_LEFT_UP, mousePosition));
+	InputEventQueue::Push(MouseInfo(MOUSE_RIGHT_DOWN, mousePosition));
 }
 void Rain::Input::Mouse::OnMouseLeftUp() {
-	InputEventQueue::Push(MouseInfo(MOUSE_RIGHT_DOWN, mousePosition));
+	InputEventQueue::Push(MouseInfo(MOUSE_LEFT_UP, mousePosition));
 }
 void Rain::Input::Mouse::OnMouseRightUp() {
 	InputEventQueue::Push(MouseInfo(MOUSE_RIGHT_UP, mousePosition));

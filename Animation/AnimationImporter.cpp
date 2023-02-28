@@ -86,7 +86,7 @@ void Rain::Animation::AnimationImporter::LoadFrames(lua_State* i_luaState, const
 	lua_pop(i_luaState, 1);
 
 	lua_rawgeti(i_luaState, -1, 2);
-	float value= lua_tointeger(i_luaState, -1);
+	float value= lua_tonumber(i_luaState, -1);
 	lua_pop(i_luaState, 1);
 
 	KeyFrame keyframe = KeyFrame(value, time);
