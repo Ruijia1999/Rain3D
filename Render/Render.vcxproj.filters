@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="windows.h" />
-    <ClInclude Include="Mesh.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="windows\windows.h">
       <Filter>windows</Filter>
@@ -32,13 +31,19 @@
     </ClInclude>
     <ClInclude Include="Texture.h" />
     <ClInclude Include="ConstantBufferFormats.h" />
+    <ClInclude Include="SkeletalMesh.h">
+      <Filter>SkeletalMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>StaticMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderFormats.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderSystem.d3d.cpp">
       <Filter>Direct3D</Filter>
     </ClCompile>
     <ClCompile Include="Graphics.cpp" />
-    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="RenderComponent.cpp">
       <Filter>ECS</Filter>
@@ -64,6 +69,12 @@
     </ClCompile>
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="ConstantBufferFormats.cpp" />
+    <ClCompile Include="SkeletalMesh.cpp">
+      <Filter>SkeletalMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>StaticMesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="OpenGL">
@@ -83,6 +94,12 @@
     </Filter>
     <Filter Include="Shader">
       <UniqueIdentifier>{82156fc0-88ef-4dc5-956c-08cd277ce80d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SkeletalMesh">
+      <UniqueIdentifier>{6cc5aa4c-79ed-4103-abe0-f4cc87857d74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StaticMesh">
+      <UniqueIdentifier>{74554ccb-b0aa-4803-b5c0-7add8c0904bc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

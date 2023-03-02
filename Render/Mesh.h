@@ -3,18 +3,11 @@
 
 
 #include "windows/windows.h"
+#include "RenderFormats.h"
 #include <string>
 namespace Rain {
 	namespace Render {
-		struct VertexFormat {
-			FLOAT x, y, z;
-			FLOAT nx, ny, nz;
-			FLOAT tx, ty, tz;
-			FLOAT u,v;
-		};
-		struct IndexFormat {
-			INT32 x, y, z;
-		};
+		
 
 		class Mesh
 		{
@@ -42,9 +35,9 @@ namespace Rain {
 			//--------
 			int vertexCount;
 			int indexCount;
-			VertexFormat* vertexData = nullptr;
+			StaticVertexFormat* vertexData = nullptr;
 			IndexFormat* indexData = nullptr;
-			void Load(int& i_vertexCount, int& i_indexCount, VertexFormat*& i_vertexData, IndexFormat*& i_indexData);
+			void Load(int& i_vertexCount, int& i_indexCount, StaticVertexFormat*& i_vertexData, IndexFormat*& i_indexData);
 		};
 	}
 }

@@ -6,8 +6,7 @@ namespace Rain {
 	namespace Animation {
 		class SklChannel
 		{
-			const char* jointName;
-			//std::vector<KeyFrame> keyFrames;
+			std::vector<KeyFramePipeline> pipelines;
 		};
 	}
 }

@@ -61,6 +61,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Multithreading", "Multithre
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MayaAnimExporter", "MayaAnimExporter\MayaAnimExporter.vcxproj", "{0B53B502-AE9E-40A8-932E-5AF748DF3912}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MayaSkeletalAnimExporter", "MayaSkeletalAnimExporter\MayaSkeletalAnimExporter.vcxproj", "{8EC84494-C654-4637-958E-3EB15FA89534}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -266,6 +268,12 @@ Global
 		{0B53B502-AE9E-40A8-932E-5AF748DF3912}.Release|x64.ActiveCfg = Release|x64
 		{0B53B502-AE9E-40A8-932E-5AF748DF3912}.Release|x64.Build.0 = Release|x64
 		{0B53B502-AE9E-40A8-932E-5AF748DF3912}.Release|x86.ActiveCfg = Release|x64
+		{8EC84494-C654-4637-958E-3EB15FA89534}.Debug|x64.ActiveCfg = Debug|x64
+		{8EC84494-C654-4637-958E-3EB15FA89534}.Debug|x64.Build.0 = Debug|x64
+		{8EC84494-C654-4637-958E-3EB15FA89534}.Debug|x86.ActiveCfg = Debug|x64
+		{8EC84494-C654-4637-958E-3EB15FA89534}.Release|x64.ActiveCfg = Release|x64
+		{8EC84494-C654-4637-958E-3EB15FA89534}.Release|x64.Build.0 = Release|x64
+		{8EC84494-C654-4637-958E-3EB15FA89534}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -296,6 +304,7 @@ Global
 		{F2452C90-AB6D-42CB-88FD-4334B19F870C} = {ED2111D5-27B6-4E2B-8E28-01FF173750C8}
 		{F5F60413-B760-4577-BD03-8D9CD04286C0} = {ED2111D5-27B6-4E2B-8E28-01FF173750C8}
 		{0B53B502-AE9E-40A8-932E-5AF748DF3912} = {CB6A4F43-D5C1-41D9-94A5-2A2A1DA045DF}
+		{8EC84494-C654-4637-958E-3EB15FA89534} = {CB6A4F43-D5C1-41D9-94A5-2A2A1DA045DF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0581FFE8-DC3D-4EDE-A90F-D2A42D49266E}

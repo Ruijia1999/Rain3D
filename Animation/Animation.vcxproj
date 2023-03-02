@@ -154,7 +154,10 @@
     <ClInclude Include="AnimationSystem.h" />
     <ClInclude Include="Joint.h" />
     <ClInclude Include="KeyFrame.h" />
+    <ClInclude Include="SkinCluster.h" />
+    <ClInclude Include="SklAnimClip.h" />
     <ClInclude Include="SklChannel.h" />
+    <ClInclude Include="SklCharacter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
@@ -164,7 +167,10 @@
     <ClCompile Include="AnimationSystem.cpp" />
     <ClCompile Include="Joint.cpp" />
     <ClCompile Include="KeyFrame.cpp" />
+    <ClCompile Include="SkinCluster.cpp" />
+    <ClCompile Include="SklAnimClip.cpp" />
     <ClCompile Include="SklChannel.cpp" />
+    <ClCompile Include="SklCharacter.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

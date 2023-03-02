@@ -108,7 +108,7 @@ void Rain::Render::Mesh::Draw() const {
 		constexpr unsigned int startingSlot = 0;
 		constexpr unsigned int vertexBufferCount = 1;
 		// The "stride" defines how large a single vertex is in the stream of data
-		constexpr unsigned int bufferStride = sizeof(VertexFormat);
+		constexpr unsigned int bufferStride = sizeof(StaticVertexFormat);
 		// It's possible to start streaming data in the middle of a vertex buffer
 		constexpr unsigned int bufferOffset = 0;
 		Graphics::pContext->IASetVertexBuffers(startingSlot, vertexBufferCount, &m_vertexBuffer, &bufferStride, &bufferOffset);
@@ -128,7 +128,7 @@ void Rain::Render::Mesh::Draw() const {
 	Graphics::pContext->DrawIndexed((UINT)(indexCount*3), 0u, 0u);
 }
 
-void Rain::Render::Mesh::Load(int& i_vertexCount, int& i_indexCount, VertexFormat*& i_vertexData, IndexFormat*& i_indexData) {
+void Rain::Render::Mesh::Load(int& i_vertexCount, int& i_indexCount, StaticVertexFormat*& i_vertexData, IndexFormat*& i_indexData) {
 	lua_State* L = luaL_newstate();
 	std::string filePath = "meshes/";
 	filePath.append(m_name);
@@ -141,7 +141,7 @@ void Rain::Render::Mesh::Load(int& i_vertexCount, int& i_indexCount, VertexForma
 	lua_pop(L, 1);
 
 #pragma region vertexData
-	i_vertexData = new VertexFormat[i_vertexCount];
+	i_vertexData = new StaticVertexFormat[i_vertexCount];
 	lua_getglobal(L, "vertexData");
 	int n = luaL_len(L, -1);
 	for (int i = 1; i <= n; ++i) {

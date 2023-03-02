@@ -26,11 +26,13 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="RenderData.h" />
+    <ClInclude Include="RenderFormats.h" />
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="rImage.h" />
     <ClInclude Include="rMesh.h" />
     <ClInclude Include="rObject.h" />
     <ClInclude Include="rText.h" />
+    <ClInclude Include="SkeletalMesh.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="windows.h" />
     <ClInclude Include="windows\windows.h" />
@@ -52,6 +54,7 @@
     <ClCompile Include="rMesh.cpp" />
     <ClCompile Include="rObject.cpp" />
     <ClCompile Include="rText.cpp" />
+    <ClCompile Include="SkeletalMesh.cpp" />
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
