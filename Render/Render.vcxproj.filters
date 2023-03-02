@@ -37,7 +37,6 @@
     <ClInclude Include="Mesh.h">
       <Filter>StaticMesh</Filter>
     </ClInclude>
-    <ClInclude Include="RenderFormats.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderSystem.d3d.cpp">
