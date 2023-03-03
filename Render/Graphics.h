@@ -11,8 +11,8 @@ namespace Rain {
 		class Graphics
 		{
 		public:
-			static std::vector<RenderData> NextRenderData;
-			static std::vector<RenderData> CurrentRenderData;
+			static std::vector<RenderDataBase> NextRenderData;
+			static std::vector<RenderDataBase> CurrentRenderData;
 			static ID3D11Device* pDevice;
 			static IDXGISwapChain* pSwapChain;
 			static ID3D11DeviceContext* pContext;

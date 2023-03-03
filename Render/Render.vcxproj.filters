@@ -14,28 +14,22 @@
       <Filter>ECS</Filter>
     </ClInclude>
     <ClInclude Include="ConstantBuffer.h" />
-    <ClInclude Include="RenderData.h">
-      <Filter>RenderData</Filter>
-    </ClInclude>
-    <ClInclude Include="rText.h">
-      <Filter>RenderData</Filter>
-    </ClInclude>
-    <ClInclude Include="rObject.h">
-      <Filter>RenderData</Filter>
-    </ClInclude>
-    <ClInclude Include="rMesh.h">
-      <Filter>RenderData</Filter>
-    </ClInclude>
-    <ClInclude Include="rImage.h">
-      <Filter>RenderData</Filter>
-    </ClInclude>
     <ClInclude Include="Texture.h" />
     <ClInclude Include="ConstantBufferFormats.h" />
     <ClInclude Include="SkeletalMesh.h">
-      <Filter>SkeletalMesh</Filter>
+      <Filter>RenderData\Skeletal</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
-      <Filter>StaticMesh</Filter>
+      <Filter>RenderData\StaticMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Skeletal.h">
+      <Filter>RenderData\Skeletal</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderData.h">
+      <Filter>RenderData\StaticMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderDataBase.h">
+      <Filter>RenderData</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -51,28 +45,22 @@
       <Filter>ECS</Filter>
     </ClCompile>
     <ClCompile Include="ConstantBuffer.cpp" />
-    <ClCompile Include="RenderData.cpp">
-      <Filter>RenderData</Filter>
-    </ClCompile>
-    <ClCompile Include="rText.cpp">
-      <Filter>RenderData</Filter>
-    </ClCompile>
-    <ClCompile Include="rObject.cpp">
-      <Filter>RenderData</Filter>
-    </ClCompile>
-    <ClCompile Include="rImage.cpp">
-      <Filter>RenderData</Filter>
-    </ClCompile>
-    <ClCompile Include="rMesh.cpp">
-      <Filter>RenderData</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="ConstantBufferFormats.cpp" />
     <ClCompile Include="SkeletalMesh.cpp">
-      <Filter>SkeletalMesh</Filter>
+      <Filter>RenderData\Skeletal</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>StaticMesh</Filter>
+      <Filter>RenderData\StaticMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Skeletal.cpp">
+      <Filter>RenderData\Skeletal</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderData.cpp">
+      <Filter>RenderData\StaticMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderDataBase.cpp">
+      <Filter>RenderData</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,11 +82,11 @@
     <Filter Include="Shader">
       <UniqueIdentifier>{82156fc0-88ef-4dc5-956c-08cd277ce80d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SkeletalMesh">
-      <UniqueIdentifier>{6cc5aa4c-79ed-4103-abe0-f4cc87857d74}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="StaticMesh">
+    <Filter Include="RenderData\StaticMesh">
       <UniqueIdentifier>{74554ccb-b0aa-4803-b5c0-7add8c0904bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderData\Skeletal">
+      <UniqueIdentifier>{6cc5aa4c-79ed-4103-abe0-f4cc87857d74}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

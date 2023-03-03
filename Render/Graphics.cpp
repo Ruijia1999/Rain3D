@@ -8,8 +8,8 @@ namespace {
 	Rain::Render::ConstantBuffer* gameSceneBuffer;
 }
 
-std::vector<Rain::Render::RenderData> Rain::Render::Graphics::NextRenderData;
-std::vector<Rain::Render::RenderData> Rain::Render::Graphics::CurrentRenderData;
+std::vector<Rain::Render::RenderDataBase> Rain::Render::Graphics::NextRenderData;
+std::vector<Rain::Render::RenderDataBase> Rain::Render::Graphics::CurrentRenderData;
 ID3D11Device* Rain::Render::Graphics::pDevice;
 IDXGISwapChain* Rain::Render::Graphics::pSwapChain;
 ID3D11DeviceContext* Rain::Render::Graphics::pContext;
@@ -42,12 +42,15 @@ void Rain::Render::Graphics::DoFrame() {
 	for (auto renderData : NextRenderData) {
 		// Fill in the subresource data.
 		
-		
-		objectBuffer->Update(&renderData.constantBuffer);
-		gameSceneBuffer->Update(&renderData.frameBuffer);
+		if (renderData.type == RenderDataType::StaticMesh) {
+			
+			objectBuffer->Update(&((RenderData)renderData).constantBuffer);
+			gameSceneBuffer->Update(&renderData.frameBuffer);
 
-		objectBuffer->Bind();
-		gameSceneBuffer->Bind();
+			objectBuffer->Bind();
+			gameSceneBuffer->Bind();
+		}
+		
 	
 		renderData.effect->Bind();
 		if (renderData.texture != nullptr) {

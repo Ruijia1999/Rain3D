@@ -26,11 +26,9 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="RenderData.h" />
+    <ClInclude Include="RenderDataBase.h" />
     <ClInclude Include="RenderSystem.h" />
-    <ClInclude Include="rImage.h" />
-    <ClInclude Include="rMesh.h" />
-    <ClInclude Include="rObject.h" />
-    <ClInclude Include="rText.h" />
+    <ClInclude Include="Skeletal.h" />
     <ClInclude Include="SkeletalMesh.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="windows.h" />
@@ -44,15 +42,13 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="RenderData.cpp" />
+    <ClCompile Include="RenderDataBase.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="RenderSystem.d3d.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="rImage.cpp" />
-    <ClCompile Include="rMesh.cpp" />
-    <ClCompile Include="rObject.cpp" />
-    <ClCompile Include="rText.cpp" />
+    <ClCompile Include="Skeletal.cpp" />
     <ClCompile Include="SkeletalMesh.cpp" />
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>

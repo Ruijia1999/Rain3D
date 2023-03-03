@@ -24,3 +24,7 @@ Rain::Render::RenderData::RenderData(const std::shared_ptr<Mesh>& i_mesh, const 
 Rain::Render::RenderData::~RenderData() {
 	int j = 0;
 }
+
+void Rain::Render::RenderData::Draw() {
+
+}
