@@ -20,10 +20,11 @@
 #include "Multithreading\Semaphore.h"
 #include "Render\ConstantBufferFormats.h"
 #include "Animation\AnimationSystem.h"
+#include "Render\RenderDataBase.h"
 using namespace std::placeholders;
 using namespace Rain;
 namespace {
-    std::vector<Rain::Render::RenderData> RenderData;
+    std::vector<Rain::Render::RenderDataBase*> renderData;
     std::vector<Rain::ECS::Entity*> entities;
     uint64_t timeLastFrame;
     uint64_t timeStart;
@@ -141,7 +142,7 @@ void Rain::Rain3DGame::Update() {
     ColliderSystem::GetInstance()->Update(timeSinceLastFrame);
 
     //Init Constant Buffer
-    RenderData.clear();
+    renderData.clear();
     std::vector<GameObject::GameObjectComponent*> gameobjects = GameObject::GameObjectSystem::GetInstance()->GetAllComponents<GameObject::GameObjectComponent>();
     for (int i = 0; i < entities.size(); i++) {
         GameObject::GameObjectComponent* go = gameobjects[i];
@@ -150,17 +151,13 @@ void Rain::Rain3DGame::Update() {
             Render::ConstantBufferFormats::VSConstantBuffer vsConstantBuffer;
             Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(go->id);
             vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1, 5000, 90*M_PI/180.0, 60 * M_PI / 180.0);
-            //vsConstantBuffer.transform_cameraToProjected.Inverse();
             vsConstantBuffer.transform_localToWorld = Math::CreateLocalToWorldTransform(transform->rotation, transform->position, transform->scale);
             vsConstantBuffer.transform_localToWorld.Inverse();
-            //vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(-0.7068252, 0, 0, 0.7073883), Math::Vector3(0, 0, -100));
             vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(cameraRot, cameraPos);
-
             vsConstantBuffer.transform_worldToCamera.Inverse();
 
             MeshRender::MeshRenderComponent* meshRender = MeshRender::MeshRenderSystem::GetInstance()->GetComponent<MeshRender::MeshRenderComponent>(go->id);
             vsConstantBuffer.color = meshRender->color;
-
             
             Render::ConstantBufferFormats::FrameConstantBuffer frameConstantBuffer;
             frameConstantBuffer.time = Time::ConvertTicksToSeconds(Time::GetCurrentSystemTimeTickCount() - timeStart);
@@ -168,13 +165,13 @@ void Rain::Rain3DGame::Update() {
             frameConstantBuffer.cameraPos = cameraPos;
             frameConstantBuffer.lightColor = lightColor;
             frameConstantBuffer.lightDirection = lightDir;
-            RenderData.push_back(Render::RenderData(meshRender->mesh, meshRender->effect, meshRender->texture, meshRender->normalMap, vsConstantBuffer, frameConstantBuffer));
+            renderData.push_back(new Render::RenderData(meshRender->mesh, meshRender->effect, meshRender->texture, meshRender->normalMap, vsConstantBuffer, frameConstantBuffer));
 
         }
     }
     Semaphore::Wait(DATA_RENDER_COMPLETED);
-    Render::Graphics::NextRenderData.resize(RenderData.size());
-    Render::Graphics::NextRenderData.swap(RenderData);
+    Render::Graphics::NextRenderData.resize(renderData.size());
+    Render::Graphics::NextRenderData.swap(renderData);
     Semaphore::Signal(NEW_RENDERDATA_PREPARED);
 
 }

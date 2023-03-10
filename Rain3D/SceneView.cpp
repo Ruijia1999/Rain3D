@@ -20,7 +20,7 @@
 using namespace std::placeholders;
 using namespace Rain;
 namespace {
-    std::vector<Rain::Render::RenderData> RenderData;
+    std::vector<Rain::Render::RenderData*> renderData;
     uint64_t timeLastFrame;
     bool stop;
     std::thread* mainGameThread;
@@ -81,7 +81,7 @@ void SceneView::Update() {
     Transform::TransformSystem::GetInstance()->Update(timeSinceLastFrame);
 
     //Init Constant Buffer
-    RenderData.clear();
+    renderData.clear();
     std::vector<GameObject::GameObjectComponent*> gameobjects = GameObject::GameObjectSystem::GetInstance()->GetAllComponents<GameObject::GameObjectComponent>();
     for (int i = 0; i < 2; i++) {
         GameObject::GameObjectComponent* go = gameobjects[i];
@@ -95,11 +95,11 @@ void SceneView::Update() {
             vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(Math::Quaternion(), Math::Vector3(0, 0, 10));
             vsConstantBuffer.transform_worldToCamera.Inverse();
             MeshRender::MeshRenderComponent* meshRender = MeshRender::MeshRenderSystem::GetInstance()->GetComponent<MeshRender::MeshRenderComponent>(go->id);
-            RenderData.push_back(Render::RenderData(meshRender->mesh, meshRender->effect, vsConstantBuffer));
+            renderData.push_back(Render::RenderData(meshRender->mesh, meshRender->effect, vsConstantBuffer));
         }
     }
-    Render::Graphics::NextRenderData.resize(RenderData.size());
-    Render::Graphics::NextRenderData.swap(RenderData);
+    Render::Graphics::NextRenderData.resize(renderData.size());
+    Render::Graphics::NextRenderData.swap(renderData);
     Rain::Render::RenderSystem::Update();
 }
 

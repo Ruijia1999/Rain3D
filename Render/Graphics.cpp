@@ -8,8 +8,8 @@ namespace {
 	Rain::Render::ConstantBuffer* gameSceneBuffer;
 }
 
-std::vector<Rain::Render::RenderDataBase> Rain::Render::Graphics::NextRenderData;
-std::vector<Rain::Render::RenderDataBase> Rain::Render::Graphics::CurrentRenderData;
+std::vector<Rain::Render::RenderDataBase*> Rain::Render::Graphics::NextRenderData;
+std::vector<Rain::Render::RenderDataBase*> Rain::Render::Graphics::CurrentRenderData;
 ID3D11Device* Rain::Render::Graphics::pDevice;
 IDXGISwapChain* Rain::Render::Graphics::pSwapChain;
 ID3D11DeviceContext* Rain::Render::Graphics::pContext;
@@ -42,24 +42,17 @@ void Rain::Render::Graphics::DoFrame() {
 	for (auto renderData : NextRenderData) {
 		// Fill in the subresource data.
 		
-		if (renderData.type == RenderDataType::StaticMesh) {
-			
-			objectBuffer->Update(&((RenderData)renderData).constantBuffer);
-			gameSceneBuffer->Update(&renderData.frameBuffer);
+		if (renderData->type == RenderDataType::StaticMesh) {
+			objectBuffer->Update(&((RenderData*)renderData)->constantBuffer);
+			gameSceneBuffer->Update(&((RenderData*)renderData)->frameBuffer);
 
 			objectBuffer->Bind();
 			gameSceneBuffer->Bind();
+			
 		}
+		renderData->Draw();
+
 		
-	
-		renderData.effect->Bind();
-		if (renderData.texture != nullptr) {
-			renderData.texture->Draw(0);
-		}
-		if (renderData.normalMap!= nullptr) {
-			renderData.normalMap->Draw(1);
-		}
-		renderData.mesh->Draw();
 
 	}
 
