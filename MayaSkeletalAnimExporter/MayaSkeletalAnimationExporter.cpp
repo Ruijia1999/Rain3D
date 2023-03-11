@@ -12,6 +12,7 @@
 #include <maya/MFloatVectorArray.h>
 #include <maya/MFnMesh.h>
 #include <maya/MFnIkJoint.h>
+#include <maya/MFnSkinCluster.h>
 #include <maya/MFnAnimCurve.h>
 #include <maya/MFnAttribute.h>
 #include <maya/MAnimUtil.h>
@@ -21,26 +22,129 @@
 #include <maya/MItMeshPolygon.h>
 #include <maya/MItSelectionList.h>
 #include <maya/MPlug.h>
-#include <maya/MPlugArray.h>
-#include <maya/MPoint.h>
+#include <maya/MMatrix.h>
+#include <maya/MDagPathArray.h>
+#include <maya/MItDependencyNodes.h>
 #include <maya/MPointArray.h>
 #include <maya/MSelectionList.h>
 #include <maya/MQuaternion.h>
+#include <maya/MItGeometry.h>
+#include <maya/MGeometry.h>
 #include <sstream>
 #include <string>
 #include <utility>
 #include <vector>
 
-// Vertex Definition
+// Joint Definition
 //==================
+
+struct Joint {
+	MFnIkJoint* jointNode;
+	std::string name;
+	unsigned int layer;
+	std::vector<Joint> children;
+	MTransformationMatrix transformationMatrix;
+	double S[3];
+	MQuaternion RO;
+	MQuaternion R;
+	MQuaternion JO;
+	double IS[3];
+	MVector T;
+	Joint() { 
+		jointNode = nullptr;
+		layer = 0;
+	}
+	Joint(MObject i_joint, int i_layer){
+	
+		jointNode = new MFnIkJoint(i_joint);
+		MFnDependencyNode dpNode(jointNode->object());
+		name = dpNode.name().asChar();
+		layer = i_layer;
+
+		jointNode->getScale(S);
+		MTransformationMatrix S_MTMatrix;
+		S_MTMatrix.setScale(S, MSpace::kTransform);
+		MMatrix S_Matrix = S_MTMatrix.asMatrix();
+
+
+		jointNode->getScaleOrientation(RO);
+		MTransformationMatrix RO_MTMatrix;
+		RO_MTMatrix.rotateBy(RO, MSpace::kTransform);
+		MMatrix RO_Matrix = RO_MTMatrix.asMatrix();
+
+
+		jointNode->getRotation(R);
+		MTransformationMatrix R_MTMatrix;
+		R_MTMatrix.rotateBy(R, MSpace::kTransform);
+		MMatrix R_Matrix = R_MTMatrix.asMatrix();
+
+
+		jointNode->getOrientation(JO);
+		MTransformationMatrix JO_MTMatrix;
+		JO_MTMatrix.rotateBy(JO, MSpace::kTransform);
+		MMatrix JO_Matrix = JO_MTMatrix.asMatrix();
+
+		
+		MObject parent = jointNode->parent(0);
+		if (strcmp( parent.apiTypeStr(),"kWorld")!=0) {
+			MFnTransform(parent).getScale(IS);
+		}
+		else {
+			IS[0] = 1; IS[1] = 1; IS[2] = 1;
+		}
+		MTransformationMatrix IS_MTMatrix;
+		IS_MTMatrix.setScale(IS, MSpace::kTransform);
+		MMatrix IS_Matrix = IS_MTMatrix.asMatrixInverse();
+
+
+		T = jointNode->getTranslation(MSpace::kTransform);
+		MTransformationMatrix T_MTMatrix;
+		T_MTMatrix.setTranslation(T, MSpace::kTransform);
+		MMatrix T_Matrix = T_MTMatrix.asMatrix();
+
+		
+		transformationMatrix = jointNode->transformation();// S_Matrix* RO_Matrix* R_Matrix* JO_Matrix* IS_Matrix* T_Matrix;
+		
+		return;
+	}
+
+	Joint& operator=(const Joint& i_joint) {
+		if (&i_joint != this) {
+			jointNode = i_joint.jointNode;
+			layer = i_joint.layer;
+			name = i_joint.name;
+			children = i_joint.children;
+			transformationMatrix = i_joint.transformationMatrix;
+			for (int i = 0; i < 3; i++) {
+				S[i] = i_joint.S[i];
+			}
+			RO = i_joint.RO;
+			R = i_joint.R;
+			JO = i_joint.JO;
+			for (int i = 0; i < 3; i++) {
+				IS[i] = i_joint.IS[i];
+			}
+			T = i_joint.T;
+		}
+
+		return *this;
+
+	}
+};
+
+struct Skincluster {
+
+};
+
+
+
 namespace {
-	MStatus ProcessAllAnimationObjects(MSelectionList& list, std::ofstream& fileOut);
-	MStatus ProcessSelectedAnimationObjects(MSelectionList& list, std::ofstream& fileOut);
-	MStatus ProcessAnimation(const MPlugArray& i_Object, std::ofstream& fileOut);
-	MStatus WriteAnimation(const MSelectionList& list, std::ofstream& fineName);
-	MStatus write(std::ofstream& animFile, const MDagPath& path);
-	MStatus writeAnimatedPlugs(std::ofstream& animFile, const MPlugArray& animatedPlugs, const MString& nodeName, unsigned int depth, unsigned int childCount);
-	MStatus writeAnimCurve(std::ofstream& animFile, const MObject* animCurvObj);
+	MStatus ProcessJoints(MSelectionList& list, Joint& rootJoint);
+	MStatus ProcessSingleJoint(Joint& joint);
+	MStatus ProcessSkincluster( std::ofstream& fileOut);
+	MStatus ProcessSingleSkincluster(std::ofstream& fileOut);
+	MStatus WriteJoints(const Joint& rootJoint, std::ofstream& fileOut);
+	MStatus WriteSingleJoint(const Joint& rootJoint, std::ofstream& fileOut);
 }
 
 
@@ -52,18 +156,17 @@ MStatus Rain::MayaSkeletalAnimExporter::writer(const MFileObject& i_file, const 
 	MStatus status;
 	const auto filePath = i_file.resolvedFullName();
 	std::ofstream fout(filePath.asChar());
+
+	//Skeleton
+	Joint rootJoint;
 	MSelectionList list;
-	// The user decides whether to export the entire scene or just a selection
-	if (i_mode == MPxFileTranslator::kExportAccessMode)
+	if (i_mode == MPxFileTranslator::kExportActiveAccessMode)
 	{
-		if (!(status = ProcessAllAnimationObjects(list,fout)))
+		if (!(status = ProcessJoints(list, rootJoint)))
 		{
 			return status;
 		}
-	}
-	else if (i_mode == MPxFileTranslator::kExportActiveAccessMode)
-	{
-		if (!(status = ProcessSelectedAnimationObjects(list, fout)))
+		if (!(status = ProcessSkincluster( fout)))
 		{
 			return status;
 		}
@@ -74,8 +177,11 @@ MStatus Rain::MayaSkeletalAnimExporter::writer(const MFileObject& i_file, const 
 		return MStatus::kFailure;
 	}
 
+	WriteJoints(rootJoint, fout);
 
-	WriteAnimation(list, fout);
+
+	//Skincluster
+
 	fout.close();
 	return MStatus::kSuccess;
 }
@@ -83,23 +189,8 @@ MStatus Rain::MayaSkeletalAnimExporter::writer(const MFileObject& i_file, const 
 //Helper
 //-------------------------
 namespace {
-	MStatus ProcessAllAnimationObjects(MSelectionList& list, std::ofstream& fileOut)
-	{
-		MStatus status;
-
-		for (MItDag i(MItDag::kDepthFirst, MFn::kMesh); !i.isDone(); i.next())
-		{
-			MDagPath dagPath;
-			i.getPath(dagPath);
-			list.add(dagPath);
-			
-		}
-		MPlugArray animatedPlugs;
-		MAnimUtil::findAnimatedPlugs(list, animatedPlugs);
-		ProcessAnimation(animatedPlugs, fileOut);
-		return status;
-	}
-	MStatus ProcessSelectedAnimationObjects(MSelectionList& list, std::ofstream& fileOut)
+	
+	MStatus ProcessJoints(MSelectionList& list, Joint& rootJoint)
 	{
 		MStatus status;
 
@@ -107,275 +198,125 @@ namespace {
 		MGlobal::getActiveSelectionList(list);
 		for (MItSelectionList i(list, MFn::kJoint); !i.isDone(); i.next())
 		{
-			MDagPath dagPath;
-			i.getDagPath(dagPath);
-			
-			int childnum = dagPath.childCount();
-			
-			MFnIkJoint joint(dagPath);
-			MQuaternion quaternion;
-			joint.getOrientation(quaternion);
+
 			MObject object;
 			i.getDependNode(object);
-			MFnDependencyNode fnNode(object);
-			std::string s = fnNode.name().asChar();
-		}
-		MPlugArray animatedPlugs;
+			rootJoint = Joint(object,0);
+			ProcessSingleJoint(rootJoint);
 		
-		MAnimUtil::findAnimatedPlugs(list, animatedPlugs);
-		ProcessAnimation(animatedPlugs, fileOut);
+		}
+
+		
 		return status;
 	}
-	MStatus ProcessAnimation(const MPlugArray& i_animatedPlugs, std::ofstream& fileOut)
-	{
-
-		unsigned int numPlugs = i_animatedPlugs.length();
-		bool hasTime = false;
-		double startTime = 0.0;
-		double endTime = 0.0;
-		bool hasUnitless = false;
-		double startUnitless = 0.0;
-		double endUnitless = 0.0;
-
-		for (int i = 0; i < numPlugs; i++) {
-			MPlug plug = i_animatedPlugs[i];
-			MObjectArray animation;
-			// Find the animation curve(s) that animate this plug
-			//
-			if (!MAnimUtil::findAnimation(plug, animation)) {
-				continue;
-			}
-			unsigned int numCurves = animation.length();
-			for (unsigned int j = 0; j < numCurves; j++) {
-				MObject animCurveNode = animation[j];
-				if (!animCurveNode.hasFn(MFn::kAnimCurve)) {
-					continue;
-				}
-				MFnAnimCurve animCurve(animCurveNode);
-				unsigned int numKeys = animCurve.numKeys();
-				if (numKeys == 0) {
-					continue;
-				}
-				if (animCurve.isUnitlessInput()) {
-					if (!hasUnitless) {
-						startUnitless = animCurve.unitlessInput(0);
-						endUnitless = animCurve.unitlessInput(numKeys - 1);
-						hasUnitless = true;
-					}
-					else {
-						startUnitless = min(startUnitless, animCurve.unitlessInput(0));
-						endUnitless = max(endUnitless, animCurve.unitlessInput(numKeys - 1));
-					}
-				}
-				else {
-					if (!hasTime) {
-						startTime = animCurve.time(0).value();
-						endTime = animCurve.time(numKeys - 1).value();
-						hasTime = true;
-					}
-					else {
-						startTime = min(startTime, animCurve.time(0).value());
-						endTime = max(endTime, animCurve.time(numKeys - 1).value());
-					}
-				}
-			}
-		}
-		fileOut << "startTime = "<<startTime << "\nendTime = " << endTime << "\n";
-		return MStatus::kSuccess;
-	}
-	MStatus WriteAnimation(const MSelectionList& list, std::ofstream& fileOut) {
-		unsigned int numObjects = list.length();
-		for (int i = 0; i < numObjects; i++) {
-			MDagPath path;
-			MObject node;
-			if (list.getDagPath(i, path) == MS::kSuccess) {
-				write(fileOut, path);
-			}
-			else if (list.getDependNode(i, node) == MS::kSuccess) {
+	MStatus ProcessSingleJoint(Joint& joint) {
 		
-				
-			}
-		}
-		return MStatus::kSuccess;
-	}
-	MStatus write(std::ofstream& animFile, const MDagPath& path)
-	{
-		animFile << "pipeline = {\n";
-		// Walk through the dag breadth first
-		MItDag dagIt(MItDag::kDepthFirst);
-		dagIt.reset(path, MItDag::kDepthFirst);
-		for (; !dagIt.isDone(); dagIt.next()) {
-			MDagPath thisPath;
-			if (dagIt.getPath(thisPath) != MS::kSuccess) {
-				continue;
-			}
-			// Find the animated plugs for this object
-			//
-			MPlugArray animatedPlugs;
-			MObject node = thisPath.node();
-			MFnDependencyNode fnNode(node);
-			MAnimUtil::findAnimatedPlugs(thisPath, animatedPlugs);
-			unsigned int numPlugs = animatedPlugs.length();
-			if (numPlugs == 0) {
-				// If the object is not animated, then write out place holder
-				// information
-				//
-				
-			}
-			else {
-				// Otherwise write out each animation curve
-				//
-				
-
-				writeAnimatedPlugs(animFile, animatedPlugs, fnNode.name(), dagIt.depth(), thisPath.childCount());
-				
-				
-			}
-			
-		}
-		animFile << "}";
-		return MStatus::kSuccess;
-	}
-	MStatus writeAnimatedPlugs(std::ofstream& animFile, const MPlugArray& animatedPlugs, const MString& nodeName,unsigned int depth,unsigned int childCount){
-		// Walk through each animated plug and write out the animation curve(s)
-		unsigned int numPlugs = animatedPlugs.length();
-		for (unsigned int i = 0; i < numPlugs; i++) {
-			MPlug plug = animatedPlugs[i];
-			MObjectArray animation;
-			if (!MAnimUtil::findAnimation(plug, animation)) {
-				continue;
-			}
-			// Write out the plugs' anim statement
-			//
-			// build up the full attribute name
-			//
-			MPlug attrPlug(plug);
-			MObject attrObj = attrPlug.attribute();
-			MFnAttribute fnAttr(attrObj);
-			MString fullAttrName(fnAttr.name());
-			attrPlug = attrPlug.parent();
-			while (!attrPlug.isNull()) {
-				attrObj = attrPlug.attribute();
-				MFnAttribute fnAttr2(attrObj);
-				fullAttrName = fnAttr2.name() + "." + fullAttrName;
-				attrPlug = attrPlug.parent();
-			}
-			attrObj = plug.attribute();
-			MFnAttribute fnLeafAttr(attrObj);
-			animFile << "    {\n";
-			animFile << "        name = \"" << fnLeafAttr.name().asChar() << "\",\n";
-			unsigned int numCurves = animation.length();
-
-
-			// Write out each animation curve that animates the plug
-			//
-			
-			for (unsigned int j = 0; j < numCurves; j++) {
-				MObject animCurveNode = animation[j];
-				if (!animCurveNode.hasFn(MFn::kAnimCurve)) {
-					continue;
-				}
-			
-				writeAnimCurve(animFile, &animCurveNode);
-				
-			}
-			
-			animFile << "    },\n";
-		}
-		return MStatus::kSuccess;
-	}
-
-	MStatus writeAnimCurve(std::ofstream& animFile, const MObject* animCurveObj) {
-		MStatus status = MS::kSuccess;
-		if (NULL == animCurveObj || animCurveObj->isNull() || !animFile) {
-			return status;
-		}
-		MFnAnimCurve animCurve(*animCurveObj, &status);
-		if (MS::kSuccess != status) {
-			std::cerr << "Error: Could not read the anim curve for export." << std::endl;
-			return status;
-		}
-
-		double conversion = 1.0;
-		MString unitName;
-		MFnAnimCurve::AnimCurveType type = animCurve.animCurveType();
-		switch (type) {
-		case MFnAnimCurve::kAnimCurveTA:
-		case MFnAnimCurve::kAnimCurveUA:
-			/*animUnitNames::setToShortName(angularUnit, unitName);
-			if (verboseUnits) animFile << unitName;
-			{
-				MAngle angle(1.0);
-				conversion = angle.as(angularUnit);
-			}*/
-			break;
-		case MFnAnimCurve::kAnimCurveTL:
-		case MFnAnimCurve::kAnimCurveUL:
-		/*	animUnitNames::setToShortName(linearUnit, unitName);
-			if (verboseUnits) animFile << unitName;
-			{
-				MDistance distance(1.0);
-				conversion = distance.as(linearUnit);
-			}*/
-			break;
-		case MFnAnimCurve::kAnimCurveTT:
-		case MFnAnimCurve::kAnimCurveUT:
-			/*animUnitNames::setToShortName(timeUnit, unitName);
-			if (verboseUnits) animFile << unitName;*/
-			break;
-		default:
-			//if (verboseUnits) animFile << kUnitlessString;
-			break;
-		}
-		//if (verboseUnits) animFile << kSemiColonChar << std::endl;
-		//if (verboseUnits) {
-		//	MString angleUnitName;
-		//	animUnitNames::setToShortName(angularUnit, angleUnitName);
-		//	animFile << kTwoSpace << kTanAngleUnitString <<
-		//		kSpaceChar << angleUnitName << kSemiColonChar << std::endl;
-		//}
-		//animFile << kTwoSpace << kPreInfinityString << kSpaceChar <<
-		//	infinityTypeAsWord(animCurve.preInfinityType()) <<
-		//	kSemiColonChar << std::endl;
-		//animFile << kTwoSpace << kPostInfinityString << kSpaceChar <<
-		//	infinityTypeAsWord(animCurve.postInfinityType()) <<
-		//	kSemiColonChar << std::endl;
-		//animFile << kTwoSpace << kKeysString << kSpaceChar << kBraceLeftChar << std::endl;
-		// And then write out each keyframe
-		//
 	
-		unsigned numKeys = animCurve.numKeyframes();
-		animFile << "        frameCount = " << numKeys << ",\n";
-		animFile << "        frames = {\n           ";
-		for (unsigned i = 0; i < numKeys; i++) {
-			animFile << "{";
-			if (animCurve.isUnitlessInput()) {
-				animFile << animCurve.unitlessInput(i);
-			}
-			else {
-				animFile << animCurve.time(i).value();
-			}
-			animFile << "," << (conversion * animCurve.value(i));
 
-			double slope;
-			double intercept;
-			//in tangent
-			//animCurve.getTangent(i, slope, intercept, true);
-			//animFile << " " << slope;
-			//animFile << " " << intercept;
-			//out tangent
-			//animCurve.getTangent(i, slope, intercept, false);
-			//animFile << " " << slope;
-			//animFile << " " << intercept;
-			//animCurve.getTangent(i, angle, weight, false);
-			//animFile << " " << angle.as(MAngle::uiUnit());
-			//animFile << " " << weight;
+		int childCount = joint.jointNode->childCount();
+	
+		for (int i = 0; i < childCount; i++) {
+			MObject nextJointObject = joint.jointNode->child(i);
+			Joint nextJoint(nextJointObject,joint.layer+1);
 			
-			animFile << "},";
+			ProcessSingleJoint(nextJoint);
+			joint.children.push_back(nextJoint);
 		}
-		animFile << "\n        },\n";
-		//animFile << kTwoSpace << kBraceRightChar << std::endl;
-		//animFile << kBraceRightChar << std::endl;
+		return MStatus::kSuccess;
+	}
+	MStatus ProcessSkincluster(std::ofstream& fileOut) {
+	
+		MItDependencyNodes iter(MFn::kInvalid);
+		for (; !iter.isDone(); iter.next()){
+	
+			MObject object = iter.thisNode();
+			if (object.apiType() == MFn::kSkinClusterFilter) {
+
+				MFnSkinCluster skinCluster(object);
+				MDagPathArray infs;
+				MStatus stat;
+				unsigned int nInfs = skinCluster.influenceObjects(infs, &stat);
+
+
+				if (0 == nInfs) {
+					stat = MS::kFailure;
+					MGlobal::displayError("Error: No influence objects found.");
+				}
+
+				// loop through the geometries affected by this cluster
+				//
+				unsigned int nGeoms = skinCluster.numOutputConnections();
+				for (unsigned int ii = 0; ii < nGeoms; ++ii) {
+					unsigned int index = skinCluster.indexForOutputConnection(ii, &stat);
+					// get the dag path of the ii'th geometry
+					//
+					MDagPath skinPath;
+					stat = skinCluster.getPathAtIndex(index, skinPath);
+					// iterate through the components of this geometry
+					//
+					MItGeometry gIter(skinPath);
+					// print out the path name of the skin, vertexCount & influenceCount
+					//
+					fileOut << skinPath.partialPathName().asChar() << " "<<gIter.count()<<" " << nInfs << "\n";
+
+					// print out the influence objects
+					//
+					for (unsigned int kk = 0; kk < nInfs; ++kk) {
+						fileOut << infs[kk].partialPathName().asChar() << " ";
+					}
+					fileOut << "\n";
+
+					for ( /* nothing */; !gIter.isDone(); gIter.next()) {
+						MObject comp = gIter.currentItem(&stat);
+
+						// Get the weights for this vertex (one per influence object)
+						//
+						MDoubleArray wts;
+						unsigned int infCount;
+						stat = skinCluster.getWeights(skinPath, comp, wts, infCount);
+
+						if (0 == infCount) {
+							stat = MS::kFailure;
+							MGlobal::displayError("Error: 0 influence objects.");
+						}
+						// Output the weight data for this vertex
+						//
+						fileOut << gIter.index() << " ";
+						
+						for (unsigned int jj = 0; jj < infCount; ++jj) {
+							fileOut << wts[jj] << " ";
+						}
+						fileOut << "\n";
+					}
+				}
+			}
+		}
+		return MStatus::kSuccess;
+	}
+	MStatus WriteJoints(const Joint& rootJoint, std::ofstream& fileOut) {
+		WriteSingleJoint(rootJoint, fileOut);
+		return MStatus::kSuccess;
+	}
+	MStatus WriteSingleJoint(const Joint& joint, std::ofstream& fileOut) {
+		//name
+		for (int i = 0; i < joint.layer * 4; i++) {
+			fileOut << " ";
+		}
+		fileOut << joint.name << "    ";
+		//transformation
+		for (int i = 0; i < 4; i++) {
+			fileOut << "{";
+			for (int j = 0; j < 4; j++) {
+				fileOut << joint.transformationMatrix.asMatrix()[i][j];
+				fileOut << ",";
+			}
+			fileOut << "},";
+		}
+		fileOut << "\n";
+
+		for (auto child : joint.children) {
+			WriteSingleJoint(child, fileOut);
+		}
 		return MStatus::kSuccess;
 	}
 }

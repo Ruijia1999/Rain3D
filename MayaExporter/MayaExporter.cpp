@@ -92,8 +92,6 @@ namespace
 	{
 		const sVertex_maya vertex;
 
-		// A Maya "shading group" is similar to what we call a "material" in our class
-		const size_t shadingGroup;
 		// This unique key is calculated in order to decide whether a new vertex should be created or not,
 		// and that calculated key is assigned to the vertex so that it can be sorted uniquely
 		const std::string uniqueKey;
@@ -102,20 +100,15 @@ namespace
 			const MFloatVector& i_tangent, const MFloatVector& i_bitangent,
 			const float i_texcoordU, const float i_texcoordV,
 			const MColor& i_vertexColor,
-			const size_t i_shadingGroup,
 			const std::string& i_uniqueKey)
 			:
 			vertex(i_position, i_normal, i_tangent, i_bitangent, i_texcoordU, i_texcoordV, i_vertexColor),
-			shadingGroup(i_shadingGroup),
 			uniqueKey(i_uniqueKey)
 		{
 
 		}
 	};
 
-	struct sJointInfo {
-
-	};
 }
 
 // Static Data
@@ -128,49 +121,22 @@ namespace
 	struct sTriangle
 	{
 		std::string vertexKeys[s_vertexCountPerTriangle];
-		size_t shadingGroup;
 
 		static bool CompareTriangles(const sTriangle& i_lhs, const sTriangle& i_rhs)
 		{
-			// Sort the triangles by shading group
-			// (so that a single draw call can work with a single contiguous block of vertex and index data)
-			if (i_lhs.shadingGroup != i_rhs.shadingGroup)
+			for (size_t i = 0; i < s_vertexCountPerTriangle; ++i)
 			{
-				return i_lhs.shadingGroup < i_rhs.shadingGroup;
-			}
-			else
-			{
-				// If two triangles use the same shading group the order doesn't matter,
-				// but it's nice to have the exported files be deterministic
-				for (size_t i = 0; i < s_vertexCountPerTriangle; ++i)
+				if (i_lhs.vertexKeys[i] != i_rhs.vertexKeys[i])
 				{
-					if (i_lhs.vertexKeys[i] != i_rhs.vertexKeys[i])
-					{
-						return i_lhs.vertexKeys[i] < i_rhs.vertexKeys[i];
-					}
+					return i_lhs.vertexKeys[i] < i_rhs.vertexKeys[i];
 				}
 			}
-			// If there are two identical triangles it means that i_lhs isn't less than i_rhs
+	
 			return false;
 		}
 	};
 
-	struct sMaterialInfo
-	{
-		// As an example, the material node's name (which is useless) is currently stored
-		MString nodeName;
-
-		// Keep track of the the range of vertices and indices that use this material
-		// (the stored indices are for the final vertex buffer and index buffer vectors)
-		struct
-		{
-			size_t first = std::numeric_limits<size_t>::max(), last = 0;
-		} vertexRange;
-		struct
-		{
-			size_t first = std::numeric_limits<size_t>::max(), last = 0;
-		} indexRange;
-	};
+	
 }
 
 // Helper Declarations
@@ -179,20 +145,14 @@ namespace
 namespace
 {
 	std::string CreateUniqueVertexKey(const int i_positionIndex, const int i_normalIndex, const int i_tangentIndex,
-		const int i_texcoordIndex, const int i_vertexColorIndex, const size_t i_shadingGroupIndex, const char* i_transformName);
-	MStatus FillVertexAndIndexArrays(const std::map<std::string, sVertexInfo>& i_uniqueVertices, const std::vector<MObject>& i_shadingGroups,
+		const int i_texcoordIndex, const int i_vertexColorIndex, const char* i_transformName);
+	MStatus FillVertexAndIndexArrays(const std::map<std::string, sVertexInfo>& i_uniqueVertices,
 		std::vector<sTriangle>& io_triangles,
-		std::vector<sVertexInfo>& o_vertexArray, std::vector<size_t>& o_indexArray,
-		std::vector<sMaterialInfo>& o_materialInfo);
-	MStatus ProcessAllObjects(std::map<std::string, sVertexInfo>& o_uniqueVertices, std::vector<sTriangle>& o_triangles,
-		std::vector<MObject>& o_shadingGroups);
-	MStatus ProcessSelectedObjects(std::map<std::string, sVertexInfo>& o_uniqueVertices, std::vector<sTriangle>& o_triangles,
-		std::vector<MObject>& o_shadingGroups);
-	MStatus ProcessSingleDagNode(const MDagPath& i_dagPath,
-		std::map<std::string, sVertexInfo>& io_uniqueVertices, std::vector<sTriangle>& io_triangles,
-		std::vector<MObject>& io_shadingGroups, std::map<std::string, size_t>& io_map_shadingGroupNamesToIndices);
-	MStatus WriteMeshToFile(const MString& i_fileName, const std::vector<sVertexInfo>& i_vertexArray, const std::vector<size_t>& i_indexArray,
-		const std::vector<sMaterialInfo>& i_materialInfo);
+		std::vector<sVertexInfo>& o_vertexArray, std::vector<size_t>& o_indexArray);
+	MStatus ProcessAllObjects(std::map<std::string, sVertexInfo>& o_uniqueVertices, std::vector<sTriangle>& o_triangles);
+	MStatus ProcessSelectedObjects(std::map<std::string, sVertexInfo>& o_uniqueVertices, std::vector<sTriangle>& o_triangles);
+	MStatus ProcessSingleDagNode(const MDagPath& i_dagPath,std::map<std::string, sVertexInfo>& io_uniqueVertices, std::vector<sTriangle>& io_triangles);
+	MStatus WriteMeshToFile(const MString& i_fileName, const std::vector<sVertexInfo>& i_vertexArray, const std::vector<size_t>& i_indexArray);
 }
 
 // Inherited Interface
@@ -205,24 +165,23 @@ MStatus Rain::MayaExporter::writer(const MFileObject& i_file, const MString& i_o
 	// Calculate the vertex and index data
 	std::vector<sVertexInfo> vertexArray;
 	std::vector<size_t> indexArray;
-	std::vector<sMaterialInfo> materialInfo;
+	
 	{
 		// Gather the vertex and triangle information
 		std::map<std::string, sVertexInfo> uniqueVertices;
 		std::vector<sTriangle> triangles;
-		std::vector<MObject> shadingGroups;
 		{
 			// The user decides whether to export the entire scene or just a selection
 			if (i_mode == MPxFileTranslator::kExportAccessMode)
 			{
-				if (!(status = ProcessAllObjects(uniqueVertices, triangles, shadingGroups)))
+				if (!(status = ProcessAllObjects(uniqueVertices, triangles)))
 				{
 					return status;
 				}
 			}
 			else if (i_mode == MPxFileTranslator::kExportActiveAccessMode)
 			{
-				if (!(status = ProcessSelectedObjects(uniqueVertices, triangles, shadingGroups)))
+				if (!(status = ProcessSelectedObjects(uniqueVertices, triangles)))
 				{
 					return status;
 				}
@@ -234,7 +193,7 @@ MStatus Rain::MayaExporter::writer(const MFileObject& i_file, const MString& i_o
 			}
 		}
 		// Convert the mesh information to vertex and index arrays
-		if (!(status = FillVertexAndIndexArrays(uniqueVertices, shadingGroups, triangles, vertexArray, indexArray, materialInfo)))
+		if (!(status = FillVertexAndIndexArrays(uniqueVertices, triangles, vertexArray, indexArray)))
 		{
 			return status;
 		}
@@ -243,7 +202,7 @@ MStatus Rain::MayaExporter::writer(const MFileObject& i_file, const MString& i_o
 	// Write the mesh data to the requested file
 	{
 		const auto filePath = i_file.resolvedFullName();
-		return WriteMeshToFile(filePath, vertexArray, indexArray, materialInfo);
+		return WriteMeshToFile(filePath, vertexArray, indexArray);
 	}
 }
 
@@ -253,11 +212,11 @@ MStatus Rain::MayaExporter::writer(const MFileObject& i_file, const MString& i_o
 namespace
 {
 	std::string CreateUniqueVertexKey(const int i_positionIndex, const int i_normalIndex, const int i_tangentIndex,
-		const int i_texcoordIndex, const int i_vertexColorIndex, const size_t i_shadingGroupIndex, const char* i_transformName)
+		const int i_texcoordIndex, const int i_vertexColorIndex, const char* i_transformName)
 	{
 		std::ostringstream vertexKey;
-		vertexKey << i_positionIndex << "_" << i_normalIndex << "_" << i_tangentIndex
-			<< "_" << i_texcoordIndex << "_" << i_vertexColorIndex << "_" << i_shadingGroupIndex;
+		vertexKey << i_positionIndex << "_" << i_normalIndex 
+			<< "_" << i_texcoordIndex << "_" << i_vertexColorIndex;
 		if (i_transformName)
 		{
 			vertexKey << "_" << i_transformName;
@@ -265,10 +224,9 @@ namespace
 		return vertexKey.str();
 	}
 
-	MStatus FillVertexAndIndexArrays(const std::map<std::string, sVertexInfo>& i_uniqueVertices, const std::vector<MObject>& i_shadingGroups,
+	MStatus FillVertexAndIndexArrays(const std::map<std::string, sVertexInfo>& i_uniqueVertices,
 		std::vector<sTriangle>& io_triangles,
-		std::vector<sVertexInfo>& o_vertexArray, std::vector<size_t>& o_indexArray,
-		std::vector<sMaterialInfo>& o_materialInfo)
+		std::vector<sVertexInfo>& o_vertexArray, std::vector<size_t>& o_indexArray)
 	{
 		MStatus status;
 
@@ -282,17 +240,10 @@ namespace
 			{
 				bool operator()(const sVertexInfo& i_lhs, const sVertexInfo& i_rhs) const
 				{
-					// Sort the vertices by shading group
-					// (so that a single draw call can work with a single contiguous block of vertex data)
-					if (i_lhs.shadingGroup != i_rhs.shadingGroup)
-					{
-						return i_lhs.shadingGroup < i_rhs.shadingGroup;
-					}
-					else
-					{
+					
 						// If two vertices use the same shading group the order doesn't matter
-						return i_lhs.uniqueKey < i_rhs.uniqueKey;
-					}
+					return i_lhs.uniqueKey < i_rhs.uniqueKey;
+					
 				}
 			};
 			std::map<sVertexInfo, std::string, CompareVertices> sortedVertices;
@@ -307,13 +258,6 @@ namespace
 				const auto& vertex = i->first;
 				o_vertexArray.push_back(vertex);
 				vertexKeyToIndexMap.insert(std::make_pair(i->second, vertexIndex));
-				// Update the vertex range for the shading group that this material uses
-				if (vertex.shadingGroup < o_materialInfo.size())
-				{
-					auto& materialInfo = o_materialInfo[vertex.shadingGroup];
-					materialInfo.vertexRange.first = std::min(vertexIndex, materialInfo.vertexRange.first);
-					materialInfo.vertexRange.last = std::max(vertexIndex, materialInfo.vertexRange.last);
-				}
 			}
 		}
 
@@ -334,13 +278,7 @@ namespace
 					const auto triangleIndex = vertexKeyToIndexMap.find(vertexKey)->second;
 					const auto indexBufferIndex = (i * s_vertexCountPerTriangle) + j;
 					o_indexArray[indexBufferIndex] = triangleIndex;
-					// Update the index range for the shading group that this material uses
-					if (triangle.shadingGroup < o_materialInfo.size())
-					{
-						auto& materialInfo = o_materialInfo[triangle.shadingGroup];
-						materialInfo.indexRange.first = std::min(indexBufferIndex, materialInfo.indexRange.first);
-						materialInfo.indexRange.last = std::max(indexBufferIndex, materialInfo.indexRange.last);
-					}
+					
 				}
 			}
 		}
@@ -348,17 +286,16 @@ namespace
 		return MStatus::kSuccess;
 	}
 
-	MStatus ProcessAllObjects(std::map<std::string, sVertexInfo>& o_uniqueVertices, std::vector<sTriangle>& o_triangles,
-		std::vector<MObject>& o_shadingGroups)
+	MStatus ProcessAllObjects(std::map<std::string, sVertexInfo>& o_uniqueVertices, std::vector<sTriangle>& o_triangles)
 	{
 		MStatus status;
 
-		std::map<std::string, size_t> map_shadingGroupNamesToIndices;
+
 		for (MItDag i(MItDag::kDepthFirst, MFn::kMesh); !i.isDone(); i.next())
 		{
 			MDagPath dagPath;
 			i.getPath(dagPath);
-			if (!(status = ProcessSingleDagNode(dagPath, o_uniqueVertices, o_triangles, o_shadingGroups, map_shadingGroupNamesToIndices)))
+			if (!(status = ProcessSingleDagNode(dagPath, o_uniqueVertices, o_triangles)))
 			{
 				return status;
 			}
@@ -367,8 +304,7 @@ namespace
 		return status;
 	}
 
-	MStatus ProcessSelectedObjects(std::map<std::string, sVertexInfo>& o_uniqueVertices, std::vector<sTriangle>& o_triangles,
-		std::vector<MObject>& o_shadingGroups)
+	MStatus ProcessSelectedObjects(std::map<std::string, sVertexInfo>& o_uniqueVertices, std::vector<sTriangle>& o_triangles)
 	{
 		MStatus status;
 
@@ -376,23 +312,14 @@ namespace
 		MSelectionList selectionList;
 		if (status = MGlobal::getActiveSelectionList(selectionList))
 		{
-			MPlugArray animatedPlugs;
-	        MAnimUtil::findAnimatedPlugs(selectionList, animatedPlugs);
-			unsigned int numPlugs = animatedPlugs.length();
 
-			std::map<std::string, size_t> map_shadingGroupNamesToIndices;
 			for (MItSelectionList i(selectionList, MFn::kMesh); !i.isDone(); i.next())
 			{
 
 				MDagPath dagPath;
 				i.getDagPath(dagPath);
-				MPlugArray animatedPlugs;
-				MObject object;
-				i.getDependNode(object);
-				bool k = MAnimUtil::isAnimated(object);
-				MAnimUtil::findAnimatedPlugs(object, animatedPlugs);
-				unsigned int numPlugs = animatedPlugs.length();
-				if (!(status = ProcessSingleDagNode(dagPath, o_uniqueVertices, o_triangles, o_shadingGroups, map_shadingGroupNamesToIndices)))
+
+				if (!(status = ProcessSingleDagNode(dagPath, o_uniqueVertices, o_triangles)))
 				{
 					return status;
 				}
@@ -403,7 +330,7 @@ namespace
 				MDagPath dagPath;
 				i.getDagPath(dagPath);
 
-				if (!(status = ProcessSingleDagNode(dagPath, o_uniqueVertices, o_triangles, o_shadingGroups, map_shadingGroupNamesToIndices)))
+				if (!(status = ProcessSingleDagNode(dagPath, o_uniqueVertices, o_triangles)))
 				{
 					return status;
 				}
@@ -419,11 +346,16 @@ namespace
 	}
 
 	MStatus ProcessSingleDagNode(const MDagPath& i_dagPath,
-		std::map<std::string, sVertexInfo>& io_uniqueVertices, std::vector<sTriangle>& io_triangles,
-		std::vector<MObject>& io_shadingGroups, std::map<std::string, size_t>& io_map_shadingGroupNamesToIndices)
+		std::map<std::string, sVertexInfo>& io_uniqueVertices, std::vector<sTriangle>& io_triangles)
 	{
 		// Get the mesh from the DAG path
 		MFnMesh mesh(i_dagPath);
+		MIntArray count;
+		MIntArray ver;
+		mesh.getVertices(count, ver);
+		
+		int j = count.length();
+		int k = ver.length();
 		MStatus status = MS::kSuccess;
 		if (mesh.isIntermediateObject())
 		{
@@ -440,7 +372,7 @@ namespace
 				return status;
 			}
 		}
-
+	
 		// Get a list of the normals
 		MFloatVectorArray normals;
 		{
@@ -529,10 +461,6 @@ namespace
 			}
 		}
 
-		// A single mesh (i.e. geometric data)
-		// can be used by multiple DAG nodes in a Maya scene.
-		// (For example, a single sphere mesh could be instanced many times
-		// but at different positions, with different orientations, scales, and materials.)
 		// An instance ID identifies the specific node that should be processed by this function.
 		unsigned int instanceId = 0;
 		if (i_dagPath.isInstanced())
@@ -546,85 +474,9 @@ namespace
 			}
 		}
 
-		// Get a list of the shading groups (i.e. materials)
-		std::vector<size_t> polygonShadingGroupIndices;
-		{
-			MObjectArray shadingGroups;
-			MIntArray localIndices;
-			const auto status = mesh.getConnectedShaders(instanceId, shadingGroups, localIndices);
-			if (status)
-			{
-				// Remap each local shading group index (i.e. that applies to the array returned by getConnectedShaders())
-				// to an index into our static list
-				std::vector<size_t> shadingGroupIndices;
-				{
-					const auto shadingGroupCount = shadingGroups.length();
-					shadingGroupIndices.resize(shadingGroupCount);
-					for (std::remove_const<decltype(shadingGroupCount)>::type i = 0; i < shadingGroupCount; ++i)
-					{
-						size_t shadingGroupIndex;
-						{
-							const auto shadingGroup = shadingGroups[i];
-							const std::string shadingGroupName = MFnDependencyNode(shadingGroup).name().asChar();
-							const auto mapLookUp = io_map_shadingGroupNamesToIndices.find(shadingGroupName);
-							if (mapLookUp != io_map_shadingGroupNamesToIndices.end())
-							{
-								shadingGroupIndex = mapLookUp->second;
-							}
-							else
-							{
-								const auto newIndex = io_shadingGroups.size();
-								io_shadingGroups.push_back(shadingGroup);
-								io_map_shadingGroupNamesToIndices.insert(std::make_pair(shadingGroupName, newIndex));
-								shadingGroupIndex = newIndex;
-							}
-						}
-						shadingGroupIndices[i] = shadingGroupIndex;
-					}
-				}
-				// Convert each polygon shading group index
-				{
-					const auto polygonCount = localIndices.length();
-					if (polygonCount == mesh.numPolygons())
-					{
-						polygonShadingGroupIndices.resize(polygonCount);
-						for (std::remove_const<decltype(polygonCount)>::type i = 0; i < polygonCount; ++i)
-						{
-							const int localIndex = localIndices[i];
-							if (localIndex >= 0)
-							{
-								polygonShadingGroupIndices[i] = shadingGroupIndices[static_cast<size_t>(localIndex)];
-							}
-							else
-							{
-								// If a polygon doesn't have a shading group the index will be -1
-								polygonShadingGroupIndices[i] = static_cast<size_t>(localIndex);
-							}
-						}
-					}
-					else
-					{
-						MGlobal::displayError(MString("mesh.numPolygons() returned ") + mesh.numPolygons()
-							+ " but mesh.getConnectedShaders() returned " + polygonCount
-							+ " indices! According to my understanding of the Maya API this should never happen");
-					}
-				}
-			}
-			else
-			{
-				MGlobal::displayError(status.errorString());
-				return status;
-			}
-		}
-
 		// Gather vertex and triangle information
 		{
-			// Use the name of the transform to ensure uniqueness
-			// (This is necessary because uniqueness is otherwise determined by indices within a given mesh.
-			// If the actual data (like the position coordinates) was used instead then this could be ignored
-			// and two identical vertices from two completely different meshes could be saved as a single one.
-			// This should happen rarely in practice, but a production-quality exporter
-			// should probably be more strict about testing equivalence to try and save as much memory as possible.)
+
 			const auto* const transformName = MFnDependencyNode(mesh.parent(instanceId)).name().asChar();
 
 			MPointArray trianglePositions;
@@ -634,8 +486,6 @@ namespace
 			{
 				if (i.hasValidTriangulation())
 				{
-					const auto shadingGroup = polygonShadingGroupIndices[polygonIndex];
-
 					// Store information for each vertex in the polygon
 					std::map<int, const std::string> indexToKeyMap;
 					{
@@ -692,14 +542,16 @@ namespace
 									}
 								}
 								const auto vertexKey = CreateUniqueVertexKey(positionIndex, normalIndex, tangentIndex,
-									texcoordIndex, vertexColorIndex, shadingGroup, transformName);
+									texcoordIndex, vertexColorIndex, transformName);
 								indexToKeyMap.insert(std::make_pair(positionIndex, vertexKey));
+								if (io_uniqueVertices.find(vertexKey) != io_uniqueVertices.end()) {
+									int j = 0;
+								}
 								io_uniqueVertices.insert(std::make_pair(vertexKey,
 									sVertexInfo(positions[positionIndex], normals[normalIndex],
 										tangent, bitangent,
 										texcoord.u, texcoord.v,
-										vertexColor,
-										shadingGroup, vertexKey)
+										vertexColor,vertexKey)
 								));
 							}
 						}
@@ -737,13 +589,10 @@ namespace
 										return MStatus::kFailure;
 									}
 								}
-								triangle.shadingGroup = shadingGroup;
 								io_triangles.push_back(triangle);
 							}
 							else
 							{
-								MGlobal::displayError(MString("Triangle #") + j + " reports that it has " +
-									positionIndices.length() + "! According to my understanding of Maya this should never happen");
 								return MStatus::kFailure;
 							}
 						}
@@ -760,19 +609,8 @@ namespace
 		return MStatus::kSuccess;
 	}
 
-	MStatus WriteMeshToFile(const MString& i_fileName, const std::vector<sVertexInfo>& i_vertexArray, const std::vector<size_t>& i_indexArray,
-		const std::vector<sMaterialInfo>& i_materialInfo)
+	MStatus WriteMeshToFile(const MString& i_fileName, const std::vector<sVertexInfo>& i_vertexArray, const std::vector<size_t>& i_indexArray)
 	{
-		// Maya's coordinate system is right=handed and UVs have (0,0) at the lower left corner.
-		// For our class my advice is to keep things the Maya way in your engine (which matches the default OpenGL behavior),
-		// but the following shows one way that the data input to this file could be converted to match standard Direct3D:
-		//	* POSITION	-> x, y, -z
-		//	* NORMAL	-> nx, ny, -nz
-		//	* TANGENT	-> tx, ty, -tz
-		//	* BITANGENT	-> -btx, -bty, btz
-		//	* TEXCOORD	-> u, 1 - v
-		//
-		//	* triangle index order	-> index_0, index_2, index_1
 
 		std::ofstream fout(i_fileName.asChar());
 		if (fout.is_open())

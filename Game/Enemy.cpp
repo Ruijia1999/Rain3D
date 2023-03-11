@@ -9,12 +9,15 @@
 void Rain::Enemy::Initialize() {
     Rain::Input::Mouse::BindEvent(MOUSE_LEFT_DOWN, [this](Rain::Input::MouseInfo info) {
         Animation::AnimationComponent* animation = Animation::AnimationSystem::GetInstance()->GetComponent<Animation::AnimationComponent>(this->id);
-        if (animation->isPlaying) {
-            animation->Stop();
+        if (animation != nullptr) {
+            if (animation->isPlaying) {
+                animation->Stop();
+            }
+            else {
+                animation->Play();
+            }
         }
-        else {
-            animation->Play();
-        }
+        
         });
 
     Rain::Input::Mouse::BindEvent(MOUSE_RIGHT_DOWN, [this](Rain::Input::MouseInfo info) {
