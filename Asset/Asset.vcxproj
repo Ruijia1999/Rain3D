@@ -148,7 +148,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Asset.h" />
-    <ClCompile Include="MeshLoader.cpp" />
     <ClCompile Include="SceneLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -178,7 +177,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MeshLoader.h" />
     <ClInclude Include="SceneLoader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
