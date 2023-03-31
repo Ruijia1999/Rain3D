@@ -2,6 +2,7 @@
 #define RAIN_MESHRENDER_SYSTEM
 #include "Render/Effect.h"
 #include "Render/Mesh.h"
+#include "Render/SkeletalMesh.h"
 #include "Render/Texture.h"
 #include "ECS/SystemBase.h"
 #include "MeshRenderComponent.h"
@@ -19,8 +20,10 @@ namespace Rain {
 			}
 			std::map<std::string, std::shared_ptr<Render::Effect>> effects;
 			std::map<std::string, std::shared_ptr<Render::Mesh>> meshes;
+			std::map<std::string, std::shared_ptr<Render::SkeletalMesh>> skeletalMeshes;
 			std::map<std::string, std::shared_ptr<Render::Texture>> textures;
 			std::shared_ptr<Render::Mesh> InitializeMesh(const char* i_name);
+			std::shared_ptr<Render::SkeletalMesh> InitializeSkeletalMesh(const char* i_name);
 			std::shared_ptr<Render::Texture> InitializeTexture(const char* i_name);
 		private:
 			static MeshRenderSystem* instance;

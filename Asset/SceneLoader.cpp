@@ -286,7 +286,67 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		}
 	);
 #pragma endregion
+#pragma region SkeletalMesh
+	RegisterComponentCreator("SkeletalMesh", [](int i_id, lua_State* i_luaState) {
+		std::shared_ptr< Render::SkeletalMesh> mesh;
+		lua_pushstring(i_luaState, "mesh");
+		lua_gettable(i_luaState, -2);
+		std::string mesh_name = lua_tostring(i_luaState, -1);
+		lua_pop(i_luaState, 1);
+		MeshRender::MeshRenderSystem* n = MeshRender::MeshRenderSystem::GetInstance();
+		if (MeshRender::MeshRenderSystem::GetInstance()->skeletalMeshes.find(mesh_name) == MeshRender::MeshRenderSystem::GetInstance()->skeletalMeshes.end()) {
+			mesh = MeshRender::MeshRenderSystem::GetInstance()->InitializeSkeletalMesh(mesh_name.c_str());
+		}
+		else {
+			mesh = MeshRender::MeshRenderSystem::GetInstance()->skeletalMeshes.find(mesh_name)->second;
+		}
 
+
+		/*std::shared_ptr < Render::Effect> effect;
+		lua_pushstring(i_luaState, "effect");
+		lua_gettable(i_luaState, -2);
+		std::string effect_name = lua_tostring(i_luaState, -1);
+		lua_pop(i_luaState, 1);
+		effect = MeshRender::MeshRenderSystem::GetInstance()->effects.find(effect_name)->second;
+
+		std::shared_ptr< Render::Texture> texture;
+		lua_pushstring(i_luaState, "texture");
+		lua_gettable(i_luaState, -2);
+		std::string texture_name = lua_tostring(i_luaState, -1);
+		lua_pop(i_luaState, 1);
+		if (MeshRender::MeshRenderSystem::GetInstance()->textures.find(texture_name) == MeshRender::MeshRenderSystem::GetInstance()->textures.end()) {
+			texture = MeshRender::MeshRenderSystem::GetInstance()->InitializeTexture(texture_name.c_str());
+		}
+		else {
+			texture = MeshRender::MeshRenderSystem::GetInstance()->textures.find(texture_name)->second;
+		}
+
+		std::shared_ptr< Render::Texture> normalMap;
+		lua_pushstring(i_luaState, "normalMap");
+		lua_gettable(i_luaState, -2);
+		std::string normal_name = lua_tostring(i_luaState, -1);
+		lua_pop(i_luaState, 1);
+		if (MeshRender::MeshRenderSystem::GetInstance()->textures.find(normal_name) == MeshRender::MeshRenderSystem::GetInstance()->textures.end()) {
+			normalMap = MeshRender::MeshRenderSystem::GetInstance()->InitializeTexture(normal_name.c_str());
+		}
+		else {
+			normalMap = MeshRender::MeshRenderSystem::GetInstance()->textures.find(normal_name)->second;
+		}*/
+
+		Math::Vector4 color;
+		lua_pushstring(i_luaState, "color");
+		lua_gettable(i_luaState, -2);
+		for (int i = 1; i <= 4; ++i) {
+			lua_rawgeti(i_luaState, -1, i);
+			color[i - 1] = lua_tonumber(i_luaState, -1) / 255.0f;
+			lua_pop(i_luaState, 1);
+		}
+		lua_pop(i_luaState, 1);
+
+		MeshRender::MeshRenderSystem::GetInstance()->AddComponent(new MeshRender::MeshRenderComponent(i_id, mesh, color));
+		}
+	);
+#pragma endregion
 #pragma region Collider
 	RegisterComponentCreator("Collider", [](int i_id, lua_State* i_luaState) {
 		

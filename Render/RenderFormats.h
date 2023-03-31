@@ -7,7 +7,7 @@ namespace Rain {
 			float tx, ty, tz;
 			float u, v;
 		};
-		struct SkinVertexFormat {
+		struct SkeletalVertexFormat {
 			float x, y, z;
 			float nx, ny, nz;
 			float tx, ty, tz;

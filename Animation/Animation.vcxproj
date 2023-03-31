@@ -152,7 +152,6 @@
     <ClInclude Include="AnimationComponent.h" />
     <ClInclude Include="AnimationImporter.h" />
     <ClInclude Include="AnimationSystem.h" />
-    <ClInclude Include="Joint.h" />
     <ClInclude Include="KeyFrame.h" />
     <ClInclude Include="SkinCluster.h" />
     <ClInclude Include="SklAnimClip.h" />
@@ -165,7 +164,6 @@
     <ClCompile Include="AnimationComponent.cpp" />
     <ClCompile Include="AnimationImporter.cpp" />
     <ClCompile Include="AnimationSystem.cpp" />
-    <ClCompile Include="Joint.cpp" />
     <ClCompile Include="KeyFrame.cpp" />
     <ClCompile Include="SkinCluster.cpp" />
     <ClCompile Include="SklAnimClip.cpp" />

@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
-    <ClCompile Include="Joint.cpp" />
     <ClCompile Include="KeyFrame.cpp" />
     <ClCompile Include="SklChannel.cpp" />
     <ClCompile Include="AnimationClip.cpp" />
@@ -19,7 +18,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
-    <ClInclude Include="Joint.h" />
     <ClInclude Include="KeyFrame.h" />
     <ClInclude Include="SklChannel.h" />
     <ClInclude Include="AnimationClip.h" />

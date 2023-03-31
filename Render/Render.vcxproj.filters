@@ -22,7 +22,7 @@
     <ClInclude Include="Mesh.h">
       <Filter>RenderData\StaticMesh</Filter>
     </ClInclude>
-    <ClInclude Include="Skeletal.h">
+    <ClInclude Include="Skeleton.h">
       <Filter>RenderData\Skeletal</Filter>
     </ClInclude>
     <ClInclude Include="RenderData.h">
@@ -30,6 +30,9 @@
     </ClInclude>
     <ClInclude Include="RenderDataBase.h">
       <Filter>RenderData</Filter>
+    </ClInclude>
+    <ClInclude Include="Joint.h">
+      <Filter>RenderData\Skeletal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -53,7 +56,7 @@
     <ClCompile Include="Mesh.cpp">
       <Filter>RenderData\StaticMesh</Filter>
     </ClCompile>
-    <ClCompile Include="Skeletal.cpp">
+    <ClCompile Include="Skeleton.cpp">
       <Filter>RenderData\Skeletal</Filter>
     </ClCompile>
     <ClCompile Include="RenderData.cpp">
@@ -61,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="RenderDataBase.cpp">
       <Filter>RenderData</Filter>
+    </ClCompile>
+    <ClCompile Include="Joint.cpp">
+      <Filter>RenderData\Skeletal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

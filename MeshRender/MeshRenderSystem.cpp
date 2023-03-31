@@ -16,7 +16,12 @@ std::shared_ptr<Rain::Render::Mesh> Rain::MeshRender::MeshRenderSystem::Initiali
 	mesh->Initialize(i_name);
 	return meshes.find(i_name)->second;
 }
-
+std::shared_ptr<Rain::Render::SkeletalMesh> Rain::MeshRender::MeshRenderSystem::InitializeSkeletalMesh(const char* i_name) {
+	Render::SkeletalMesh* mesh = new Render::SkeletalMesh();
+	skeletalMeshes.insert(std::pair<std::string, Render::SkeletalMesh*>(i_name, mesh));
+	mesh->Initialize(i_name);
+	return skeletalMeshes.find(i_name)->second;
+}
 std::shared_ptr<Rain::Render::Texture> Rain::MeshRender::MeshRenderSystem::InitializeTexture(const char* i_name) {
 	if (strcmp(i_name,"")==0) {
 		return nullptr;

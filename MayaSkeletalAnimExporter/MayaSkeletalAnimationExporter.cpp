@@ -167,7 +167,7 @@ namespace {
 	MStatus ProcessSingleDagNode(const MDagPath& i_dagPath, std::ofstream& fileOut);
 	MStatus WriteJoints(const int jointCount, const Joint* jointDataArray, std::ofstream& fileOut);
 	MStatus WriteSingleJoint(const Joint& rootJoint, std::ofstream& fileOut);
-	MStatus WriteSkinCluster(const int positionCount, const Skincluster* skinClusterDataArray, std::ofstream& fileOut);
+	MStatus WriteSkinCluster(int positionCount, const Skincluster* skinClusterDataArray, std::ofstream& fileOut);
 
 }
 
@@ -179,9 +179,8 @@ MStatus Rain::MayaSkeletalAnimExporter::writer(const MFileObject& i_file, const 
 {
 	MStatus status;
 	const auto filePath = i_file.resolvedFullName();
-	std::ofstream fout(filePath.asChar());
+	std::ofstream fout(filePath.asChar(), std::ios::out | std::ios::binary);
 
-	
 	Joint rootJoint;
 	MSelectionList list;
 	std::map<std::string, int> jointIndexArray;
@@ -308,11 +307,11 @@ namespace {
 
 	MStatus WriteJoints(const int jointCount, const Joint* jointDataArray, std::ofstream& fileOut) {
 		
-		fileOut << "\nSkeletonData = {\n";
+		
 		for (int i = 0; i < jointCount; i++) {
 			WriteSingleJoint(jointDataArray[i], fileOut);
 		}
-		fileOut << "}\n";
+		
 		return MStatus::kSuccess;
 	}
 	MStatus WriteSingleJoint(const Joint& joint, std::ofstream& fileOut) {
@@ -321,9 +320,6 @@ namespace {
 		//name
 		fileOut << "        name = "<< joint.name << ",\n";
 
-		//Index
-
-		fileOut << "        index = " << 1 << ",\n";
 		//transformation
 
 
@@ -479,7 +475,7 @@ namespace {
 		return MStatus::kSuccess;
 	}
 
-	MStatus WriteSkinCluster(const int positionCount, const Skincluster* skinClusterDataArray, std::ofstream& fileOut) {
+	MStatus WriteSkinCluster(int positionCount, const Skincluster* skinClusterDataArray, std::ofstream& fileOut) {
 
 		struct WriteData {
 			int index;
@@ -497,7 +493,7 @@ namespace {
 			}
 		}
 
-
+		
 		fileOut.write((char*)&positionCount, sizeof(positionCount));
 		fileOut.write((char*)dataArray, sizeof(WriteData) * positionCount*4);
 		return MStatus::kSuccess;
@@ -583,8 +579,10 @@ namespace {
 				
 			}
 			int length = indexArray.size();
+
 			fileOut.write((char*)&length, sizeof(length));
 			fileOut.write((char*)&indexArray[0], sizeof(Triangle)*length);
+
 		}
 
 		return MStatus::kSuccess;
