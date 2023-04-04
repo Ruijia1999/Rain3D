@@ -16,6 +16,7 @@ Rain::Math::Vector3::Vector3(const Vector3& i_vec) {
 	y = i_vec.y;
 	z = i_vec.z;
 }
+
 Rain::Math::Vector3& Rain::Math::Vector3::operator=(const Vector3& i_vec) {
 	if (this != &i_vec) {
 		x = i_vec.x;
@@ -24,6 +25,7 @@ Rain::Math::Vector3& Rain::Math::Vector3::operator=(const Vector3& i_vec) {
 	}
 	return *this;
 }
+
 void Rain::Math::Vector3::Normalize() {
 	float i = x * x + y * y + z * z;
 	i = sqrtf(i);

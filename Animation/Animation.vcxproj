@@ -148,27 +148,27 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
-    <ClInclude Include="AnimationClip.h" />
+    <ClInclude Include="GeneralAnimationClip.h" />
     <ClInclude Include="AnimationComponent.h" />
+    <ClInclude Include="GeneralAnimationComponent.h" />
     <ClInclude Include="AnimationImporter.h" />
     <ClInclude Include="AnimationSystem.h" />
     <ClInclude Include="KeyFrame.h" />
-    <ClInclude Include="SkinCluster.h" />
+    <ClInclude Include="Pose.h" />
+    <ClInclude Include="SklAnimationComponent.h" />
     <ClInclude Include="SklAnimClip.h" />
-    <ClInclude Include="SklChannel.h" />
-    <ClInclude Include="SklCharacter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
-    <ClCompile Include="AnimationClip.cpp" />
+    <ClCompile Include="GeneralAnimationClip.cpp" />
     <ClCompile Include="AnimationComponent.cpp" />
+    <ClCompile Include="GeneralAnimationComponent.cpp" />
     <ClCompile Include="AnimationImporter.cpp" />
     <ClCompile Include="AnimationSystem.cpp" />
     <ClCompile Include="KeyFrame.cpp" />
-    <ClCompile Include="SkinCluster.cpp" />
+    <ClCompile Include="Pose.cpp" />
+    <ClCompile Include="SklAnimationComponent.cpp" />
     <ClCompile Include="SklAnimClip.cpp" />
-    <ClCompile Include="SklChannel.cpp" />
-    <ClCompile Include="SklCharacter.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

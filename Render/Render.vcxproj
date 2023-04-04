@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="ConstantBufferFormats.h" />
+    <ClInclude Include="ConstantLayout.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Joint.h" />
@@ -31,6 +32,7 @@
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SkeletalMesh.h" />
+    <ClInclude Include="SkeletonRenderData.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="windows.h" />
     <ClInclude Include="windows\windows.h" />
@@ -38,6 +40,7 @@
   <ItemGroup>
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="ConstantBufferFormats.cpp" />
+    <ClCompile Include="ConstantLayout.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Joint.cpp" />
@@ -52,6 +55,7 @@
     </ClCompile>
     <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="SkeletalMesh.cpp" />
+    <ClCompile Include="SkeletonRenderData.cpp" />
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -60,6 +64,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="defaultVertex.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="SkeletalMeshPixel.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="SkeletalMeshVertex.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

@@ -1,5 +1,7 @@
 #ifndef RAIN_MATH_VECTOR3
 #define RAIN_MATH_VECTOR3
+
+
 namespace Rain {
 	namespace Math {
 		class Vector3

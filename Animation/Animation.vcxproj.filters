@@ -3,38 +3,64 @@
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="KeyFrame.cpp" />
-    <ClCompile Include="SklChannel.cpp" />
-    <ClCompile Include="AnimationClip.cpp" />
     <ClCompile Include="AnimationSystem.cpp">
       <Filter>ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationImporter.cpp" />
+    <ClCompile Include="SklAnimClip.cpp">
+      <Filter>Skeletal</Filter>
+    </ClCompile>
+    <ClCompile Include="Pose.cpp">
+      <Filter>Skeletal</Filter>
+    </ClCompile>
+    <ClCompile Include="SklAnimationComponent.cpp">
+      <Filter>Skeletal</Filter>
     </ClCompile>
     <ClCompile Include="AnimationComponent.cpp">
       <Filter>ECS</Filter>
     </ClCompile>
-    <ClCompile Include="AnimationImporter.cpp" />
-    <ClCompile Include="SklAnimClip.cpp" />
-    <ClCompile Include="SkinCluster.cpp" />
-    <ClCompile Include="SklCharacter.cpp" />
+    <ClCompile Include="GeneralAnimationComponent.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneralAnimationClip.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="KeyFrame.h" />
-    <ClInclude Include="SklChannel.h" />
-    <ClInclude Include="AnimationClip.h" />
     <ClInclude Include="AnimationSystem.h">
       <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationImporter.h" />
+    <ClInclude Include="SklAnimClip.h">
+      <Filter>Skeletal</Filter>
+    </ClInclude>
+    <ClInclude Include="Pose.h">
+      <Filter>Skeletal</Filter>
+    </ClInclude>
+    <ClInclude Include="SklAnimationComponent.h">
+      <Filter>Skeletal</Filter>
     </ClInclude>
     <ClInclude Include="AnimationComponent.h">
       <Filter>ECS</Filter>
     </ClInclude>
-    <ClInclude Include="AnimationImporter.h" />
-    <ClInclude Include="SklAnimClip.h" />
-    <ClInclude Include="SkinCluster.h" />
-    <ClInclude Include="SklCharacter.h" />
+    <ClInclude Include="GeneralAnimationComponent.h">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneralAnimationClip.h">
+      <Filter>General</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ECS">
       <UniqueIdentifier>{728d1f42-9fd2-4776-a4f6-22b99a0d7820}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="General">
+      <UniqueIdentifier>{b2b3ce4f-19ba-462d-8db7-3a33270d93b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Skeletal">
+      <UniqueIdentifier>{633cd246-4e7e-47c5-afa3-d208c3bfa046}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

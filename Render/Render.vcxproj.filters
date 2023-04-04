@@ -34,6 +34,10 @@
     <ClInclude Include="Joint.h">
       <Filter>RenderData\Skeletal</Filter>
     </ClInclude>
+    <ClInclude Include="SkeletonRenderData.h">
+      <Filter>RenderData\Skeletal</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantLayout.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderSystem.d3d.cpp">
@@ -68,6 +72,10 @@
     <ClCompile Include="Joint.cpp">
       <Filter>RenderData\Skeletal</Filter>
     </ClCompile>
+    <ClCompile Include="SkeletonRenderData.cpp">
+      <Filter>RenderData\Skeletal</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstantLayout.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="OpenGL">
@@ -118,6 +126,12 @@
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="waterVertex.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="SkeletalMeshPixel.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="SkeletalMeshVertex.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

@@ -8,7 +8,13 @@
 #include <string>
 namespace Rain {
 	namespace Render {
-
+		struct JointData {
+			char name[52];
+			double translation[3];
+			double rotation[3];
+			int childrenCount;
+			int* children;
+		};
 
 		class SkeletalMesh
 		{
@@ -17,10 +23,13 @@ namespace Rain {
 			ID3D11Buffer* m_indexBuffer = nullptr;
 			
 		public:
+			Skeleton* skeleton;
 
 			void Initialize(const char* i_filePath);
+			void UpdateMesh();
 			void Draw() const;
 			void CleanUp();
+			
 			SkeletalMesh(const SkeletalMesh& i_mesh);
 			SkeletalMesh();
 			~SkeletalMesh() {
@@ -36,11 +45,14 @@ namespace Rain {
 			//--------
 			int pointCount;
 			int indexCount;
-			Skeleton* skeleton;
 			IndexFormat* indexData = nullptr;
 			SkeletalVertexFormat* vertexData = nullptr;
 			
+		private:
 			void Load(int& i_indexCount, int& i_pointCount, Skeleton* skeleton, IndexFormat*& i_indexData);
+			void LoadJointData(const int jointData, const JointData* jointDataArray, Skeleton* skeleton);
+			
+			
 		};
 	}
 }

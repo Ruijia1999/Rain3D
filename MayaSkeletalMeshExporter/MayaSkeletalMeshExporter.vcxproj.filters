@@ -2,9 +2,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="EntryPoint.cpp" />
-    <ClCompile Include="MayaAnimationExporter.cpp" />
+    <ClCompile Include="MayaSkeletalMeshExporter.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MayaAnimationExporter.h" />
+    <ClInclude Include="MayaSkeletalMeshExporter.h" />
   </ItemGroup>
 </Project>

@@ -21,6 +21,7 @@
 #include "Render\ConstantBufferFormats.h"
 #include "Animation\AnimationSystem.h"
 #include "Render\RenderDataBase.h"
+#include "Render\SkeletonRenderData.h"
 using namespace std::placeholders;
 using namespace Rain;
 namespace {
@@ -165,7 +166,13 @@ void Rain::Rain3DGame::Update() {
             frameConstantBuffer.cameraPos = cameraPos;
             frameConstantBuffer.lightColor = lightColor;
             frameConstantBuffer.lightDirection = lightDir;
-            renderData.push_back(new Render::RenderData(meshRender->mesh, meshRender->effect, meshRender->texture, meshRender->normalMap, vsConstantBuffer, frameConstantBuffer));
+            if (meshRender->meshType == 0) {
+                renderData.push_back(new Render::RenderData(meshRender->mesh, meshRender->effect, meshRender->texture, meshRender->normalMap, vsConstantBuffer, frameConstantBuffer));
+            }
+            else if (meshRender->meshType == 1) {
+                renderData.push_back(new Render::SkeletonRenderData(meshRender->skeletalMesh, meshRender->effect,vsConstantBuffer, frameConstantBuffer));
+            }
+            
 
         }
     }

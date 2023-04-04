@@ -1,5 +1,5 @@
-#ifndef RAIN_MAYASKLANIMEXPORTER_H
-#define RAIN_MAYASKLANIMEXPORTER_H
+#ifndef RAIN_MAYAMESHEXPORTER_H
+#define RAIN_MAYAMESHEXPORTER_H
 
 #include <maya/MPxFileTranslator.h>
 
@@ -8,7 +8,7 @@
 
 namespace Rain
 {
-	class MayaSkeletalAnimExporter final : public MPxFileTranslator
+	class MayaSkeletalMeshExporter final : public MPxFileTranslator
 	{
 		// Inherited Interface
 		//====================
@@ -22,8 +22,8 @@ namespace Rain
 
 		// You can choose what the default file extension of an exported mesh is
 		MString defaultExtension() const final {
-			return "hrjSklAnim";
-		}
+			return "hrjSkelMesh";
+		}	
 
 
 	public:
@@ -31,7 +31,7 @@ namespace Rain
 		// This function is used by Maya to create an instance of the exporter (see registerFileTranslator() in EntryPoint.cpp)
 		static void* Create()
 		{
-			return new MayaSkeletalAnimExporter;
+			return new MayaSkeletalMeshExporter;
 		}
 	};
 }

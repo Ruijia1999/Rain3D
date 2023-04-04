@@ -63,6 +63,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MayaAnimExporter", "MayaAni
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MayaSkeletalAnimExporter", "MayaSkeletalAnimExporter\MayaSkeletalAnimExporter.vcxproj", "{8EC84494-C654-4637-958E-3EB15FA89534}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MayaSkeletalMeshExporter", "MayaSkeletalMeshExporter\MayaSkeletalMeshExporter.vcxproj", "{54E379DE-207D-4CAA-B463-8839D77269EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -274,6 +276,12 @@ Global
 		{8EC84494-C654-4637-958E-3EB15FA89534}.Release|x64.ActiveCfg = Release|x64
 		{8EC84494-C654-4637-958E-3EB15FA89534}.Release|x64.Build.0 = Release|x64
 		{8EC84494-C654-4637-958E-3EB15FA89534}.Release|x86.ActiveCfg = Release|x64
+		{54E379DE-207D-4CAA-B463-8839D77269EC}.Debug|x64.ActiveCfg = Debug|x64
+		{54E379DE-207D-4CAA-B463-8839D77269EC}.Debug|x64.Build.0 = Debug|x64
+		{54E379DE-207D-4CAA-B463-8839D77269EC}.Debug|x86.ActiveCfg = Debug|x64
+		{54E379DE-207D-4CAA-B463-8839D77269EC}.Release|x64.ActiveCfg = Release|x64
+		{54E379DE-207D-4CAA-B463-8839D77269EC}.Release|x64.Build.0 = Release|x64
+		{54E379DE-207D-4CAA-B463-8839D77269EC}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -305,6 +313,7 @@ Global
 		{F5F60413-B760-4577-BD03-8D9CD04286C0} = {ED2111D5-27B6-4E2B-8E28-01FF173750C8}
 		{0B53B502-AE9E-40A8-932E-5AF748DF3912} = {CB6A4F43-D5C1-41D9-94A5-2A2A1DA045DF}
 		{8EC84494-C654-4637-958E-3EB15FA89534} = {CB6A4F43-D5C1-41D9-94A5-2A2A1DA045DF}
+		{54E379DE-207D-4CAA-B463-8839D77269EC} = {CB6A4F43-D5C1-41D9-94A5-2A2A1DA045DF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0581FFE8-DC3D-4EDE-A90F-D2A42D49266E}

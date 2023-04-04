@@ -33,15 +33,17 @@ std::shared_ptr<Rain::Render::Texture> Rain::MeshRender::MeshRenderSystem::Initi
 }
 void Rain::MeshRender::MeshRenderSystem::Initialize() {
 	SystemBase::Initialize();
-	
+	Render::ConstantLayout::Initialize();
 	effects.insert(std::pair<std::string, std::shared_ptr<Render::Effect>>("default", new Render::Effect()));
-	effects.find("default")->second->Initialize("defaultVertex", "defaultPixel");
+	effects.find("default")->second->Initialize("defaultVertex", "defaultPixel", Render::ConstantLayout::staticMeshLayout, Render::ConstantLayout::staticMeshEleNum);
 	effects.insert(std::pair<std::string, std::shared_ptr<Render::Effect>>("texture", new Render::Effect()));
-	effects.find("texture")->second->Initialize("textureVertex", "texturePixel");
+	effects.find("texture")->second->Initialize("textureVertex", "texturePixel", Render::ConstantLayout::staticMeshLayout, Render::ConstantLayout::staticMeshEleNum);
 	effects.insert(std::pair<std::string, std::shared_ptr<Render::Effect>>("textureWithNormal", new Render::Effect()));
-	effects.find("textureWithNormal")->second->Initialize("textureWithNormalVertex", "textureWithNormalPixel");
+	effects.find("textureWithNormal")->second->Initialize("textureWithNormalVertex", "textureWithNormalPixel", Render::ConstantLayout::staticMeshLayout, Render::ConstantLayout::staticMeshEleNum);
 	effects.insert(std::pair<std::string, std::shared_ptr<Render::Effect>>("water", new Render::Effect()));
-	effects.find("water")->second->Initialize("waterVertex", "waterPixel");
+	effects.find("water")->second->Initialize("waterVertex", "waterPixel", Render::ConstantLayout::staticMeshLayout, Render::ConstantLayout::staticMeshEleNum);
+	effects.insert(std::pair<std::string, std::shared_ptr<Render::Effect>>("skeletalDefault", new Render::Effect()));
+	effects.find("skeletalDefault")->second->Initialize("SkeletalMeshVertex", "SkeletalMeshPixel", Render::ConstantLayout::skeletalMeshLayout, Render::ConstantLayout::skeletalMeshEleNum);
 }
 
 Rain::MeshRender::MeshRenderSystem::MeshRenderSystem() {

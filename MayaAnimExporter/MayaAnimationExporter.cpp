@@ -200,15 +200,9 @@ namespace {
 			MAnimUtil::findAnimatedPlugs(thisPath, animatedPlugs);
 			unsigned int numPlugs = animatedPlugs.length();
 			if (numPlugs == 0) {
-				// If the object is not animated, then write out place holder
-				// information
-				//
-				
+
 			}
 			else {
-				// Otherwise write out each animation curve
-				//
-				
 
 				writeAnimatedPlugs(animFile, animatedPlugs, fnNode.name(), dagIt.depth(), thisPath.childCount());
 				

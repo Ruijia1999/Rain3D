@@ -1,5 +1,5 @@
 #include "AnimationImporter.h"
-#include "Animation\AnimationClip.h"
+
 
 void Rain::Animation::AnimationImporter::LoadAnimation(const char* i_filePath, double& time, std::vector<KeyFramePipeline>& pipelines) {
 	lua_State* L = luaL_newstate();
@@ -21,7 +21,9 @@ void Rain::Animation::AnimationImporter::LoadAnimation(const char* i_filePath, d
 	}
 	
 }
+void Rain::Animation::AnimationImporter::LoadSklAnimation(const char* i_filePath, double& time, std::vector<JointAnimCurve>& pipelines) {
 
+}
 void Rain::Animation::AnimationImporter::LoadAnimHeader(lua_State* i_luaState, double& start_time, double& end_time) {
 	lua_getglobal(i_luaState, "startTime");
 	start_time = lua_tonumber(i_luaState, -1);

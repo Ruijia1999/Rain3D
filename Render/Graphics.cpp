@@ -1,5 +1,6 @@
 #include "Graphics.h"
 #include "Mesh.h"
+#include "SkeletonRenderData.h"
 #include "Effect.h"
 #include "ConstantBuffer.h"
 #include "Multithreading/Semaphore.h"
@@ -48,12 +49,17 @@ void Rain::Render::Graphics::DoFrame() {
 
 			objectBuffer->Bind();
 			gameSceneBuffer->Bind();
-			
+			renderData->Draw();
 		}
-		renderData->Draw();
+		else if (renderData->type == RenderDataType::SkeletalMesh) {
+			objectBuffer->Update(&((SkeletonRenderData*)renderData)->constantBuffer);
+			gameSceneBuffer->Update(&((SkeletonRenderData*)renderData)->frameBuffer);
 
-		
+			objectBuffer->Bind();
+			gameSceneBuffer->Bind();
 
+			renderData->Draw();
+		}
 	}
 
 	pSwapChain->Present(0, 0);

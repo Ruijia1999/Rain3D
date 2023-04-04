@@ -1,4 +1,6 @@
 #include "AnimationSystem.h"
+#include "GeneralAnimationClip.h"
+#include "SklAnimClip.h"
 #include "AnimationImporter.h"
 Rain::Animation::AnimationSystem* Rain::Animation::AnimationSystem::instance;
 Rain::Animation::AnimationSystem * Rain::Animation::AnimationSystem::GetInstance() {
@@ -14,20 +16,38 @@ Rain::Animation::AnimationSystem::AnimationSystem() {
 
 }
 void Rain::Animation::AnimationSystem::Initialize() {
-	InitializeClip("Bounce");
-	InitializeClip("Scale");
-	InitializeClip("BounceLoop");
+	InitializeClip("Bounce", AnimType::General);
+	InitializeClip("Scale", AnimType::General);
+	InitializeClip("BounceLoop", AnimType::General);
+	InitializeClip("Human", AnimType::Skeletal);
 }
-void Rain::Animation::AnimationSystem::InitializeClip(const char* name) {
-	double time;
-	std::vector<KeyFramePipeline> pipelines;
-	AnimationImporter::LoadAnimation(name, time, pipelines);
-	AnimationClip* clip = new AnimationClip(name, time, pipelines);
-	animationClips.insert(std::pair<std::string, AnimationClip*>(name, clip));
+
+void Rain::Animation::AnimationSystem::InitializeClip(const char* name, AnimType type) {
+	
+	if (type == AnimType::General) {
+		double time;
+		std::vector<KeyFramePipeline> pipelines;
+		AnimationImporter::LoadAnimation(name, time, pipelines);
+		GeneralAnimationClip* clip = nullptr;
+		clip = new GeneralAnimationClip(name, time, pipelines);
+		generalAnimationClips.insert(std::pair<std::string, GeneralAnimationClip*>(name, clip));
+	}
+	else if (type == AnimType::Skeletal) {
+		//clip = new SklAnimClip(name, time, pipelines);
+	}
+
+	
 }
-std::shared_ptr<Rain::Animation::AnimationClip> Rain::Animation::AnimationSystem::GetClip(const std::string& i_name) {
-	if (animationClips.find(i_name) != animationClips.end()) {
-		return animationClips.find(i_name)->second;
+std::shared_ptr<Rain::Animation::GeneralAnimationClip> Rain::Animation::AnimationSystem::GetGeneralClip(const std::string& i_name) {
+	if (generalAnimationClips.find(i_name) != generalAnimationClips.end()) {
+		return generalAnimationClips.find(i_name)->second;
+	}
+	return nullptr;
+}
+
+std::shared_ptr<Rain::Animation::SklAnimClip> Rain::Animation::AnimationSystem::GetSkeletalClip(const std::string& i_name) {
+	if (skeletalAnimationClips.find(i_name) != skeletalAnimationClips.end()) {
+		return skeletalAnimationClips.find(i_name)->second;
 	}
 	return nullptr;
 }

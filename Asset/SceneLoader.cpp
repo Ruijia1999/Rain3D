@@ -7,6 +7,10 @@
 #include "ECS/Entity.h"
 #include "Reflect/Reflect.h"
 #include "GameObject/GameObjectSystem.h"
+#include "Animation\GeneralAnimationClip.h"
+#include "Animation\SklAnimClip.h"
+#include "Animation/GeneralAnimationComponent.h"
+#include "Animation\SklAnimationComponent.h"
 #include "Transform/TransformSystem.h"
 #include "Collision/ColliderSystem.h"
 #include "Collision/ColliderBase.h"
@@ -147,10 +151,14 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 
 		Animation::AnimationSystem* system = Animation::AnimationSystem::GetInstance();
 
+		lua_pushstring(i_luaState, "type");
+		lua_gettable(i_luaState, -2);
+		std::string type = lua_tostring(i_luaState, -1);
+		lua_pop(i_luaState, 1);
+
 		lua_pushstring(i_luaState, "currentClip");
 		lua_gettable(i_luaState, -2);
 		std::string currentClip = lua_tostring(i_luaState, -1);
-		std::shared_ptr< Animation::AnimationClip> clip = system->GetClip(currentClip);
 		lua_pop(i_luaState, 1);
 		
 		
@@ -164,8 +172,16 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		bool loop = lua_toboolean(i_luaState, -1);
 		lua_pop(i_luaState, 1);
 
-		system->AddComponent(new Animation::AnimationComponent(i_id, clip, autoPlay, loop));
-		
+		if (type == "Skeletal") {
+			std::shared_ptr< Animation::SklAnimClip> clip = system->GetSkeletalClip(currentClip);
+			system->AddComponent(new Animation::SklAnimationComponent(i_id, clip, autoPlay, loop));
+		}
+		else if (type == "General") {
+			std::shared_ptr< Animation::GeneralAnimationClip> clip = system->GetGeneralClip(currentClip);
+			system->AddComponent(new Animation::GeneralAnimationComponent(i_id, clip, autoPlay, loop));
+
+		}
+
 		}
 	);
 #pragma endregion
@@ -302,14 +318,14 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		}
 
 
-		/*std::shared_ptr < Render::Effect> effect;
+		std::shared_ptr < Render::Effect> effect;
 		lua_pushstring(i_luaState, "effect");
 		lua_gettable(i_luaState, -2);
 		std::string effect_name = lua_tostring(i_luaState, -1);
 		lua_pop(i_luaState, 1);
 		effect = MeshRender::MeshRenderSystem::GetInstance()->effects.find(effect_name)->second;
 
-		std::shared_ptr< Render::Texture> texture;
+		/*std::shared_ptr< Render::Texture> texture;
 		lua_pushstring(i_luaState, "texture");
 		lua_gettable(i_luaState, -2);
 		std::string texture_name = lua_tostring(i_luaState, -1);
@@ -343,7 +359,7 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		}
 		lua_pop(i_luaState, 1);
 
-		MeshRender::MeshRenderSystem::GetInstance()->AddComponent(new MeshRender::MeshRenderComponent(i_id, mesh, color));
+		MeshRender::MeshRenderSystem::GetInstance()->AddComponent(new MeshRender::MeshRenderComponent(i_id, mesh, effect, color));
 		}
 	);
 #pragma endregion

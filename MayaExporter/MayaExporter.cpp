@@ -372,7 +372,7 @@ namespace
 				return status;
 			}
 		}
-	
+
 		// Get a list of the normals
 		MFloatVectorArray normals;
 		{
@@ -579,6 +579,7 @@ namespace
 								{
 									const auto positionIndex = positionIndices[k];
 									const auto mapLookUp = indexToKeyMap.find(positionIndex);
+
 									if (mapLookUp != indexToKeyMap.end())
 									{
 										triangle.vertexKeys[k] = mapLookUp->second;

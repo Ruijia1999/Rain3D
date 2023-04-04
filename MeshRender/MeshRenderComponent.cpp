@@ -25,10 +25,11 @@ Rain::MeshRender::MeshRenderComponent::MeshRenderComponent(int i_id, const std::
 	normalMap = i_normalMap;
 	meshType = 0;
 }
-Rain::MeshRender::MeshRenderComponent::MeshRenderComponent(int i_id, const std::shared_ptr <Render::SkeletalMesh>& i_mesh, Math::Vector4 i_color) {
+Rain::MeshRender::MeshRenderComponent::MeshRenderComponent(int i_id, const std::shared_ptr <Render::SkeletalMesh>& i_mesh, const std::shared_ptr < Render::Effect>& i_effect, Math::Vector4 i_color) {
 	id = i_id;
 	skeletalMesh = i_mesh;
 	color = i_color;
+	effect = i_effect;
 	meshType = 1;
 }
 
