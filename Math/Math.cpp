@@ -43,6 +43,9 @@ Rain::Math::Matrix Rain::Math::CreateCameraToProjectedTransform_perspective(cons
         		0.0f, 0.0f, -Q*near_plane, 0.0f);
 }  
 
+float Rain::Math::AngleToRadian(float angle) {
+    return (angle * atan(1) * 4) / 180;
+}
 //
 //Rain::Math::Matrix Rain::Math::CreateCameraToProjectedTransform_perspective(
 //	const float i_vertical,

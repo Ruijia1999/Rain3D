@@ -345,6 +345,9 @@ namespace {
 		fileOut.write((char*)&joint.R.x, sizeof(joint.R.x));
 		fileOut.write((char*)&joint.R.y, sizeof(joint.R.y));
 		fileOut.write((char*)&joint.R.z, sizeof(joint.R.z));
+		fileOut.write((char*)&joint.JO.x, sizeof(joint.JO.x));
+		fileOut.write((char*)&joint.JO.y, sizeof(joint.JO.y));
+		fileOut.write((char*)&joint.JO.z, sizeof(joint.JO.z));
 
 		double i = joint.transformationMatrix.asMatrix().matrix[0][0];
 		//Children
@@ -424,12 +427,20 @@ namespace {
 									int c = 0;
 								}
 								else {
+									int minIndex = 0;
 									for (int i = 0; i < 4; i++) {
-										if (skinClusterDataArray[gIter.index()].influenceData[i].weight < wts[jj]) {
-											skinClusterDataArray[gIter.index()].influenceData[i].jointIndex = jj;
-											skinClusterDataArray[gIter.index()].influenceData[i].weight = wts[jj];
+										
+										if(skinClusterDataArray[gIter.index()].influenceData[i].weight < skinClusterDataArray[gIter.index()].influenceData[minIndex].weight){
+				
+											minIndex = i;
+						
 										}
 									}
+									if (skinClusterDataArray[gIter.index()].influenceData[minIndex].weight < wts[jj]) {
+										skinClusterDataArray[gIter.index()].influenceData[minIndex].jointIndex = jj;
+										skinClusterDataArray[gIter.index()].influenceData[minIndex].weight = wts[jj];
+									}
+								
 								}
 								
 								

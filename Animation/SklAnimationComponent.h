@@ -32,8 +32,9 @@ namespace Rain {
 			}
 
 			std::shared_ptr<SklAnimClip> currentClip;
-
-
+			Math::Vector3 velTranslate;
+			Math::Quaternion previousRotate;
+			Math::Quaternion nextRotate;
 		};
 
 	}

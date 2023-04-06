@@ -153,9 +153,9 @@ void Rain::Rain3DGame::Update() {
             Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(go->id);
             vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1, 5000, 90*M_PI/180.0, 60 * M_PI / 180.0);
             vsConstantBuffer.transform_localToWorld = Math::CreateLocalToWorldTransform(transform->rotation, transform->position, transform->scale);
-            vsConstantBuffer.transform_localToWorld.Inverse();
+            vsConstantBuffer.transform_localToWorld.Invert();
             vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(cameraRot, cameraPos);
-            vsConstantBuffer.transform_worldToCamera.Inverse();
+            vsConstantBuffer.transform_worldToCamera.Invert();
 
             MeshRender::MeshRenderComponent* meshRender = MeshRender::MeshRenderSystem::GetInstance()->GetComponent<MeshRender::MeshRenderComponent>(go->id);
             vsConstantBuffer.color = meshRender->color;

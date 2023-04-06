@@ -5,6 +5,7 @@
 #include "windows/windows.h"
 #include "RenderFormats.h"
 #include "Skeleton.h"
+#include "Animation\Pose.h"
 #include <string>
 namespace Rain {
 	namespace Render {
@@ -12,6 +13,7 @@ namespace Rain {
 			char name[52];
 			double translation[3];
 			double rotation[3];
+			double jointRotation[3];
 			int childrenCount;
 			int* children;
 		};
@@ -26,10 +28,12 @@ namespace Rain {
 			Skeleton* skeleton;
 
 			void Initialize(const char* i_filePath);
-			void UpdateMesh();
 			void Draw() const;
 			void CleanUp();
 			
+			void UpdateMesh(Animation:: Pose* pose);
+			void UpdatePoseTransform(const Joint* joint, int parentIndex, Joint** jointArray, int index, Animation::Pose* pose);
+
 			SkeletalMesh(const SkeletalMesh& i_mesh);
 			SkeletalMesh();
 			~SkeletalMesh() {
@@ -49,10 +53,8 @@ namespace Rain {
 			SkeletalVertexFormat* vertexData = nullptr;
 			
 		private:
-			void Load(int& i_indexCount, int& i_pointCount, Skeleton* skeleton, IndexFormat*& i_indexData);
-			void LoadJointData(const int jointData, const JointData* jointDataArray, Skeleton* skeleton);
-			
-			
+			void Load(int& i_indexCount, int& i_pointCount, Skeleton* skeleton, IndexFormat*& i_indexData, SkeletalVertexFormat*& i_vertexData);
+
 		};
 	}
 }

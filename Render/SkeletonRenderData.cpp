@@ -35,6 +35,5 @@ void Rain::Render::SkeletonRenderData::Draw() {
 	if (normalMap != nullptr) {
 		normalMap->Draw(1);
 	}
-	mesh->UpdateMesh();
 	mesh->Draw();
 }

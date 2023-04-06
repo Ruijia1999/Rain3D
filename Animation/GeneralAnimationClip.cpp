@@ -52,8 +52,9 @@ bool Rain::Animation::GeneralAnimationClip::Update(bool loop, int& i_frame, doub
 		i_frame++;
 		if (loop) {
 			if (i_frame >= pipelines[0].frameCount - 1) {
+				i_time -= pipelines[0].keyFrames[i_frame].time * SECOND_PER_FRAME;
 				i_frame = 0;
-				i_time = 0;
+				
 			}
 		}
 		else {

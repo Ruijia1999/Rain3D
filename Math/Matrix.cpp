@@ -1,4 +1,5 @@
 #include "Matrix.h"
+#include <cmath>
 Rain::Math::Matrix::Matrix(const Matrix& i_matrix4) {
 	m00 = i_matrix4.m00; m01 = i_matrix4.m01; m02 = i_matrix4.m02; m03 = i_matrix4.m03;
 	m10 = i_matrix4.m10; m11 = i_matrix4.m11; m12 = i_matrix4.m12; m13 = i_matrix4.m13;
@@ -143,7 +144,94 @@ Rain::Math::Matrix& Rain::Math::Matrix::operator=(const Matrix& i_matrix4) {
 	return *this;
 }
 
-void Rain::Math::Matrix::Inverse() {
+void Rain::Math::Matrix::Inverse(Matrix& inverseM) {
+	double det =
+		m00 * (m11 * (m22 * m33 - m23* m32) -
+			m12 * (m21 * m33 - m23 * m31) +
+			m13 * (m21 * m32 - m22 * m31)) -
+		m01 * (m10 * (m22 * m33 - m23 * m32) -
+			m12 * (m20 * m33 - m23 * m30) +
+			m13 * (m20 * m32 - m22 * m30)) +
+		m02 * (m10 * (m21 * m33 - m23 * m31) -
+			m11 * (m20 * m33 - m23 * m30) +
+			m13 * (m20 * m31 - m21 * m30)) -
+		m03 * (m10 * (m21 * m32 - m22 * m31) -
+			m11 * (m20 * m32 - m22 * m30) +
+			m12 * (m20 * m31 - m21 * m30));
+
+	if (abs(det) < 1E-9) {
+		//Can't be inversed
+		return;
+	}
+
+	double det_inv = 1.0 / det;
+
+	inverseM.m00 =
+		det_inv * (m11 * (m22 * m33 - m23 * m32) -
+			m12 * (m21 * m33 - m23 * m31) +
+			m13 * (m21 * m32 - m22 * m31));
+	inverseM.m01 =
+		-det_inv * (m10 * (m22 * m33 - m23 * m32) -
+			m12 * (m20 * m33 - m23 * m30) +
+			m13 * (m20 * m32 - m22 * m30));
+	inverseM.m02 = det_inv * (m10 * (m21 * m33 - m23 * m31) -
+		m11 * (m20 * m33 - m23 * m30) +
+		m13 * (m20 * m31 - m21 * m30));
+	inverseM.m03 =
+		-det_inv * (m10 * (m21 * m32 - m22 * m31) -
+			m11 * (m20 * m32 - m22 * m30) +
+			m12 * (m20 * m31 - m21 * m30));
+
+	inverseM.m10 =
+		-det_inv * (m01 * (m22 * m33 - m23 * m32) -
+			m02 * (m21 * m33 - m23 * m31) +
+			m03 * (m21 * m32 - m22 * m31));
+	inverseM.m11 =
+		det_inv * (m00 * (m22 * m33 - m23 * m32) -
+			m02 * (m20 * m33 - m23 * m30) +
+			m03 * (m20 * m32 - m22 * m30));
+	inverseM.m12 =
+		-det_inv * (m00 * (m21 * m33 - m23 * m31) -
+			m01 * (m20 * m33 - m23 * m30) +
+			m03 * (m20 * m31 - m21 * m30));
+	inverseM.m13 = det_inv * (m00 * (m21 * m32 - m22 * m31) -
+		m01 * (m20 * m32 - m22 * m30) +
+		m02 * (m20 * m31 - m21 * m30));
+
+	inverseM.m20 = det_inv * (m01 * (m12 * m33 - m13 * m32) -
+		m02 * (m11 * m33 - m13 * m31) +
+		m03 * (m11 * m32 - m12 * m31));
+	inverseM.m21 = -det_inv * (m00 * (m12 * m33- m13 * m32) -
+		m02 * (m10 * m33 - m13 * m30) +
+		m03 * (m10 * m32 - m12 * m30));
+	inverseM.m22 = det_inv * (m00 * (m11 * m33 - m13 * m31) -
+		m01 * (m10 * m33 - m13 * m30) +
+		m03 * (m10 * m31 - m11 * m30));
+	inverseM.m23 =
+		-det_inv * (m00 * (m11 * m32 - m12 * m31) -
+			m01 * (m10 * m32 - m12 * m30) +
+			m02 * (m10 * m31 - m11 * m30));
+
+	inverseM.m30 =
+		-det_inv * (m01 * (m12 * m23 - m13 * m22) -
+			m02 * (m11 * m23 - m13 * m21) +
+			m03 * (m11 * m22 - m12 * m21));
+	inverseM.m31 = det_inv * (m00 * (m12 * m23 - m13 * m22) -
+		m02 * (m10 * m23 - m13 * m20) +
+		m03 * (m10 * m22 - m12 * m20));
+	inverseM.m32 = -det_inv * (m00 * (m11 * m23 - m13 * m21) -
+		m01 * (m10 * m23 - m13 * m20) +
+		m03 * (m10 * m21 - m11 * m20));
+	inverseM.m33 = det_inv * (m00 * (m11 * m22 - m12 * m21) -
+		m01 * (m10 * m22 - m12 * m20) +
+		m02 * (m10 * m21 - m11 * m20));
+
+	inverseM.Invert();
+	return;
+
+}
+
+void Rain::Math::Matrix::Invert() {
 	float temp;
 	temp = m01;
 	m01 = m10;

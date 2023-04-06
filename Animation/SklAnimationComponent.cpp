@@ -25,13 +25,15 @@ void Rain::Animation::SklAnimationComponent::Initialize() {
 	if (autoPlay) {
 		currentTime = 0;
 		currentFrame = -1;
-
+		velTranslate = Math::Vector3(0, 0, 0);
+		
 		Play();
 	}
 	else {
 		isPlaying = false;
 		currentTime = 0;
 		currentFrame = -1;
+		velTranslate = Math::Vector3(0, 0, 0);
 
 	}
 }
@@ -40,11 +42,12 @@ void Rain::Animation::SklAnimationComponent::Update(double i_timeSinceLastFrame)
 		return;
 	}
 	double secondTime = Time::ConvertTicksToSeconds(i_timeSinceLastFrame);
-	Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(id);
-	//Mesh
-	//if (!currentClip->Update(loop, currentFrame, currentTime, secondTime, )) {
-	//	Stop();
-	//}
+	
+	MeshRender::MeshRenderComponent* mesh = MeshRender::MeshRenderSystem::GetInstance()->GetComponent<MeshRender::MeshRenderComponent>(id);
+
+	if (!currentClip->Update(loop, currentFrame, currentTime, secondTime, velTranslate, previousRotate, nextRotate, mesh)) {
+		Stop();
+	}
 }
 void Rain::Animation::SklAnimationComponent::Destroy() {
 
@@ -55,8 +58,6 @@ void Rain::Animation::SklAnimationComponent::Play() {
 	}
 	isPlaying = true;
 	Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(id);
-
-
 }
 void Rain::Animation::SklAnimationComponent::Pause() {
 	isPlaying = false;
@@ -65,9 +66,6 @@ void Rain::Animation::SklAnimationComponent::Stop() {
 	isPlaying = false;
 	currentTime = 0;
 	currentFrame = -1;
-
-	//Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(id);
-	//transform->position = orgTranslate;
-	//transform->scale = orgScale;
+	velTranslate = Math::Vector3(0, 0, 0);
 
 }

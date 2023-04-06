@@ -246,7 +246,7 @@ namespace {
 				continue;
 			}
 			animFile << "            {\n";
-			animFile << "            attribute = \"" << fnLeafAttr.name().asChar() << "\",\n";
+			animFile << "            name = \"" << fnLeafAttr.name().asChar() << "\",\n";
 			unsigned int numCurves = animation.length();
 
 

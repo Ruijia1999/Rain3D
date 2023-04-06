@@ -25,7 +25,8 @@ namespace Rain {
 			Matrix(const Quaternion& i_rotation);
 			Matrix(const Vector3& i_translation);
 			Matrix(const Quaternion& i_rotation, const Vector3& i_translation, const Vector3& i_scale);
-			void Inverse();
+			void Invert();
+			void Inverse(Matrix& inverseM);
 			Matrix operator/(const float i)const;
 			Vector4 operator*(const Vector4& i_matrix4);
 			Vector4 operator*(const Vector4& i_matrix4) const;

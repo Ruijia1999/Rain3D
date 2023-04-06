@@ -16,13 +16,29 @@ void Rain::Animation::AnimationImporter::LoadAnimation(const char* i_filePath, d
 	int n = luaL_len(L, -1);
 	for (int i = 1; i <= n; ++i) {
 		lua_rawgeti(L, -1, i);
-		LoadPipeline(L, startTime, pipelines);
+		LoadPipeline(L,  pipelines);
 		lua_pop(L, 1);
 	}
 	
 }
-void Rain::Animation::AnimationImporter::LoadSklAnimation(const char* i_filePath, double& time, std::vector<JointAnimCurve>& pipelines) {
+void Rain::Animation::AnimationImporter::LoadSklAnimation(const char* i_filePath, double& time, std::vector<JointAnimCurve>& jointsAnimCurve) {
+	lua_State* L = luaL_newstate();
+	std::string filePath = "animations/";
+	filePath.append(i_filePath);
+	filePath.append(".hrjSklAnim");
+	auto ret = luaL_dofile(L, filePath.c_str());
 
+	double startTime;
+	double endTime;
+	LoadAnimHeader(L, startTime, endTime);
+
+	lua_getglobal(L, "animationData");
+	int n = luaL_len(L, -1);
+	for (int i = 1; i <= n; ++i) {
+		lua_rawgeti(L, -1, i);
+		LoadJointAnimCurve(L, jointsAnimCurve);
+		lua_pop(L, 1);
+	}
 }
 void Rain::Animation::AnimationImporter::LoadAnimHeader(lua_State* i_luaState, double& start_time, double& end_time) {
 	lua_getglobal(i_luaState, "startTime");
@@ -33,8 +49,29 @@ void Rain::Animation::AnimationImporter::LoadAnimHeader(lua_State* i_luaState, d
 	lua_pop(i_luaState, 1);
 
 }
+void Rain::Animation::AnimationImporter::LoadJointAnimCurve(lua_State* i_luaState, std::vector<JointAnimCurve>& jointsAnimCurve) {
+	JointAnimCurve animCurve;
 
-void Rain::Animation::AnimationImporter::LoadPipeline(lua_State* i_luaState, const double start_time, std::vector<KeyFramePipeline>& pipelines) {
+	lua_pushstring(i_luaState, "joint");
+	lua_gettable(i_luaState, -2);
+	animCurve.jointName = lua_tostring(i_luaState, -1);
+	lua_pop(i_luaState, 1);
+
+	
+
+	lua_pushstring(i_luaState, "pipeline");
+	lua_gettable(i_luaState, -2);
+	int n = luaL_len(i_luaState, -1);
+	for (int i = 1; i <= n; ++i) {
+		lua_rawgeti(i_luaState, -1, i);
+		LoadPipeline(i_luaState, animCurve.pipelines);
+		lua_pop(i_luaState, 1);
+	}
+	lua_pop(i_luaState, 1);
+	jointsAnimCurve.push_back(animCurve);
+
+}
+void Rain::Animation::AnimationImporter::LoadPipeline(lua_State* i_luaState, std::vector<KeyFramePipeline>& pipelines) {
 	lua_pushstring(i_luaState, "name");
 	lua_gettable(i_luaState, -2);
 	std::string type = lua_tostring(i_luaState, -1);
@@ -74,7 +111,7 @@ void Rain::Animation::AnimationImporter::LoadPipeline(lua_State* i_luaState, con
 	int n = luaL_len(i_luaState, -1);
 	for (int i = 1; i <= n; ++i) {
 		lua_rawgeti(i_luaState, -1, i);
-		LoadFrames(i_luaState, start_time, i-1, keyframes);
+		LoadFrames(i_luaState, i-1, keyframes);
 		lua_pop(i_luaState, 1);
 	}
 	lua_pop(i_luaState, 1);
@@ -82,7 +119,7 @@ void Rain::Animation::AnimationImporter::LoadPipeline(lua_State* i_luaState, con
 	KeyFramePipeline pipleLine = KeyFramePipeline(pipelineType, frameCount, keyframes);
 	pipelines.push_back(pipleLine);
 }
-void Rain::Animation::AnimationImporter::LoadFrames(lua_State* i_luaState, const double start_time,int index, KeyFrame* keyframes) {
+void Rain::Animation::AnimationImporter::LoadFrames(lua_State* i_luaState, int index, KeyFrame* keyframes) {
 	lua_rawgeti(i_luaState, -1, 1);
 	double time = lua_tointeger(i_luaState, -1);
 	lua_pop(i_luaState, 1);

@@ -10,13 +10,14 @@ namespace Rain {
 		class AnimationImporter {
 		public:
 			static void LoadAnimation(const char* i_filePath, double& time, std::vector<KeyFramePipeline>& pipelines);
-			static void LoadSklAnimation(const char* i_filePath, double& time, std::vector<JointAnimCurve>& pipelines);
+			static void LoadSklAnimation(const char* i_filePath, double& time, std::vector<JointAnimCurve>& jointsAnimCurv);
 
 		private:
 			//Helper------
 			static void LoadAnimHeader(lua_State* i_luaState, double& start_time, double& end_time);
-			static void LoadPipeline(lua_State* i_luaState, const double start_time, std::vector<KeyFramePipeline>& pipelines);
-			static void LoadFrames(lua_State* i_luaState, const double start_time, int index, KeyFrame* keyframes);
+			static void LoadJointAnimCurve(lua_State* i_luaState, std::vector<JointAnimCurve>& jointsAnimCurve);
+			static void LoadPipeline(lua_State* i_luaState, std::vector<KeyFramePipeline>& pipelines);
+			static void LoadFrames(lua_State* i_luaState,  int index, KeyFrame* keyframes);
 		};
 	}
 

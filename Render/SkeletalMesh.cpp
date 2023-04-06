@@ -8,9 +8,8 @@
 void Rain::Render::SkeletalMesh::Initialize(const char* i_filePath) {
 	m_name = i_filePath;
 	skeleton = new Skeleton();
-	Load(indexCount, pointCount, skeleton, indexData);
+	Load(indexCount, pointCount, skeleton, indexData, vertexData);
 
-	vertexData = new SkeletalVertexFormat[pointCount];
 	// Index Buffer
 	{
 		const auto bufferSize = sizeof(indexData[0]) * indexCount;
@@ -97,7 +96,7 @@ void Rain::Render::SkeletalMesh::Draw() const {
 	Graphics::pContext->DrawIndexed((UINT)(indexCount * 3), 0u, 0u);
 }
 
-void Rain::Render::SkeletalMesh::Load(int& i_indexCount, int& i_pointCount, Skeleton* skeleton, IndexFormat*& i_indexData) {
+void Rain::Render::SkeletalMesh::Load(int& i_indexCount, int& i_pointCount, Skeleton* skeleton, IndexFormat*& i_indexData, SkeletalVertexFormat*& i_vertexData) {
 	lua_State* L = luaL_newstate();
 	std::string filePath = "meshes/";
 	
@@ -138,19 +137,15 @@ void Rain::Render::SkeletalMesh::Load(int& i_indexCount, int& i_pointCount, Skel
 		file.read((char*)jointDataArray[i].name, 52);
 		file.read((char*)jointDataArray[i].translation, sizeof(double)*3);
 		file.read((char*)jointDataArray[i].rotation, sizeof(double) * 3);
+		file.read((char*)jointDataArray[i].jointRotation, sizeof(double) * 3);
 		file.read((char*)&jointDataArray[i].childrenCount, sizeof(int));
 		jointDataArray[i].children = new int[jointDataArray[i].childrenCount];
 		file.read((char*)jointDataArray[i].children, sizeof(int)* jointDataArray[i].childrenCount);
 	}
-	
-	LoadJointData(jointCount, jointDataArray, skeleton);
-#pragma endregion
-}
+	i_vertexData = new SkeletalVertexFormat[i_pointCount];
 
-void Rain::Render::SkeletalMesh::LoadJointData(const int jointCount, const JointData* jointDataArray, Skeleton* skeleton) {
 	skeleton->jointCount = jointCount;
-	skeleton->jointArray = new Joint*[jointCount];
-
+	skeleton->jointArray = new Joint * [jointCount];
 
 	for (int i = 0; i < jointCount; i++) {
 		skeleton->jointArray[i] = new Joint();
@@ -163,29 +158,67 @@ void Rain::Render::SkeletalMesh::LoadJointData(const int jointCount, const Joint
 			skeleton->jointArray[i]->name.append(1, jointDataArray[i].name[j]);
 			j++;
 		}
-		
+
 		skeleton->jointArray[i]->translation = Math::Vector3(jointDataArray[i].translation[0], jointDataArray[i].translation[1], jointDataArray[i].translation[2]);
-		skeleton->jointArray[i]->rotate= Math::Quaternion(jointDataArray[i].rotation[0], jointDataArray[i].rotation[1], jointDataArray[i].rotation[2], 1-jointDataArray[i].rotation[0]-jointDataArray[i].rotation[1]-jointDataArray[i].rotation[2]);
-		
+		skeleton->jointArray[i]->rotate = Math::Quaternion(jointDataArray[i].rotation[0], jointDataArray[i].rotation[1], jointDataArray[i].rotation[2], sqrt(1 - jointDataArray[i].rotation[0]* jointDataArray[i].rotation[0] - jointDataArray[i].rotation[1]* jointDataArray[i].rotation[1] - jointDataArray[i].rotation[2]* jointDataArray[i].rotation[2]));
+		skeleton->jointArray[i]->jointOrient = Math::Quaternion(jointDataArray[i].jointRotation[0], jointDataArray[i].jointRotation[1], jointDataArray[i].rotation[2], sqrt(1 - jointDataArray[i].jointRotation[0] * jointDataArray[i].jointRotation[0] - jointDataArray[i].jointRotation[1] * jointDataArray[i].jointRotation[1] - jointDataArray[i].jointRotation[2] * jointDataArray[i].jointRotation[2]));
+
 	}
 	skeleton->rootJoint = skeleton->jointArray[0];
-}
-
-void Rain::Render::SkeletalMesh::UpdateMesh() {
 
 	skeleton->UpdateJointsPosition();
 
 	for (int i = 0; i < pointCount; i++) {
 		Math::Vector3 pos(0, 0, 0);
 
-		vertexData[i].x = skeleton->vertexInfo[i].position.x;
-		vertexData[i].y = skeleton->vertexInfo[i].position.y;;
-		vertexData[i].z = skeleton->vertexInfo[i].position.z;;
+		i_vertexData[i].x = skeleton->vertexInfo[i].position.x;
+		i_vertexData[i].y = skeleton->vertexInfo[i].position.y;;
+		i_vertexData[i].z = skeleton->vertexInfo[i].position.z;;
 		int j = 0;
 	}
+#pragma endregion
+}
+
+
+void Rain::Render::SkeletalMesh::UpdateMesh(Animation::Pose* pose) {
+
+	SkeletalVertexFormat* vertexArray= new SkeletalVertexFormat[skeleton->pointCount];
+	UpdatePoseTransform(skeleton->rootJoint, -1, skeleton->jointArray, 0,pose);
+
+
+	for (int i = 0; i < pointCount; i++) {
+		Math::Vector3 rsl(0, 0, 0);
+		Math::Vector4 orgPos(vertexData[i].x, vertexData[i].y, vertexData[i].z, 1);
+		float a = 0;
+		for (int j = 0; j < 4; j++) {
+
+			float weight = skeleton->vertexInfo[i].skincluster.data[j].weight;
+			int index = skeleton->vertexInfo[i].skincluster.data[j].jointIndex;
+			
+			if (index!=-1) {
+
+				Math::Matrix inverseM;
+				skeleton->jointArray[index]->transformMatrix.Inverse(inverseM);
+				Math::Vector4 pos = pose->transformMatrix[index] * (inverseM * orgPos);
+				rsl = rsl + Math::Vector3(pos.x * weight, pos.y * weight, pos.z * weight);
+
+			}
+			if (rsl.z < -30) {
+				int l = 1;
+			}
+
+		}
+
+		vertexArray[i].x = rsl.x;
+		vertexArray[i].y = rsl.y;
+		vertexArray[i].z = rsl.z;
+	
+		int j = 0;
+	}
+	
 	// Vertex Buffer
 	{
-		const auto bufferSize = sizeof(vertexData[0]) * pointCount;
+		const auto bufferSize = sizeof(vertexArray[0]) * pointCount;
 		const auto vertexBufferDescription = [bufferSize]
 		{
 			D3D11_BUFFER_DESC vertexBufferDescription{};
@@ -202,7 +235,7 @@ void Rain::Render::SkeletalMesh::UpdateMesh() {
 
 		D3D11_SUBRESOURCE_DATA vertexInitialData{};
 
-		vertexInitialData.pSysMem = vertexData;
+		vertexInitialData.pSysMem = vertexArray;
 
 		ID3D11Device* pContext = Graphics::pDevice;
 
@@ -211,5 +244,41 @@ void Rain::Render::SkeletalMesh::UpdateMesh() {
 			int j = 0;
 		};
 
+	}
+}
+
+void Rain::Render::SkeletalMesh::UpdatePoseTransform(const Joint* joint, int parentIndex, Joint** jointArray,int index, Animation::Pose* pose) {
+
+	if (parentIndex== -1) {
+		Math::Matrix m = Math::Matrix(Math::Vector3(pose->transformation[index].x, pose->transformation[index].y, pose->transformation[index].z));
+		Math::Matrix j = Math::Matrix(pose->rotation[index]);
+		Math::Matrix l = Math::Matrix(joint->jointOrient);
+		l.Invert();
+		Math::Matrix k;
+		k.Invert();
+		pose->transformMatrix[index] = k * (m * j);
+		pose->transformMatrix[index].Invert();
+
+		Math::Vector4 t(pose->transformation[index], 1);
+		pose->worldPosition[index] = t;
+		
+	} 
+	else {
+
+		Math::Matrix m = Math::Matrix(Math::Vector3(pose->transformation[index].x, pose->transformation[index].y, pose->transformation[index].z));
+		Math::Matrix j = Math::Matrix(pose->rotation[index]);
+		Math::Matrix l = Math::Matrix(joint->jointOrient);
+		l.Invert();
+		Math::Matrix k = pose->transformMatrix[parentIndex];
+		k.Invert();
+		pose->transformMatrix[index] = k * (m * (j*l));
+		pose->transformMatrix[index].Invert();
+		
+		Math::Vector4 t(pose->transformation[index], 1);
+		pose->worldPosition[index]= pose->transformMatrix[parentIndex] * t;
+		
+	}
+	for (auto child : joint->children) {
+		UpdatePoseTransform(jointArray[child], index, jointArray, child, pose);
 	}
 }

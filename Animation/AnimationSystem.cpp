@@ -19,7 +19,7 @@ void Rain::Animation::AnimationSystem::Initialize() {
 	InitializeClip("Bounce", AnimType::General);
 	InitializeClip("Scale", AnimType::General);
 	InitializeClip("BounceLoop", AnimType::General);
-	InitializeClip("Human", AnimType::Skeletal);
+	InitializeClip("human", AnimType::Skeletal);
 }
 
 void Rain::Animation::AnimationSystem::InitializeClip(const char* name, AnimType type) {
@@ -33,7 +33,12 @@ void Rain::Animation::AnimationSystem::InitializeClip(const char* name, AnimType
 		generalAnimationClips.insert(std::pair<std::string, GeneralAnimationClip*>(name, clip));
 	}
 	else if (type == AnimType::Skeletal) {
-		//clip = new SklAnimClip(name, time, pipelines);
+		double time;
+		std::vector<JointAnimCurve> jointsAnimCurve;
+		AnimationImporter::LoadSklAnimation(name, time, jointsAnimCurve);
+		SklAnimClip* clip = nullptr;
+		clip = new SklAnimClip(name, time, jointsAnimCurve);
+		skeletalAnimationClips.insert(std::pair<std::string, SklAnimClip*>(name, clip));
 	}
 
 	

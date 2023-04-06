@@ -13,6 +13,7 @@ namespace Rain {
 
 			Quaternion();
 			Quaternion(float i_x, float i_y, float i_z, float i_w);
+			Quaternion(float angleX, float angleY, float angleZ);
 			void operator=(const Quaternion& i_vec4);
 			Vector3 operator*(const Vector3& i_vec3) const;
 			float& operator[](int i);

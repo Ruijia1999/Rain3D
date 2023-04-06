@@ -35,7 +35,7 @@ namespace Rain {
 		
 		private:
 			//helper------
-			void UpdateSingleJointPosition(Joint* joint, const Joint* parentJoint);
+			void UpdateSingleJointPosition(Joint* joint, Joint* parentJoint);
 		};
 
 	}
