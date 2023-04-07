@@ -3,6 +3,7 @@
 #include "Time\Time.h"
 
 
+
 Rain::Animation::SklAnimationComponent::SklAnimationComponent() {
 	currentClip = nullptr;
 	currentTime = 0;
@@ -66,6 +67,6 @@ void Rain::Animation::SklAnimationComponent::Stop() {
 	isPlaying = false;
 	currentTime = 0;
 	currentFrame = -1;
-	velTranslate = Math::Vector3(0, 0, 0);
-
+	MeshRender::MeshRenderComponent* mesh = MeshRender::MeshRenderSystem::GetInstance()->GetComponent<MeshRender::MeshRenderComponent>(id);
+	mesh->skeletalMesh->UpdateMesh( mesh->skeletalMesh->skeleton->bindPose);
 }

@@ -82,14 +82,6 @@ bool Rain::Animation::SklAnimClip::Update(bool loop, int& i_frame, double& i_tim
 		}
 		else {
 			if (i_frame >= jointsAnim[0].pipelines[0].frameCount - 1) {
-				for (int i = 0; i < jointsAnim.size(); i++) {
-					float posX = GetTransValue(loop, i_frame, i, AnimPipelineType::TranslationX);
-					float posY = GetTransValue(loop, i_frame, i, AnimPipelineType::TranslationY);
-					float posZ = GetTransValue(loop, i_frame, i, AnimPipelineType::TranslationZ);
-					pose->transformation[i] = Math::Vector3(posX, posY, posZ);
-					pose->rotation[i] = GetRotateValue(loop, i_frame, i_time, i);
-				}
-				i_sklMesh->skeletalMesh->UpdateMesh(pose);
 				return false;
 			}
 		}

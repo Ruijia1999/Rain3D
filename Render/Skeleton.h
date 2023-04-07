@@ -25,7 +25,7 @@ namespace Rain {
 
 			int jointCount;
 			Joint** jointArray;
-
+			Animation::Pose* bindPose;
 			int pointCount;
 			SkinnedVertexData* vertexInfo;
 
@@ -35,7 +35,7 @@ namespace Rain {
 		
 		private:
 			//helper------
-			void UpdateSingleJointPosition(Joint* joint, Joint* parentJoint);
+			void UpdateSingleJointPosition(Joint* joint, Joint* parentJoint, int index, int parentIndex);
 		};
 
 	}

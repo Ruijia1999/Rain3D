@@ -146,7 +146,7 @@ void Rain::Render::SkeletalMesh::Load(int& i_indexCount, int& i_pointCount, Skel
 
 	skeleton->jointCount = jointCount;
 	skeleton->jointArray = new Joint * [jointCount];
-
+	skeleton->bindPose = new Animation::Pose(jointCount);
 	for (int i = 0; i < jointCount; i++) {
 		skeleton->jointArray[i] = new Joint();
 		int childrenCount = jointDataArray[i].childrenCount;
@@ -159,15 +159,16 @@ void Rain::Render::SkeletalMesh::Load(int& i_indexCount, int& i_pointCount, Skel
 			j++;
 		}
 
-		skeleton->jointArray[i]->translation = Math::Vector3(jointDataArray[i].translation[0], jointDataArray[i].translation[1], jointDataArray[i].translation[2]);
-		skeleton->jointArray[i]->rotate = Math::Quaternion(jointDataArray[i].rotation[0], jointDataArray[i].rotation[1], jointDataArray[i].rotation[2], sqrt(1 - jointDataArray[i].rotation[0]* jointDataArray[i].rotation[0] - jointDataArray[i].rotation[1]* jointDataArray[i].rotation[1] - jointDataArray[i].rotation[2]* jointDataArray[i].rotation[2]));
-		skeleton->jointArray[i]->jointOrient = Math::Quaternion(jointDataArray[i].jointRotation[0], jointDataArray[i].jointRotation[1], jointDataArray[i].rotation[2], sqrt(1 - jointDataArray[i].jointRotation[0] * jointDataArray[i].jointRotation[0] - jointDataArray[i].jointRotation[1] * jointDataArray[i].jointRotation[1] - jointDataArray[i].jointRotation[2] * jointDataArray[i].jointRotation[2]));
+		skeleton->bindPose->transformation [i] = Math::Vector3(jointDataArray[i].translation[0], jointDataArray[i].translation[1], jointDataArray[i].translation[2]);
+		skeleton->bindPose->rotation[i] = Math::Quaternion(jointDataArray[i].rotation[0], jointDataArray[i].rotation[1], jointDataArray[i].rotation[2], sqrt(1 - jointDataArray[i].rotation[0]* jointDataArray[i].rotation[0] - jointDataArray[i].rotation[1]* jointDataArray[i].rotation[1] - jointDataArray[i].rotation[2]* jointDataArray[i].rotation[2]));
+		skeleton->jointArray[i]->jointOrient= Math::Quaternion(jointDataArray[i].jointRotation[0], jointDataArray[i].jointRotation[1], jointDataArray[i].rotation[2], sqrt(1 - jointDataArray[i].jointRotation[0] * jointDataArray[i].jointRotation[0] - jointDataArray[i].jointRotation[1] * jointDataArray[i].jointRotation[1] - jointDataArray[i].jointRotation[2] * jointDataArray[i].jointRotation[2]));
 
 	}
 	skeleton->rootJoint = skeleton->jointArray[0];
 
 	skeleton->UpdateJointsPosition();
 
+	
 	for (int i = 0; i < pointCount; i++) {
 		Math::Vector3 pos(0, 0, 0);
 
@@ -176,6 +177,8 @@ void Rain::Render::SkeletalMesh::Load(int& i_indexCount, int& i_pointCount, Skel
 		i_vertexData[i].z = skeleton->vertexInfo[i].position.z;;
 		int j = 0;
 	}
+
+	UpdateMesh(skeleton->bindPose);
 #pragma endregion
 }
 
@@ -198,7 +201,7 @@ void Rain::Render::SkeletalMesh::UpdateMesh(Animation::Pose* pose) {
 			if (index!=-1) {
 
 				Math::Matrix inverseM;
-				skeleton->jointArray[index]->transformMatrix.Inverse(inverseM);
+				skeleton->bindPose->transformMatrix[index].Inverse(inverseM);
 				Math::Vector4 pos = pose->transformMatrix[index] * (inverseM * orgPos);
 				rsl = rsl + Math::Vector3(pos.x * weight, pos.y * weight, pos.z * weight);
 
@@ -276,7 +279,7 @@ void Rain::Render::SkeletalMesh::UpdatePoseTransform(const Joint* joint, int par
 		
 		Math::Vector4 t(pose->transformation[index], 1);
 		pose->worldPosition[index]= pose->transformMatrix[parentIndex] * t;
-		
+		int a = 0;
 	}
 	for (auto child : joint->children) {
 		UpdatePoseTransform(jointArray[child], index, jointArray, child, pose);

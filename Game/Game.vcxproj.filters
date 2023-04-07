@@ -23,6 +23,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Soldier.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc">
@@ -42,5 +43,6 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Soldier.cpp" />
   </ItemGroup>
 </Project>

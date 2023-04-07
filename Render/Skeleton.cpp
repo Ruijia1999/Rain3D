@@ -1,54 +1,48 @@
 #include "Skeleton.h"
 #include "Transform\TransformSystem.h"
 void Rain::Render::Skeleton::UpdateJointsPosition() {
-	UpdateSingleJointPosition(rootJoint, nullptr);
+	UpdateSingleJointPosition(rootJoint, nullptr,0, -1);
 }
 
-void Rain::Render::Skeleton::UpdateSingleJointPosition(Joint* joint, Joint* parentJoint) {
+void Rain::Render::Skeleton::UpdateSingleJointPosition(Joint* joint, Joint* parentJoint, int index, int parentIndex) {
 	if (joint == nullptr) {
 		return;
 	}
 	if (joint == rootJoint) {
 		
-		Math::Matrix m = Math::Matrix(Math::Vector3(joint->translation.x, joint->translation.y, joint->translation.z));
-		Math::Matrix j = Math::Matrix(joint->rotate);
+		Math::Matrix m = Math::Matrix(Math::Vector3(bindPose->transformation[index].x, bindPose->transformation[index].y, bindPose->transformation[index].z));
+		Math::Matrix j = Math::Matrix(bindPose->rotation[index]);
 		Math::Matrix l = Math::Matrix(joint->jointOrient);
 		Math::Matrix k;
 		k.Invert();
 
-		joint->transformMatrix = k * (l * (m * j));
-		joint->transformMatrix.Invert();
+		bindPose->transformMatrix[index] = k * (l * (m * j));
+		bindPose->transformMatrix[index].Invert();
 
-		Math::Vector4 t(joint->translation, 1);
-		joint->worldPosition = k*t;
+
+	
 
 	}
 	else {
-		Math::Matrix m =  Math::Matrix(Math::Vector3(joint->translation.x, joint->translation.y, joint->translation.z));
-		Math::Matrix j = Math::Matrix(joint->rotate);
+		Math::Matrix m = Math::Matrix(Math::Vector3(bindPose->transformation[index].x, bindPose->transformation[index].y, bindPose->transformation[index].z));
+		Math::Matrix j = Math::Matrix(bindPose->rotation[index]);
 		Math::Matrix l = Math::Matrix(joint->jointOrient);
 		l.Invert();
-		Math::Matrix k = parentJoint->transformMatrix;
+		Math::Matrix k = bindPose->transformMatrix[parentIndex];
 		k.Invert();
 
-		joint->transformMatrix = (k * (m * (j*l)));
-		joint->transformMatrix.Invert();
-		if (joint->name == "MikeFreeman_RightUpLeg") {
-			int a = 1;
-		}
-		Math::Vector4 t(joint->translation, 1);
-		
-		joint->worldPosition = parentJoint->transformMatrix *  t;
-		
+		bindPose->transformMatrix[index] = (k * (m * (j*l)));
+		bindPose->transformMatrix[index].Invert();
+
 		int v = 1;
 	}
 
 	for (auto child : joint->children) {
-		UpdateSingleJointPosition(jointArray[child], joint);
+		UpdateSingleJointPosition(jointArray[child], joint, child, index);
 	}
 }
 
 Rain::Math::Vector3 Rain::Render::Skeleton::GetPositionByIndex(int i_index) {
-	Math::Vector3 rslt(jointArray[i_index]->worldPosition[0], jointArray[i_index]->worldPosition[1], jointArray[i_index]->worldPosition[2]);
+	Math::Vector3 rslt;
 	return rslt;
 }
