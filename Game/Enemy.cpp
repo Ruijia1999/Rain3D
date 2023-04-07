@@ -6,71 +6,85 @@
 #include "Collision\ColliderComponent.h"
 #include "MeshRender\MeshRender.h"
 #include "Animation\AnimationSystem.h"
+#include "Animation\SklAnimationComponent.h"
 void Rain::Enemy::Initialize() {
-    Rain::Input::KeyBoard::BindEvent(0x41, KEYDOWN, [this](Rain::Input::KeyBoard::KeyInfo info) {
-        Animation::AnimationComponent* animation = Animation::AnimationSystem::GetInstance()->GetComponent<Animation::AnimationComponent>(this->id);
-        
-        if (animation != nullptr) {
-            if (!animation->isPlaying) {
-                animation->Play();
-            }
-        }
 
+    //A
+    Rain::Input::KeyBoard::BindEvent(0x41, KEYDOWN, [this](Rain::Input::KeyBoard::KeyInfo info) {
+        StartRun();
+        Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
+        transform->rotation = Math::Quaternion(0, -0.7071068, 0, 0.7071068);
         });
-    Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent< Transform::TransformComponent>(this->id);
-    transform->position = transform->position + Math::Vector3(1, 0, 0);
+   
    
     Rain::Input::KeyBoard::BindEvent(0x41, KEYSTAY, [this](Rain::Input::KeyBoard::KeyInfo info) {
         Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
-        transform->position = transform->position + Math::Vector3(-0.3f, 0, 0);
-
+        transform->position = transform->position + Math::Vector3(-2, 0, 0);
+        StartRun();
         });
 
     Rain::Input::KeyBoard::BindEvent(0x41, KEYUP, [this](Rain::Input::KeyBoard::KeyInfo info) {
-        Animation::AnimationComponent* animation = Animation::AnimationSystem::GetInstance()->GetComponent<Animation::AnimationComponent>(this->id);
-       
-        if (animation != nullptr) {
-            if (animation->isPlaying) {
-                animation->Stop();
-            }
-        }
+        Stand();
 
         });
-   /* Rain::Input::KeyBoard::BindEvent(0x44, KEYDOWN, [this](Rain::Input::MouseInfo info) {
-        Animation::AnimationComponent* animation = Animation::AnimationSystem::GetInstance()->GetComponent<Animation::AnimationComponent>(this->id);
-        Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent< Transform::TransformComponent>(this->id);
-        if (animation != nullptr) {
-            if (animation->isPlaying) {
-                animation->Stop();
-            }
-            else {
-                animation->Play();
-            }
-        }
 
-        });*/
-   /* Rain::Input::Mouse::BindEvent(MOUSE_LEFT_DOWN, [this](Rain::Input::MouseInfo info) {
-        Animation::AnimationComponent* animation = Animation::AnimationSystem::GetInstance()->GetComponent<Animation::AnimationComponent>(this->id);
-        if (animation != nullptr) {
-            if (animation->isPlaying) {
-                animation->Stop();
-            }
-            else {
-                animation->Play();
-            }
-        }
-        
+    //D
+    Rain::Input::KeyBoard::BindEvent(0x44, KEYDOWN, [this](Rain::Input::KeyBoard::KeyInfo info) {
+        StartRun();
+        Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
+        transform->rotation = Math::Quaternion(0, 0.7071068, 0, 0.7071068);
         });
 
-    Rain::Input::Mouse::BindEvent(MOUSE_RIGHT_DOWN, [this](Rain::Input::MouseInfo info) {
-        Animation::AnimationComponent* animation = Animation::AnimationSystem::GetInstance()->GetComponent<Animation::AnimationComponent>(this->id);
-        if (animation->isPlaying) {
-            animation->Pause();
-        }else {
-            animation->Play();
-        }
 
-        });*/
+    Rain::Input::KeyBoard::BindEvent(0x44, KEYSTAY, [this](Rain::Input::KeyBoard::KeyInfo info) {
+         Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
+         transform->position = transform->position + Math::Vector3(2, 0, 0);
+         StartRun();
+        });
+
+    Rain::Input::KeyBoard::BindEvent(0x44, KEYUP, [this](Rain::Input::KeyBoard::KeyInfo info) {
+        Stand();
+
+        });
+
+    //W
+    Rain::Input::KeyBoard::BindEvent(0x57, KEYDOWN, [this](Rain::Input::KeyBoard::KeyInfo info) {
+        StartRun();
+        Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
+        transform->rotation = Math::Quaternion(0, 0, 0, 1);
+        });
+  
+
+    Rain::Input::KeyBoard::BindEvent(0x57, KEYSTAY, [this](Rain::Input::KeyBoard::KeyInfo info) {
+         Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
+         transform->position = transform->position + Math::Vector3(0, 0, 2);
+         StartRun();
+        });
+
+    Rain::Input::KeyBoard::BindEvent(0x57, KEYUP, [this](Rain::Input::KeyBoard::KeyInfo info) {
+        Stand();
+
+        });
+
+    //S
+    Rain::Input::KeyBoard::BindEvent(0x53, KEYDOWN, [this](Rain::Input::KeyBoard::KeyInfo info) {
+        StartRun();
+        Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
+        transform->rotation = Math::Quaternion(0, 1, 0, 0);
+        });
+   
+
+    Rain::Input::KeyBoard::BindEvent(0x53, KEYSTAY, [this](Rain::Input::KeyBoard::KeyInfo info) {
+         Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
+         transform->position = transform->position + Math::Vector3(0,0,-2);
+         StartRun();
+        });
+
+    Rain::Input::KeyBoard::BindEvent(0x53, KEYUP, [this](Rain::Input::KeyBoard::KeyInfo info) {
+        Stand();
+
+        });
+  
     ColliderComponent* collider = ColliderSystem::GetInstance()->GetComponent<ColliderComponent>(id);
 }
 
@@ -81,4 +95,23 @@ Rain::Enemy::Enemy() : Entity() {
 
 void Rain::Enemy::Update(double i_timeSinceLastFrame) {
  
+}
+
+void Rain::Enemy::StartRun() {
+    Animation::AnimationComponent* animation = Animation::AnimationSystem::GetInstance()->GetComponent<Animation::AnimationComponent>(this->id);
+
+    if (animation != nullptr) {
+        if (((Animation::SklAnimationComponent*)animation)->currentClip->name != "Run") {
+            ((Animation::SklAnimationComponent*)animation)->SetClip("Run");
+        }
+    }
+}
+void Rain::Enemy::Stand() {
+    Animation::AnimationComponent* animation = Animation::AnimationSystem::GetInstance()->GetComponent<Animation::AnimationComponent>(this->id);
+
+    if (animation != nullptr) {
+        if (((Animation::SklAnimationComponent*)animation)->currentClip->name != "Idle") {
+            ((Animation::SklAnimationComponent*)animation)->SetClip("Idle");
+        }
+    }
 }

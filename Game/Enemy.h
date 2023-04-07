@@ -12,7 +12,8 @@ namespace Rain {
 		Enemy(int i_id, std::string i_tag, std::string i_name);
 		void Initialize();
 		void Update(double i_timeSinceLastFrame);
-
+		void StartRun();
+		void Stand();
 	};
 	REGIST(Enemy)
 }

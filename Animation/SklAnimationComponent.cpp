@@ -1,8 +1,7 @@
 #include "SklAnimationComponent.h"
 #include "Transform\TransformSystem.h"
 #include "Time\Time.h"
-
-
+#include "Animation\AnimationSystem.h"
 
 Rain::Animation::SklAnimationComponent::SklAnimationComponent() {
 	currentClip = nullptr;
@@ -69,4 +68,17 @@ void Rain::Animation::SklAnimationComponent::Stop() {
 	currentFrame = -1;
 	MeshRender::MeshRenderComponent* mesh = MeshRender::MeshRenderSystem::GetInstance()->GetComponent<MeshRender::MeshRenderComponent>(id);
 	mesh->skeletalMesh->UpdateMesh( mesh->skeletalMesh->skeleton->bindPose);
+}
+
+void  Rain::Animation::SklAnimationComponent::SetClip(std::string i_name) {
+
+	std::shared_ptr<Rain::Animation::SklAnimClip> run = Animation::AnimationSystem::GetInstance()->GetSkeletalClip(i_name);
+	currentTime = 0;
+	currentFrame = -1;
+	
+	currentClip = run;
+	if (isPlaying) {
+		Play();
+	}
+	
 }

@@ -19,7 +19,9 @@ void Rain::Animation::AnimationSystem::Initialize() {
 	InitializeClip("Bounce", AnimType::General);
 	InitializeClip("Scale", AnimType::General);
 	InitializeClip("BounceLoop", AnimType::General);
-	InitializeClip("human", AnimType::Skeletal);
+	InitializeClip("Squat", AnimType::Skeletal);
+	InitializeClip("Run", AnimType::Skeletal);
+	InitializeClip("Idle", AnimType::Skeletal);
 }
 
 void Rain::Animation::AnimationSystem::InitializeClip(const char* name, AnimType type) {

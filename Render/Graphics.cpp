@@ -30,7 +30,7 @@ void Rain::Render::Graphics::Initialize(HWND hWnd, int width, int height) {
 void Rain::Render::Graphics::DoFrame() {
 	Semaphore::Wait(NEW_RENDERDATA_PREPARED);
 
-	const float bgColor[] = { 0, 0, 0, 1.0f };
+	const float bgColor[] = { 0, 0.8, 0.8, 1.0f };
 	if (pTarget != nullptr) {
 		pContext->ClearRenderTargetView(pTarget, bgColor);
 	}
