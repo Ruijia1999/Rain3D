@@ -21,23 +21,23 @@ namespace Rain {
 		class SkeletalMesh
 		{
 		private:
-			ID3D11Buffer* m_vertexBuffer = nullptr;
+
 			ID3D11Buffer* m_indexBuffer = nullptr;
 			
 		public:
 			Skeleton* skeleton;
 
 			void Initialize(const char* i_filePath);
-			void Draw() const;
+			void Draw(Animation::Pose* pose) const;
 			void CleanUp();
 			
-			void UpdateMesh(Animation:: Pose* pose);
-			void UpdatePoseTransform(const Joint* joint, int parentIndex, Joint** jointArray, int index, Animation::Pose* pose);
+			void UpdateMesh(Animation:: Pose* pose, ID3D11Buffer*& i_vertexBuffer)const;
+			void UpdatePoseTransform(const Joint* joint, int parentIndex, Joint** jointArray, int index, Animation::Pose* pose) const;
 
 			SkeletalMesh(const SkeletalMesh& i_mesh);
 			SkeletalMesh();
 			~SkeletalMesh() {
-				m_vertexBuffer = nullptr;
+			
 				m_indexBuffer = nullptr;
 				delete vertexData;
 				delete indexData;

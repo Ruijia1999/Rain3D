@@ -39,13 +39,13 @@ void Rain::Render::SkeletalMesh::Initialize(const char* i_filePath) {
 }
 Rain::Render::SkeletalMesh::SkeletalMesh() {
 
-	m_vertexBuffer = nullptr;
+
 	m_indexBuffer = nullptr;
 	vertexData = nullptr;
 	indexData = nullptr;
 }
 Rain::Render::SkeletalMesh::SkeletalMesh(const SkeletalMesh& i_mesh) {
-	m_vertexBuffer = i_mesh.m_vertexBuffer;
+
 	m_indexBuffer = i_mesh.m_indexBuffer;
 
 	m_name = i_mesh.m_name;
@@ -56,7 +56,7 @@ Rain::Render::SkeletalMesh::SkeletalMesh(const SkeletalMesh& i_mesh) {
 }
 Rain::Render::SkeletalMesh& Rain::Render::SkeletalMesh::operator=(const SkeletalMesh& i_mesh) {
 	if (&i_mesh != this) {
-		m_vertexBuffer = i_mesh.m_vertexBuffer;
+	
 		m_indexBuffer = i_mesh.m_indexBuffer;
 
 		m_name = i_mesh.m_name;
@@ -68,8 +68,9 @@ Rain::Render::SkeletalMesh& Rain::Render::SkeletalMesh::operator=(const Skeletal
 	return *this;
 
 }
-void Rain::Render::SkeletalMesh::Draw() const {
-	
+void Rain::Render::SkeletalMesh::Draw(Animation::Pose* pose) const {
+	ID3D11Buffer* vertexBuffer = nullptr;
+	UpdateMesh(pose, vertexBuffer);
 	// Bind a specific vertex buffer to the device as a data source
 	{
 
@@ -79,7 +80,7 @@ void Rain::Render::SkeletalMesh::Draw() const {
 		constexpr unsigned int bufferStride = sizeof(SkeletalVertexFormat);
 		// It's possible to start streaming data in the middle of a vertex buffer
 		constexpr unsigned int bufferOffset = 0;
-		Graphics::pContext->IASetVertexBuffers(startingSlot, vertexBufferCount, &m_vertexBuffer, &bufferStride, &bufferOffset);
+		Graphics::pContext->IASetVertexBuffers(startingSlot, vertexBufferCount, &vertexBuffer, &bufferStride, &bufferOffset);
 	}
 	// Bind the index format
 	{
@@ -178,12 +179,11 @@ void Rain::Render::SkeletalMesh::Load(int& i_indexCount, int& i_pointCount, Skel
 		int j = 0;
 	}
 
-	UpdateMesh(skeleton->bindPose);
 #pragma endregion
 }
 
 
-void Rain::Render::SkeletalMesh::UpdateMesh(Animation::Pose* pose) {
+void Rain::Render::SkeletalMesh::UpdateMesh(Animation::Pose* pose, ID3D11Buffer*& i_vertexBuffer) const {
 
 	SkeletalVertexFormat* vertexArray= new SkeletalVertexFormat[skeleton->pointCount];
 	UpdatePoseTransform(skeleton->rootJoint, -1, skeleton->jointArray, 0,pose);
@@ -242,7 +242,7 @@ void Rain::Render::SkeletalMesh::UpdateMesh(Animation::Pose* pose) {
 
 		ID3D11Device* pContext = Graphics::pDevice;
 
-		const auto result_create = Graphics::pDevice->CreateBuffer(&vertexBufferDescription, &vertexInitialData, &m_vertexBuffer);
+		const auto result_create = Graphics::pDevice->CreateBuffer(&vertexBufferDescription, &vertexInitialData, &i_vertexBuffer);
 		if (FAILED(result_create)) {
 			int j = 0;
 		};
@@ -250,7 +250,7 @@ void Rain::Render::SkeletalMesh::UpdateMesh(Animation::Pose* pose) {
 	}
 }
 
-void Rain::Render::SkeletalMesh::UpdatePoseTransform(const Joint* joint, int parentIndex, Joint** jointArray,int index, Animation::Pose* pose) {
+void Rain::Render::SkeletalMesh::UpdatePoseTransform(const Joint* joint, int parentIndex, Joint** jointArray,int index, Animation::Pose* pose) const {
 
 	if (parentIndex== -1) {
 		Math::Matrix m = Math::Matrix(Math::Vector3(pose->transformation[index].x, pose->transformation[index].y, pose->transformation[index].z));

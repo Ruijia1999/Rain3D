@@ -43,3 +43,8 @@ void Rain::MeshRender::MeshRenderComponent::Update(double i_timeSinceLastFrame) 
 void Rain::MeshRender::MeshRenderComponent::Destroy() {
 
 }
+
+void Rain::MeshRender::MeshRenderComponent::UpdateSkeletalMesh(Animation::Pose* i_pose) {
+	pose = i_pose;
+
+}

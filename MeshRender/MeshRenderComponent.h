@@ -19,10 +19,14 @@ namespace Rain {
 			void Update(double i_timeSinceLastFrame);
 			void Destroy();
 
+			void UpdateSkeletalMesh(Animation::Pose* pose);
 			int meshType;
 			std::shared_ptr <Render::Effect> effect;
 			std::shared_ptr < Render::Mesh> mesh;
+
 			std::shared_ptr <Render::SkeletalMesh> skeletalMesh;
+			Animation::Pose* pose;
+
 			std::shared_ptr < Render::Texture> texture ;
 			std::shared_ptr < Render::Texture> normalMap;
 			Math::Vector4 color;

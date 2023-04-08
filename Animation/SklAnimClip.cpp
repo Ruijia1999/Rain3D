@@ -93,7 +93,7 @@ bool Rain::Animation::SklAnimClip::Update(bool loop, int& i_frame, double& i_tim
 		pose->transformation[i] = Math::Vector3(posX, posY, posZ);
 		pose->rotation[i] = GetRotateValue(loop, i_frame, i_time, i);
 	}
-	i_sklMesh->skeletalMesh->UpdateMesh(pose);
+	i_sklMesh->UpdateSkeletalMesh(pose);
 	return true;
 }
 

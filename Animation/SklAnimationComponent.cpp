@@ -67,7 +67,7 @@ void Rain::Animation::SklAnimationComponent::Stop() {
 	currentTime = 0;
 	currentFrame = -1;
 	MeshRender::MeshRenderComponent* mesh = MeshRender::MeshRenderSystem::GetInstance()->GetComponent<MeshRender::MeshRenderComponent>(id);
-	mesh->skeletalMesh->UpdateMesh( mesh->skeletalMesh->skeleton->bindPose);
+	mesh->UpdateSkeletalMesh(mesh->skeletalMesh->skeleton->bindPose);
 }
 
 void  Rain::Animation::SklAnimationComponent::SetClip(std::string i_name) {
