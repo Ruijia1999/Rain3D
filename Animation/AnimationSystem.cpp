@@ -20,6 +20,7 @@ void Rain::Animation::AnimationSystem::Initialize() {
 	InitializeClip("Scale", AnimType::General);
 	InitializeClip("BounceLoop", AnimType::General);
 	InitializeClip("Squat", AnimType::Skeletal);
+	InitializeClip("Attacked", AnimType::Skeletal);
 	InitializeClip("Run", AnimType::Skeletal);
 	InitializeClip("Idle", AnimType::Skeletal);
 }

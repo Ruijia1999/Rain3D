@@ -14,6 +14,7 @@ namespace Rain {
 		void Update(double i_timeSinceLastFrame);
 		void StartRun();
 		void Stand();
+		void Attacked();
 	};
 	REGIST(Enemy)
 }
