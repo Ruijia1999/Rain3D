@@ -39,7 +39,10 @@ namespace Rain {
 			~SkeletalMesh() {
 			
 				m_indexBuffer = nullptr;
-				delete vertexData;
+				delete positionArray;
+				delete normalArray;
+				delete tangentArray;
+				delete uvArray;
 				delete indexData;
 			}
 			SkeletalMesh& operator=(const SkeletalMesh& i_mesh);
@@ -50,10 +53,12 @@ namespace Rain {
 			int pointCount;
 			int indexCount;
 			IndexFormat* indexData = nullptr;
-			SkeletalVertexFormat* vertexData = nullptr;
-			
+			Math::Vector3* positionArray;
+			Math::Vector3* normalArray;
+			Math::Vector3* tangentArray;
+			Math::Vector2* uvArray;
 		private:
-			void Load(int& i_indexCount, int& i_pointCount, Skeleton* skeleton, IndexFormat*& i_indexData, SkeletalVertexFormat*& i_vertexData);
+			void Load(int& i_indexCount, int& i_pointCount, Skeleton* skeleton, IndexFormat*& i_indexData, Math::Vector3*& i_positionArray, Math::Vector3*& i_normalArray, Math::Vector3*& i_tangentArray, Math::Vector2*& i_uvArray);
 
 		};
 	}

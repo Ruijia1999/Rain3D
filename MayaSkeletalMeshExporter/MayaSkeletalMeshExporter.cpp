@@ -39,10 +39,17 @@
 // Joint Definition
 //==================
 struct Triangle {
-	int vertexIndex[3];
+	int positionIndex[3];
+	int normalIndex[3];
+	int tangentIndex[3];
+	int uvIndex[3];
 };
-struct Position {
-	float position[3];
+
+struct Vector3 {
+	float data[3];
+};
+struct Vector2 {
+	float data[2];
 };
 struct Skin {
 
@@ -50,8 +57,13 @@ struct Skin {
 	float weight;
 };
 
+struct VertexIndice {
+	int positionIndex;
+	int normalIndex;
+	int tangentIndex;
+	int uvIndex;
+};
 struct SkinnedVertex {
-	float position[3];
 	Skin skinInfo[4];
 };
 struct JointInfluence {
@@ -172,10 +184,10 @@ namespace {
 	MStatus ProcessSingleJoint(Joint& joint, Joint* jointDataArray, const std::map<std::string, int> jointIndexArray);
 	MStatus ProcessJointIndex(std::ofstream& fileOut, int& dataCount, std::map<std::string, int>& jointIndexArray);
 	MStatus ProcessSkincluster( std::ofstream& fileOut, Skincluster* skinClusterDataArray);
-	MStatus ProcessSingleDagNode(const MDagPath& i_dagPath, Position*& positionArray, std::ofstream& fileOut);
+	MStatus ProcessSingleDagNode(const MDagPath& i_dagPath, std::ofstream& fileOut);
 	MStatus WriteJoints(const int jointCount, const Joint* jointDataArray, std::ofstream& fileOut);
 	MStatus WriteSingleJoint(const Joint& rootJoint, std::ofstream& fileOut);
-	MStatus WriteVertex(int positionCount, const Skincluster* skinClusterDataArray, const Position* positionArray, std::ofstream& fileOut);
+	MStatus WriteSkincluster(int positionCount, const Skincluster* skinClusterDataArray, std::ofstream& fileOut);
 
 }
 
@@ -194,7 +206,10 @@ MStatus Rain::MayaSkeletalMeshExporter::writer(const MFileObject& i_file, const 
 	std::map<std::string, int> jointIndexArray;
 	Skincluster* skinclusterDataArray = nullptr;
 	Joint* jointDataArray = nullptr;
-	Position* positionDataArray = nullptr;
+	Vector3* positionDataArray = nullptr;
+	//Position* normalArray = nullptr;
+	//Position* binaryArray = nullptr;
+	//UV* uvArray = nullptr;
 	int skinClusterDataCount = 0;
 	if (i_mode == MPxFileTranslator::kExportActiveAccessMode)
 	{
@@ -206,7 +221,7 @@ MStatus Rain::MayaSkeletalMeshExporter::writer(const MFileObject& i_file, const 
 			MDagPath dagPath;
 			i.getDagPath(dagPath);
 
-			if (!(status = ProcessSingleDagNode(dagPath, positionDataArray, fout)))
+			if (!(status = ProcessSingleDagNode(dagPath, fout)))
 			{
 				return status;
 			}
@@ -217,7 +232,7 @@ MStatus Rain::MayaSkeletalMeshExporter::writer(const MFileObject& i_file, const 
 			MDagPath dagPath;
 			i.getDagPath(dagPath);
 
-			if (!(status = ProcessSingleDagNode(dagPath, positionDataArray, fout)))
+			if (!(status = ProcessSingleDagNode(dagPath, fout)))
 			{
 				return status;
 			}
@@ -245,7 +260,7 @@ MStatus Rain::MayaSkeletalMeshExporter::writer(const MFileObject& i_file, const 
 
 		
 		
-		WriteVertex(skinClusterDataCount, skinclusterDataArray, positionDataArray, fout);
+		WriteSkincluster(skinClusterDataCount, skinclusterDataArray, fout);
 		WriteJoints(j, jointDataArray, fout);
 		
 	}
@@ -502,7 +517,7 @@ namespace {
 		return MStatus::kSuccess;
 	}
 
-	MStatus WriteVertex(int positionCount, const Skincluster* skinClusterDataArray, const Position* positionArray, std::ofstream& fileOut) {
+	MStatus WriteSkincluster(int positionCount, const Skincluster* skinClusterDataArray, std::ofstream& fileOut) {
 
 
 
@@ -511,15 +526,10 @@ namespace {
 			return MStatus::kFailure;
 		}
 		for (int i = 0; i < positionCount; i++) {
-			for (int j = 0; j < 3; j++) {
-				dataArray[i].position[j] = positionArray[i].position[j];
-			}
 			for (int j = 0; j < 4; j++) {
 				dataArray[i].skinInfo[j].index = skinClusterDataArray[i].influenceData[j].jointIndex;
 				dataArray[i].skinInfo[j].weight = skinClusterDataArray[i].influenceData[j].weight;
 			}
-			
-
 		}
 
 		
@@ -530,7 +540,7 @@ namespace {
 #pragma endregion
 
 #pragma region MeshData
-	MStatus ProcessSingleDagNode(const MDagPath& i_dagPath, Position*& positionArray, std::ofstream& fileOut)
+	MStatus ProcessSingleDagNode(const MDagPath& i_dagPath, std::ofstream& fileOut)
 	{
 		// Get the mesh from the DAG path
 		MFnMesh mesh(i_dagPath);
@@ -545,6 +555,7 @@ namespace {
 		{
 			return MStatus::kSuccess;
 		}
+#pragma region position, normal, tangent and UV
 		// Get a list of the positions
 		MPointArray positions;
 		{
@@ -555,6 +566,105 @@ namespace {
 				return status;
 			}
 		}
+
+		int positionCount = positions.length();
+		Vector3* positionArray = new Vector3[positionCount];
+		for (int i = 0; i < positionCount; i++) {
+			positionArray[i].data[0] = positions[i].x;
+			positionArray[i].data[1] = positions[i].y;
+			positionArray[i].data[2] = positions[i].z;
+		}
+
+		fileOut.write((char*)&positionCount, sizeof(positionCount));
+		fileOut.write((char*)positionArray, sizeof(Vector3) * positionCount);
+
+
+		// Get a list of the normals
+		MFloatVectorArray normals;
+		{
+			const auto status = mesh.getNormals(normals, MSpace::kWorld);
+			if (!status)
+			{
+				MGlobal::displayError(status.errorString());
+				return status;
+			}
+		}
+		int normalCount = normals.length();
+		Vector3* normalArray = new Vector3[normalCount];
+		for (int i = 0; i < normalCount; i++) {
+			normalArray[i].data[0] = normals[i].x;
+			normalArray[i].data[1] = normals[i].y;
+			normalArray[i].data[2] = normals[i].z;
+		}
+
+		fileOut.write((char*)&normalCount, sizeof(normalCount));
+		fileOut.write((char*)normalArray, sizeof(Vector3) * normalCount);
+
+		// Get a list of tangents
+		MFloatVectorArray tangents;
+		{
+			constexpr MString* const useDefaultUvSet = nullptr;	// If more than one UV set exists this code will use the "default" one (as chosen by Maya)
+			{
+				const auto status = mesh.getTangents(tangents, MSpace::kWorld, useDefaultUvSet);
+				if (!status
+					// Tangents may not exist if there are no UVs
+					&& (status != MS::kInvalidParameter))
+				{
+					MGlobal::displayError(status.errorString());
+					return status;
+				}
+			}
+
+		}
+		int tangentCount = tangents.length();
+		Vector3* tangentArray = new Vector3[tangentCount];
+		for (int i = 0; i < tangentCount; i++) {
+			tangentArray[i].data[0] = tangents[i].x;
+			tangentArray[i].data[1] = tangents[i].y;
+			tangentArray[i].data[2] = tangents[i].z;
+		}
+
+		fileOut.write((char*)&tangentCount, sizeof(tangentCount));
+		fileOut.write((char*)tangentArray, sizeof(Vector3) * tangentCount);
+
+		// Get a list of the texture coordinates
+		MFloatArray texcoordUs, texcoordVs;
+		{
+			MStatus status;
+			const auto uvSetCount = mesh.numUVSets(&status);
+			if (status)
+			{
+				if (uvSetCount > 0)
+				{
+					constexpr MString* const useDefaultUvSet = nullptr;	// If more than one UV set exists this code will use the "default" one (as chosen by Maya)
+					status = mesh.getUVs(texcoordUs, texcoordVs, useDefaultUvSet);
+					if (!status)
+					{
+						MGlobal::displayError(status.errorString());
+						return status;
+					}
+				}
+			}
+			else
+			{
+				MGlobal::displayError(status.errorString());
+				return status;
+			}
+		}
+
+		int uvCount = texcoordUs.length();
+		Vector2* uvArray = new Vector2[uvCount];
+		for (int i = 0; i < uvCount; i++) {
+			uvArray[i].data[0] = texcoordUs[i];
+			uvArray[i].data[1] = texcoordVs[i];
+
+		}
+
+		fileOut.write((char*)&uvCount, sizeof(uvCount));
+		fileOut.write((char*)uvArray, sizeof(Vector2) * uvCount);
+#pragma endregion
+
+		
 
 		// An instance ID identifies the specific node that should be processed by this function.
 		unsigned int instanceId = 0;
@@ -576,13 +686,69 @@ namespace {
 
 			MPointArray trianglePositions;
 			MIntArray positionIndices;
+
+			std::map<int, VertexIndice*> vertexIndices;
+			int vertexCount=0;
+
 			size_t polygonIndex = 0;
 			std::vector< Triangle> indexArray;
 			for (MItMeshPolygon i(mesh.object()); !i.isDone(); i.next(), ++polygonIndex)
 			{
 				if (i.hasValidTriangulation())
 				{
-					// Store information for each individual triangle in the polygon
+#pragma region Store information for each vertex in the polygon
+					
+					std::map<int, const std::string> indexToKeyMap;
+					{
+						MIntArray vertices;
+						const auto status = i.getVertices(vertices);
+						const auto vertexCount = vertices.length();
+						if (status)
+						{
+							for (std::remove_const<decltype(vertexCount)>::type j = 0; j < vertexCount; ++j)
+							{
+								const auto positionIndex = vertices[j];
+								const auto normalIndex = i.normalIndex(j);
+								int texcoordIndex = -1;
+	
+								{
+									int potentialTexcoordIndex;
+									constexpr MString* const useDefaultUvSet = nullptr;
+									const auto status = i.getUVIndex(j, potentialTexcoordIndex, useDefaultUvSet);
+									if (status && (potentialTexcoordIndex >= 0)
+										&& (static_cast<unsigned int>(potentialTexcoordIndex) < texcoordUs.length())
+										&& (static_cast<unsigned int>(potentialTexcoordIndex) < texcoordVs.length()))
+									{
+										texcoordIndex = potentialTexcoordIndex;
+									}
+								}
+								int tangentIndex = -1;
+		
+								{
+									MStatus status;
+									const auto potentialTangentIndex = i.tangentIndex(j, &status);
+									if (status && (potentialTangentIndex >= 0)
+										&& (static_cast<unsigned int>(potentialTangentIndex) < tangents.length()))
+									{
+										tangentIndex = potentialTangentIndex;
+									}
+								}
+								VertexIndice* i = new VertexIndice();
+								i->positionIndex = positionIndex;
+								i->normalIndex = normalIndex;
+								i->tangentIndex = tangentIndex;
+								i->uvIndex = texcoordIndex;
+								vertexIndices.insert(std::make_pair(positionIndex, i));
+							}
+						}
+						else
+						{
+							MGlobal::displayError(status.errorString());
+							return status;
+						}
+					}
+#pragma endregion
+#pragma region Store information for each individual triangle in the polygon
 					{
 						const auto triangleCount = [&i]
 						{
@@ -598,7 +764,7 @@ namespace {
 								Triangle triangle;
 								for (unsigned int k = 0; k < 3; ++k)
 								{
-									triangle.vertexIndex[k] = positionIndices[k];
+									triangle.positionIndex[k] = positionIndices[k];
 								}
 								indexArray.push_back(triangle);
 							}
@@ -606,30 +772,30 @@ namespace {
 							{
 								return MStatus::kFailure;
 							}
+
 						}
 					}
+#pragma endregion
 				}
 				else
 				{
 					MGlobal::displayError("This mesh has an invalid triangulation");
 					return MStatus::kFailure;
 				}
-
-				
-			}
-			int positionCount = positions.length();
-			positionArray = new Position[positionCount];
-			for (int i = 0; i < positionCount; i++) {
-				positionArray[i].position[0] = positions[i].x;
-				positionArray[i].position[1] = positions[i].y;
-				positionArray[i].position[2] = positions[i].z;
 			}
 
 			int length = indexArray.size();
-
+			for (int i = 0; i < length; i++) {
+				for (int j = 0; j < 3; j++) {
+					if (vertexIndices.find(indexArray[i].positionIndex[j]) != vertexIndices.end()) {
+						indexArray[i].normalIndex[j] = vertexIndices.find(indexArray[i].positionIndex[j])->second->normalIndex;
+						indexArray[i].tangentIndex[j] = vertexIndices.find(indexArray[i].positionIndex[j])->second->tangentIndex;
+						indexArray[i].uvIndex[j] = vertexIndices.find(indexArray[i].positionIndex[j])->second->uvIndex;
+					}
+				}
+			}
 			fileOut.write((char*)&length, sizeof(length));
 			fileOut.write((char*)&indexArray[0], sizeof(Triangle)*length);
-
 		}
 
 		return MStatus::kSuccess;

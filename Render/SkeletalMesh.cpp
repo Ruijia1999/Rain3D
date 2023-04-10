@@ -8,7 +8,7 @@
 void Rain::Render::SkeletalMesh::Initialize(const char* i_filePath) {
 	m_name = i_filePath;
 	skeleton = new Skeleton();
-	Load(indexCount, pointCount, skeleton, indexData, vertexData);
+	Load(indexCount, pointCount, skeleton, indexData, positionArray, normalArray, tangentArray, uvArray);
 
 	// Index Buffer
 	{
@@ -41,7 +41,10 @@ Rain::Render::SkeletalMesh::SkeletalMesh() {
 
 
 	m_indexBuffer = nullptr;
-	vertexData = nullptr;
+	positionArray = nullptr;
+	normalArray = nullptr;
+	tangentArray = nullptr;
+	uvArray = nullptr;
 	indexData = nullptr;
 }
 Rain::Render::SkeletalMesh::SkeletalMesh(const SkeletalMesh& i_mesh) {
@@ -51,7 +54,10 @@ Rain::Render::SkeletalMesh::SkeletalMesh(const SkeletalMesh& i_mesh) {
 	m_name = i_mesh.m_name;
 	pointCount = i_mesh.pointCount;
 	indexCount = i_mesh.indexCount;
-	vertexData = i_mesh.vertexData;
+	positionArray = i_mesh.positionArray;
+	normalArray = i_mesh.normalArray;
+	tangentArray = i_mesh.tangentArray;
+	uvArray = i_mesh.uvArray;
 	indexData = i_mesh.indexData;
 }
 Rain::Render::SkeletalMesh& Rain::Render::SkeletalMesh::operator=(const SkeletalMesh& i_mesh) {
@@ -62,7 +68,10 @@ Rain::Render::SkeletalMesh& Rain::Render::SkeletalMesh::operator=(const Skeletal
 		m_name = i_mesh.m_name;
 		pointCount = i_mesh.pointCount;
 		indexCount = i_mesh.indexCount;
-		vertexData = i_mesh.vertexData;
+		positionArray = i_mesh.positionArray;
+		normalArray = i_mesh.normalArray;
+		tangentArray = i_mesh.tangentArray;
+		uvArray = i_mesh.uvArray;
 		indexData = i_mesh.indexData;
 	}
 	return *this;
@@ -97,25 +106,63 @@ void Rain::Render::SkeletalMesh::Draw(Animation::Pose* pose) const {
 	Graphics::pContext->DrawIndexed((UINT)(indexCount * 3), 0u, 0u);
 }
 
-void Rain::Render::SkeletalMesh::Load(int& i_indexCount, int& i_pointCount, Skeleton* skeleton, IndexFormat*& i_indexData, SkeletalVertexFormat*& i_vertexData) {
+void Rain::Render::SkeletalMesh::Load(int& i_indexCount, int& i_pointCount, Skeleton* skeleton, IndexFormat*& i_indexData, Math::Vector3*& i_positionArray, Math::Vector3*& i_normalArray, Math::Vector3*& i_tangentArray, Math::Vector2*& i_uvArray ) {
 	lua_State* L = luaL_newstate();
 	std::string filePath = "meshes/";
 	
 	const char* suffix = ".hrjSkelMesh";
 	filePath.append(m_name);
 	filePath.append(suffix);
-#pragma region positionData
+
 	std::fstream file(filePath, std::ios::in | std::ios::binary);
 	if (!file) {
 		//LOG ERROR
 		return;
 	}
 
+	int positionCount;
+	//Math::Vector3* positionArray;
+	int normalCount;
+	//Math::Vector3* normalArray;
+	int tangentCount;
+	//Math::Vector3* tangentArray;
+	int uvCount;
+	//Math::Vector2* uvArray;
+
+#pragma region position, normal, tangent, uv
+
+	file.read((char*)(&positionCount), sizeof(positionCount));
+	i_positionArray = new Math::Vector3[positionCount];
+	file.read((char*)(i_positionArray), sizeof(Math::Vector3) * positionCount);
+
+	file.read((char*)(&normalCount), sizeof(normalCount));
+	i_normalArray = new Math::Vector3[normalCount];
+	file.read((char*)(i_normalArray), sizeof(Math::Vector3) * normalCount);
+
+	file.read((char*)(&tangentCount), sizeof(tangentCount));
+	i_tangentArray = new Math::Vector3[tangentCount];
+	file.read((char*)(i_tangentArray), sizeof(Math::Vector3) * tangentCount);
+
+	file.read((char*)(&uvCount), sizeof(uvCount));
+	i_uvArray = new Math::Vector2[uvCount];
+	file.read((char*)(i_uvArray), sizeof(Math::Vector2) * uvCount);
+
+#pragma endregion
+
+#pragma region VertexData
+
 	file.read((char*)(&i_indexCount), sizeof(i_indexCount));
 	i_indexData = new IndexFormat[i_indexCount];
+	SkeletalIndexFormat* skeletalIndices = new SkeletalIndexFormat[i_indexCount];
 
-	file.read((char*)(i_indexData), sizeof(IndexFormat) * i_indexCount);
-	int sizea = sizeof(IndexFormat) * i_indexCount;
+	file.read((char*)(skeletalIndices), sizeof(SkeletalIndexFormat) * i_indexCount);
+
+	for (int i = 0; i < i_indexCount; i++) {
+		i_indexData[i].x = skeletalIndices[i].x;
+		i_indexData[i].y = skeletalIndices[i].y;
+		i_indexData[i].z = skeletalIndices[i].z;
+	}
+
 #pragma endregion
 
 #pragma region Skincluster
@@ -123,8 +170,13 @@ void Rain::Render::SkeletalMesh::Load(int& i_indexCount, int& i_pointCount, Skel
 	file.read((char*)(&i_pointCount), sizeof(i_pointCount));
 	skeleton->pointCount = i_pointCount;
 	skeleton->vertexInfo = new SkinnedVertexData[pointCount];
+	Skincluster* skinClueter = new Skincluster[pointCount];
+	file.read((char*)(skinClueter), sizeof(Skincluster) * pointCount);
 
-	file.read((char*)(skeleton->vertexInfo), sizeof(SkinnedVertexData) * pointCount);
+	for (int i = 0; i < pointCount; i++) {
+		skeleton->vertexInfo[i].vertexIndex = i;
+		skeleton->vertexInfo[i].skincluster = skinClueter[i];
+	}
 #pragma endregion
 
 #pragma region SkeletonData
@@ -143,7 +195,7 @@ void Rain::Render::SkeletalMesh::Load(int& i_indexCount, int& i_pointCount, Skel
 		jointDataArray[i].children = new int[jointDataArray[i].childrenCount];
 		file.read((char*)jointDataArray[i].children, sizeof(int)* jointDataArray[i].childrenCount);
 	}
-	i_vertexData = new SkeletalVertexFormat[i_pointCount];
+	
 
 	skeleton->jointCount = jointCount;
 	skeleton->jointArray = new Joint * [jointCount];
@@ -170,14 +222,7 @@ void Rain::Render::SkeletalMesh::Load(int& i_indexCount, int& i_pointCount, Skel
 	skeleton->UpdateJointsPosition();
 
 	
-	for (int i = 0; i < pointCount; i++) {
-		Math::Vector3 pos(0, 0, 0);
 
-		i_vertexData[i].x = skeleton->vertexInfo[i].position.x;
-		i_vertexData[i].y = skeleton->vertexInfo[i].position.y;;
-		i_vertexData[i].z = skeleton->vertexInfo[i].position.z;;
-		int j = 0;
-	}
 
 #pragma endregion
 }
@@ -191,7 +236,7 @@ void Rain::Render::SkeletalMesh::UpdateMesh(Animation::Pose* pose, ID3D11Buffer*
 
 	for (int i = 0; i < pointCount; i++) {
 		Math::Vector3 rsl(0, 0, 0);
-		Math::Vector4 orgPos(vertexData[i].x, vertexData[i].y, vertexData[i].z, 1);
+		Math::Vector4 orgPos(positionArray[skeleton->vertexInfo->vertexIndex].x, positionArray[skeleton->vertexInfo->vertexIndex].y, positionArray[skeleton->vertexInfo->vertexIndex].z, 1);
 		float a = 0;
 		for (int j = 0; j < 4; j++) {
 

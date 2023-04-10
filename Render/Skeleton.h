@@ -15,7 +15,7 @@ namespace Rain {
 			SkinclusterData data[4];
 		};
 		struct SkinnedVertexData {
-			Math::Vector3 position;
+			int vertexIndex;
 			Skincluster skincluster;
 		};
 		class Skeleton
