@@ -371,7 +371,23 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		std::string type = lua_tostring(i_luaState, -1);
 		lua_pop(i_luaState, 1);
 
-		ColliderSystem::GetInstance()->AddComponent(new ColliderComponent(i_id, type.c_str()));
+		Math::Vector3 size;
+		lua_pushstring(i_luaState, "size");
+		if (i_luaState != nullptr) {
+			lua_gettable(i_luaState, -2);
+			for (int i = 1; i <= 3; ++i) {
+				lua_rawgeti(i_luaState, -1, i);
+				size[i - 1] = lua_tonumber(i_luaState, -1);
+				lua_pop(i_luaState, 1);
+			}
+			lua_pop(i_luaState, 1);
+			ColliderSystem::GetInstance()->AddComponent(new ColliderComponent(i_id, type.c_str(),size));
+		}
+		else {
+			ColliderSystem::GetInstance()->AddComponent(new ColliderComponent(i_id, type.c_str()));
+		}
+
+		
 		}
 	);
 #pragma endregion

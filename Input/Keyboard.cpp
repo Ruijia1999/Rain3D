@@ -30,10 +30,16 @@ void Rain::Input::KeyBoard::Update() {
 	}
 }
 void Rain::Input::KeyBoard::OnKeyDown(int i_keyCode) {
-	InputEventQueue::Push(KeyInfo(i_keyCode, KEYDOWN));
+	if (preKeyStates[i_keyCode] == KEYUP) {
+		InputEventQueue::Push(KeyInfo(i_keyCode, KEYDOWN));
+	}
+
 }
 void Rain::Input::KeyBoard::OnKeyUp(int i_keyCode) {
-	InputEventQueue::Push(KeyInfo(i_keyCode, KEYUP));
+	if (preKeyStates[i_keyCode] != KEYUP) {
+		InputEventQueue::Push(KeyInfo(i_keyCode, KEYUP));
+	}
+
 }
 
 void Rain::Input::KeyBoard::OnKeyStay(int i_keyCode) {
@@ -41,6 +47,5 @@ void Rain::Input::KeyBoard::OnKeyStay(int i_keyCode) {
 	if ((it = KeyBoard::keyStayEventsMap.find(i_keyCode)) != KeyBoard::keyStayEventsMap.end()) {
 		it->second.Operate(KeyInfo(i_keyCode,KEYSTAY));
 	}
-
-		
+	
 }

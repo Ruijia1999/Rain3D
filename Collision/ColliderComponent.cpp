@@ -20,6 +20,23 @@ void Rain::ColliderComponent::Update(double i_timeSinceLastFrame) {
 void Rain::ColliderComponent::Destroy() {
 
 }
+
+Rain::ColliderComponent::ColliderComponent(int i_id, const char* i_type, Math::Vector3 size) :ComponentBase(i_id) {
+	Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
+	MeshRender::MeshRenderComponent* meshRender = MeshRender::MeshRenderSystem::GetInstance()->GetComponent<MeshRender::MeshRenderComponent>(this->id);
+	if (strcmp(i_type, "AABB") == 0) {
+		type = Collision::ColliderType::AABB;
+		collider = (Collision::ColliderBase*)new Collision::AABBCollider(transform->rotation, transform->position, size.x,size.y,size.z);
+	}
+	else if (strcmp(i_type, "OBB") == 0) {
+		type = Collision::ColliderType::OBB;
+		collider = (Collision::ColliderBase*)new Collision::OBBCollider(transform->rotation, transform->position, size.x, size.y, size.z);
+	}
+	else if (strcmp(i_type, "Sphere") == 0) {
+		type = Collision::ColliderType::Sphere;
+		collider = (Collision::ColliderBase*)new Collision::SphereCollider(transform->rotation, transform->position, size.x);
+	}
+}
 Rain::ColliderComponent::ColliderComponent(int i_id, const char* i_type):ComponentBase(i_id) {
 	Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
 	MeshRender::MeshRenderComponent* meshRender = MeshRender::MeshRenderSystem::GetInstance()->GetComponent<MeshRender::MeshRenderComponent>(this->id);
