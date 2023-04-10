@@ -134,5 +134,11 @@
     <FxCompile Include="SkeletalMeshVertex.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="SkeletalColorWithNormalPixel.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="SkeletalColorWithNormalVertex.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

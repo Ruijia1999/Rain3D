@@ -235,8 +235,11 @@ void Rain::Render::SkeletalMesh::UpdateMesh(Animation::Pose* pose, ID3D11Buffer*
 
 
 	for (int i = 0; i < pointCount; i++) {
-		Math::Vector3 rsl(0, 0, 0);
-		Math::Vector4 orgPos(positionArray[skeleton->vertexInfo->vertexIndex].x, positionArray[skeleton->vertexInfo->vertexIndex].y, positionArray[skeleton->vertexInfo->vertexIndex].z, 1);
+		Math::Vector3 rslPos(0, 0, 0);
+		Math::Vector3 rslNml(0, 0, 0);
+		Math::Vector4 orgPos(positionArray[skeleton->vertexInfo[i].vertexIndex].x, positionArray[skeleton->vertexInfo[i].vertexIndex].y, positionArray[skeleton->vertexInfo[i].vertexIndex].z, 1);
+		Math::Vector4 orgNml(normalArray[skeleton->vertexInfo[i].vertexIndex].x, normalArray[skeleton->vertexInfo[i].vertexIndex].y, normalArray[skeleton->vertexInfo[i].vertexIndex].z, 1);
+		
 		float a = 0;
 		for (int j = 0; j < 4; j++) {
 
@@ -245,22 +248,30 @@ void Rain::Render::SkeletalMesh::UpdateMesh(Animation::Pose* pose, ID3D11Buffer*
 			
 			if (index!=-1) {
 
-				Math::Matrix inverseM;
-				skeleton->bindPose->transformMatrix[index].Inverse(inverseM);
-				Math::Vector4 pos = pose->transformMatrix[index] * (inverseM * orgPos);
-				rsl = rsl + Math::Vector3(pos.x * weight, pos.y * weight, pos.z * weight);
+				Math::Matrix transformInverse;
+				Math::Matrix transformPrevious = skeleton->bindPose->transformMatrix[index];
+				Math::Matrix transformNext = pose->transformMatrix[index];
+				Math::Matrix rotatePrevious(1,0,0,0,0,transformPrevious.m11, transformPrevious.m12, 0,0,transformPrevious.m21, transformPrevious.m22,0,0,0,0,1) ;
+				Math::Matrix rotateNext(1, 0, 0, 0, 0, transformNext.m11, transformNext.m12, 0, 0, transformNext.m21, transformNext.m22, 0, 0, 0, 0, 1);;
+			
+				rotatePrevious.Invert();
+				skeleton->bindPose->transformMatrix[index].Inverse(transformInverse);
+				Math::Vector4 pos = pose->transformMatrix[index] * (transformInverse * orgPos);
+				Math::Vector4 nml = rotateNext * (rotatePrevious * orgNml);
 
-			}
-			if (rsl.z < -30) {
-				int l = 1;
+				rslPos = rslPos + Math::Vector3(pos.x * weight, pos.y * weight, pos.z * weight);
+				rslNml = rslNml + Math::Vector3(nml.x * weight, nml.y * weight, nml.z * weight);
 			}
 
 		}
 
-		vertexArray[i].x = rsl.x;
-		vertexArray[i].y = rsl.y;
-		vertexArray[i].z = rsl.z;
-	
+		vertexArray[i].x = rslPos.x;
+		vertexArray[i].y = rslPos.y;
+		vertexArray[i].z = rslPos.z;
+		vertexArray[i].nx = rslNml.x;
+		vertexArray[i].ny = rslNml.y;
+		vertexArray[i].nz = rslNml.z;
+
 		int j = 0;
 	}
 	

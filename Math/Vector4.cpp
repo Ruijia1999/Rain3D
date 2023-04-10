@@ -53,6 +53,11 @@ Rain::Math::Vector4 Rain::Math::Vector4::operator/(const float& i) {
 	Vector4 j = Vector4(x / i, y / i, z / i, w / i);
 	return j;
 }
+Rain::Math::Vector4& Rain::Math::Vector4::operator+(const Vector4& i_vec) const {
+	Vector4 j = Vector4(x + i_vec.x, y + i_vec.y, z + i_vec.z, w+i_vec.w);
+	return j;
+}
+
 void Rain::Math::Vector4::operator=(const Vector4& i_vec4) {
 	x = i_vec4.x;
 	y = i_vec4.y;

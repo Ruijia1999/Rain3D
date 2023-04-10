@@ -42,8 +42,8 @@ void Rain::Render::ConstantLayout::Initialize() {
 
 
 	//skeletal mesh
-	skeletalMeshLayout = new  D3D11_INPUT_ELEMENT_DESC[1];
-	skeletalMeshEleNum = 1;
+	skeletalMeshLayout = new  D3D11_INPUT_ELEMENT_DESC[2];
+	skeletalMeshEleNum = 2;
 	skeletalMeshLayout[0].SemanticName = "POSITION";
 	skeletalMeshLayout[0].SemanticIndex = 0;
 	skeletalMeshLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -51,5 +51,14 @@ void Rain::Render::ConstantLayout::Initialize() {
 	skeletalMeshLayout[0].AlignedByteOffset = 0;
 	skeletalMeshLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	skeletalMeshLayout[0].InstanceDataStepRate = 0;
+
+	skeletalMeshLayout[1].SemanticName = "NORMAL";
+	skeletalMeshLayout[1].SemanticIndex = 0;
+	skeletalMeshLayout[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	skeletalMeshLayout[1].InputSlot = 0;
+	skeletalMeshLayout[1].AlignedByteOffset = 12;
+	skeletalMeshLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	skeletalMeshLayout[1].InstanceDataStepRate = 0;
+
 
 }

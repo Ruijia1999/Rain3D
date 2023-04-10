@@ -44,6 +44,8 @@ void Rain::MeshRender::MeshRenderSystem::Initialize() {
 	effects.find("water")->second->Initialize("waterVertex", "waterPixel", Render::ConstantLayout::staticMeshLayout, Render::ConstantLayout::staticMeshEleNum);
 	effects.insert(std::pair<std::string, std::shared_ptr<Render::Effect>>("skeletalDefault", new Render::Effect()));
 	effects.find("skeletalDefault")->second->Initialize("SkeletalMeshVertex", "SkeletalMeshPixel", Render::ConstantLayout::skeletalMeshLayout, Render::ConstantLayout::skeletalMeshEleNum);
+	effects.insert(std::pair<std::string, std::shared_ptr<Render::Effect>>("skeletalNormal", new Render::Effect()));
+	effects.find("skeletalNormal")->second->Initialize("SkeletalColorWithNormalVertex", "SkeletalColorWithNormalPixel", Render::ConstantLayout::skeletalMeshLayout, Render::ConstantLayout::skeletalMeshEleNum);
 }
 
 Rain::MeshRender::MeshRenderSystem::MeshRenderSystem() {

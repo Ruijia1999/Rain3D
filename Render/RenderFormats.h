@@ -9,6 +9,7 @@ namespace Rain {
 		};
 		struct SkeletalVertexFormat {
 			float x, y, z;
+			float nx, ny, nz;
 		};
 		struct IndexFormat {
 			INT32 x, y, z;

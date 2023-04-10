@@ -18,6 +18,7 @@ namespace Rain {
 			Vector4(Vector3 i_vec3, float i_w);
 			void operator=(const Vector4& i_vec4);
 			Vector4 operator/(const float& i);
+			Vector4& operator+(const Vector4& i) const;
 			void operator/=(const float& i);
 			float& operator[](int i);
 			float operator[](int i) const;
