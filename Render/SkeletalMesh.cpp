@@ -8,7 +8,7 @@
 void Rain::Render::SkeletalMesh::Initialize(const char* i_filePath) {
 	m_name = i_filePath;
 	skeleton = new Skeleton();
-	Load(indexCount, pointCount, skeleton, indexData, positionArray, normalArray, tangentArray, uvArray);
+	Load(indexCount, pointCount, skeleton, indexData, vertexData,positionArray, normalArray, tangentArray, uvArray);
 
 	// Index Buffer
 	{
@@ -46,6 +46,7 @@ Rain::Render::SkeletalMesh::SkeletalMesh() {
 	tangentArray = nullptr;
 	uvArray = nullptr;
 	indexData = nullptr;
+	vertexData = nullptr;
 }
 Rain::Render::SkeletalMesh::SkeletalMesh(const SkeletalMesh& i_mesh) {
 
@@ -59,6 +60,7 @@ Rain::Render::SkeletalMesh::SkeletalMesh(const SkeletalMesh& i_mesh) {
 	tangentArray = i_mesh.tangentArray;
 	uvArray = i_mesh.uvArray;
 	indexData = i_mesh.indexData;
+	vertexData = i_mesh.vertexData;
 }
 Rain::Render::SkeletalMesh& Rain::Render::SkeletalMesh::operator=(const SkeletalMesh& i_mesh) {
 	if (&i_mesh != this) {
@@ -73,6 +75,7 @@ Rain::Render::SkeletalMesh& Rain::Render::SkeletalMesh::operator=(const Skeletal
 		tangentArray = i_mesh.tangentArray;
 		uvArray = i_mesh.uvArray;
 		indexData = i_mesh.indexData;
+		vertexData = i_mesh.vertexData;
 	}
 	return *this;
 
@@ -86,7 +89,7 @@ void Rain::Render::SkeletalMesh::Draw(Animation::Pose* pose) const {
 		constexpr unsigned int startingSlot = 0;
 		constexpr unsigned int vertexBufferCount = 1;
 		// The "stride" defines how large a single vertex is in the stream of data
-		constexpr unsigned int bufferStride = sizeof(SkeletalVertexFormat);
+		constexpr unsigned int bufferStride = sizeof(StaticVertexFormat);
 		// It's possible to start streaming data in the middle of a vertex buffer
 		constexpr unsigned int bufferOffset = 0;
 		Graphics::pContext->IASetVertexBuffers(startingSlot, vertexBufferCount, &vertexBuffer, &bufferStride, &bufferOffset);
@@ -106,7 +109,7 @@ void Rain::Render::SkeletalMesh::Draw(Animation::Pose* pose) const {
 	Graphics::pContext->DrawIndexed((UINT)(indexCount * 3), 0u, 0u);
 }
 
-void Rain::Render::SkeletalMesh::Load(int& i_indexCount, int& i_pointCount, Skeleton* skeleton, IndexFormat*& i_indexData, Math::Vector3*& i_positionArray, Math::Vector3*& i_normalArray, Math::Vector3*& i_tangentArray, Math::Vector2*& i_uvArray ) {
+void Rain::Render::SkeletalMesh::Load(int& i_indexCount, int& i_pointCount, Skeleton* skeleton, IndexFormat*& i_indexData, SkeletalIndexFormat*& i_vertexFormat, Math::Vector3*& i_positionArray, Math::Vector3*& i_normalArray, Math::Vector3*& i_tangentArray, Math::Vector2*& i_uvArray ) {
 	lua_State* L = luaL_newstate();
 	std::string filePath = "meshes/";
 	
@@ -153,14 +156,14 @@ void Rain::Render::SkeletalMesh::Load(int& i_indexCount, int& i_pointCount, Skel
 
 	file.read((char*)(&i_indexCount), sizeof(i_indexCount));
 	i_indexData = new IndexFormat[i_indexCount];
-	SkeletalIndexFormat* skeletalIndices = new SkeletalIndexFormat[i_indexCount];
+	i_vertexFormat = new SkeletalIndexFormat[i_indexCount];
 
-	file.read((char*)(skeletalIndices), sizeof(SkeletalIndexFormat) * i_indexCount);
+	file.read((char*)(i_vertexFormat), sizeof(SkeletalIndexFormat) * i_indexCount);
 
 	for (int i = 0; i < i_indexCount; i++) {
-		i_indexData[i].x = skeletalIndices[i].x;
-		i_indexData[i].y = skeletalIndices[i].y;
-		i_indexData[i].z = skeletalIndices[i].z;
+		i_indexData[i].x = i_vertexFormat[i].x;
+		i_indexData[i].y = i_vertexFormat[i].y;
+		i_indexData[i].z = i_vertexFormat[i].z;
 	}
 
 #pragma endregion
@@ -230,7 +233,7 @@ void Rain::Render::SkeletalMesh::Load(int& i_indexCount, int& i_pointCount, Skel
 
 void Rain::Render::SkeletalMesh::UpdateMesh(Animation::Pose* pose, ID3D11Buffer*& i_vertexBuffer) const {
 
-	SkeletalVertexFormat* vertexArray= new SkeletalVertexFormat[skeleton->pointCount];
+	StaticVertexFormat* vertexArray= new StaticVertexFormat[skeleton->pointCount];
 	UpdatePoseTransform(skeleton->rootJoint, -1, skeleton->jointArray, 0,pose);
 
 
@@ -239,7 +242,7 @@ void Rain::Render::SkeletalMesh::UpdateMesh(Animation::Pose* pose, ID3D11Buffer*
 		Math::Vector3 rslNml(0, 0, 0);
 		Math::Vector4 orgPos(positionArray[skeleton->vertexInfo[i].vertexIndex].x, positionArray[skeleton->vertexInfo[i].vertexIndex].y, positionArray[skeleton->vertexInfo[i].vertexIndex].z, 1);
 		Math::Vector4 orgNml(normalArray[skeleton->vertexInfo[i].vertexIndex].x, normalArray[skeleton->vertexInfo[i].vertexIndex].y, normalArray[skeleton->vertexInfo[i].vertexIndex].z, 1);
-		
+
 		float a = 0;
 		for (int j = 0; j < 4; j++) {
 
@@ -271,6 +274,9 @@ void Rain::Render::SkeletalMesh::UpdateMesh(Animation::Pose* pose, ID3D11Buffer*
 		vertexArray[i].nx = rslNml.x;
 		vertexArray[i].ny = rslNml.y;
 		vertexArray[i].nz = rslNml.z;
+		vertexArray[i].u = uvArray[skeleton->vertexInfo[i].vertexIndex].x;
+		vertexArray[i].v = normalArray[skeleton->vertexInfo[i].vertexIndex].y;
+
 
 		int j = 0;
 	}

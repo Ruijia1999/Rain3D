@@ -21,17 +21,27 @@ Rain::Render::SkeletonRenderData::SkeletonRenderData(const std::shared_ptr<Skele
 	}
 }
 
-//Rain::Render::SkeletonRenderData::SkeletonRenderData(const std::shared_ptr<Mesh>& i_mesh, const std::shared_ptr <Effect>& i_effect, const std::shared_ptr <Texture>& i_texture, std::shared_ptr <Texture> i_normalMap, const ConstantBufferFormats::VSConstantBuffer& i_constantBuffer, const ConstantBufferFormats::FrameConstantBuffer& i_frameBuffer) :
-//	SkeletonRenderDataBase(SkeletonRenderDataType::StaticMesh),
-//	mesh(i_mesh),
-//	effect(i_effect),
-//	texture(i_texture),
-//	normalMap(i_normalMap),
-//	constantBuffer(i_constantBuffer),
-//	frameBuffer(i_frameBuffer)
-//{
-//
-//}
+Rain::Render::SkeletonRenderData::SkeletonRenderData(const std::shared_ptr<SkeletalMesh>& i_mesh, const Animation::Pose* i_pose, const std::shared_ptr <Effect>& i_effect, const std::shared_ptr <Texture>& i_texture, std::shared_ptr <Texture> i_normalMap, const ConstantBufferFormats::VSConstantBuffer& i_constantBuffer, const ConstantBufferFormats::FrameConstantBuffer& i_frameBuffer):
+	RenderDataBase(RenderDataType::SkeletalMesh),
+	mesh(i_mesh),
+	effect(i_effect),
+	texture(i_texture),
+	normalMap(i_normalMap),
+	constantBuffer(i_constantBuffer),
+	frameBuffer(i_frameBuffer)
+{
+	if (i_pose == nullptr) {
+		i_pose = i_mesh->skeleton->bindPose;
+	}
+	pose = new Animation::Pose(i_pose->jointCount);
+
+	for (int i = 0; i < pose->jointCount; i++) {
+		pose->rotation[i] = i_pose->rotation[i];
+		pose->transformation[i] = i_pose->transformation[i];
+
+	}
+}
+
 Rain::Render::SkeletonRenderData::~SkeletonRenderData() {
 	int j = 0;
 }

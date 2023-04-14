@@ -53,12 +53,13 @@ namespace Rain {
 			int pointCount;
 			int indexCount;
 			IndexFormat* indexData = nullptr;
+			SkeletalIndexFormat* vertexData = nullptr;
 			Math::Vector3* positionArray;
 			Math::Vector3* normalArray;
 			Math::Vector3* tangentArray;
 			Math::Vector2* uvArray;
 		private:
-			void Load(int& i_indexCount, int& i_pointCount, Skeleton* skeleton, IndexFormat*& i_indexData, Math::Vector3*& i_positionArray, Math::Vector3*& i_normalArray, Math::Vector3*& i_tangentArray, Math::Vector2*& i_uvArray);
+			void Load(int& i_indexCount, int& i_pointCount, Skeleton* skeleton, IndexFormat*& i_indexData, SkeletalIndexFormat*& i_vertexFormat, Math::Vector3*& i_positionArray, Math::Vector3*& i_normalArray, Math::Vector3*& i_tangentArray, Math::Vector2*& i_uvArray);
 
 		};
 	}
