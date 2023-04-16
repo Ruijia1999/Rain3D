@@ -16,6 +16,7 @@
 #include "Collision/ColliderBase.h"
 #include "Application/Rain3DGame.h"
 #include "Animation\AnimationSystem.h"
+#include "Camera\Camera.h"
 namespace {
 	std::map<std::string, std::function<void(int, lua_State*)>> m_componentCreators;
 }
@@ -38,33 +39,13 @@ void Rain::Asset::SceneLoader::LoadScene(const char* i_filePath) {
 	}
 #pragma endregion
 
+	EngineLog::Log("Game scene is loaded successfully.");
 }
 void Rain::Asset::SceneLoader::LoadSettings(lua_State* i_luaState) {
 	Math::Vector3 cameraPos;
 	Math::Quaternion cameraRot;
 	Math::Vector3 lightDirection;
 	Math::Vector4 lightColor;
-
-	lua_pushstring(i_luaState, "camera");
-	lua_gettable(i_luaState, -2);
-	lua_pushstring(i_luaState, "rotation");
-	lua_gettable(i_luaState, -2);
-	for (int i = 1; i <= 4; ++i) {
-		lua_rawgeti(i_luaState, -1, i);
-		cameraRot[i - 1] = lua_tonumber(i_luaState, -1);
-		lua_pop(i_luaState, 1);
-	}
-	lua_pop(i_luaState, 1);
-
-	lua_pushstring(i_luaState, "position");
-	lua_gettable(i_luaState, -2);
-	for (int i = 1; i <= 3; ++i) {
-		lua_rawgeti(i_luaState, -1, i);
-		cameraPos[i - 1] = lua_tonumber(i_luaState, -1);
-		lua_pop(i_luaState, 1);
-	}
-	lua_pop(i_luaState, 1);
-	lua_pop(i_luaState, 1);
 
 	lua_pushstring(i_luaState, "light");
 	lua_gettable(i_luaState, -2);
@@ -86,7 +67,18 @@ void Rain::Asset::SceneLoader::LoadSettings(lua_State* i_luaState) {
 	}
 	lua_pop(i_luaState, 1);
 	lua_pop(i_luaState, 1);
-	Rain::Rain3DGame::InitializeSettings(lightColor,lightDirection, cameraRot, cameraPos);
+
+	Math::Vector4 backgroundColor;
+	lua_pushstring(i_luaState, "background");
+	lua_gettable(i_luaState, -2);
+	for (int i = 1; i <= 4; ++i) {
+		lua_rawgeti(i_luaState, -1, i);
+		backgroundColor[i - 1] = lua_tonumber(i_luaState, -1);
+		lua_pop(i_luaState, 1);
+	}
+	lua_pop(i_luaState, 1);
+
+	Rain::Rain3DGame::InitializeSettings(lightColor,lightDirection, backgroundColor);
 }
 
 void Rain::Asset::SceneLoader::LoadEntity(lua_State* i_luaState) {
@@ -143,6 +135,14 @@ void Rain::Asset::SceneLoader::LoadComponent(int i_id, lua_State* i_luaState) {
 	lua_gettable(i_luaState, -2);
 	std::string component = lua_tostring(i_luaState, -1);
 	lua_pop(i_luaState, 1);
+
+	if (m_componentCreators.find(component) == m_componentCreators.end()) {
+		std::string msg;
+		msg.append("Invalid component:");
+		msg.append(component);
+		EngineLog::LogWarning(msg.c_str());
+		return;
+	}
 	m_componentCreators.find(component)->second(i_id, i_luaState);
 }
 void Rain::Asset::SceneLoader::RegisterComponentCreators() {
@@ -388,6 +388,44 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		}
 
 		
+		}
+	);
+#pragma endregion
+#pragma region Camera
+	RegisterComponentCreator("Camera", [](int i_id, lua_State* i_luaState) {
+
+		Camera::CameraSystem* system = Camera::CameraSystem::GetInstance();
+
+		lua_pushstring(i_luaState, "isMain");
+		lua_gettable(i_luaState, -2);
+		bool isMain = lua_toboolean(i_luaState, -1);
+		lua_pop(i_luaState, 1);
+
+		lua_pushstring(i_luaState, "far");
+		lua_gettable(i_luaState, -2);
+		float cfar = lua_tonumber(i_luaState, -1);
+		lua_pop(i_luaState, 1);
+	
+
+		lua_pushstring(i_luaState, "near");
+		lua_gettable(i_luaState, -2);
+		float cnear = lua_tonumber(i_luaState, -1);
+		lua_pop(i_luaState, 1);
+
+
+		lua_pushstring(i_luaState, "horizental");
+		lua_gettable(i_luaState, -2);
+		float chorizental = lua_tonumber(i_luaState, -1);
+		lua_pop(i_luaState, 1);
+
+
+		lua_pushstring(i_luaState, "vertical");
+		lua_gettable(i_luaState, -2);
+		float cvertical = lua_tonumber(i_luaState, -1);
+		lua_pop(i_luaState, 1);
+
+		system->AddComponent(new Camera::CameraComponent(i_id,isMain, cnear, cfar, chorizental, cvertical));
+			
 		}
 	);
 #pragma endregion

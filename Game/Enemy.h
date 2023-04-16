@@ -14,6 +14,7 @@ namespace Rain {
 		void Update(double i_timeSinceLastFrame);
 
 	private:
+		float speed;
 		bool isAttacked;
 		void StartRun();
 		void Stand();

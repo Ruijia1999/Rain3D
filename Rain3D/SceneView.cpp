@@ -45,7 +45,7 @@ SceneView::SceneView(QWidget *parent)
 SceneView::~SceneView()
 {}
 void SceneView::Initialize() {
-    Rain::EngineLog::CreateLogFile("ss");
+    Rain::EngineLog::CreateLogFile();
 
     Rain::Input::Initialize();
     Rain::Render::RenderSystem::Initialize((HWND)winId(),1600,900);

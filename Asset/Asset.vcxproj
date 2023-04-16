@@ -154,6 +154,9 @@
     <ProjectReference Include="..\Animation\Animation.vcxproj">
       <Project>{89e4e0b4-2d6b-4e08-9165-4cce938660bd}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Camera\Camera.vcxproj">
+      <Project>{dadbbf17-7c27-4d13-b60a-73d37f0da1f3}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Collision\Collision.vcxproj">
       <Project>{3a4b6747-2a72-4433-8cb1-621cbe9bab07}</Project>
     </ProjectReference>
@@ -174,6 +177,9 @@
     </ProjectReference>
     <ProjectReference Include="..\Reflect\Reflect.vcxproj">
       <Project>{f1a88e4c-2af6-40e0-beae-f79def1593b3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Transform\Transform.vcxproj">
+      <Project>{f8dfc15e-11b6-4423-befb-bc41546e5598}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
 #include "ColliderSystem.h"
+#include "EngineLog\EngineLog.h"
 Rain::ColliderSystem* Rain::ColliderSystem::instance;
 
 Rain::ColliderSystem* Rain::ColliderSystem::GetInstance() {
@@ -13,6 +14,10 @@ Rain::ColliderSystem* Rain::ColliderSystem::GetInstance() {
 
 Rain::ColliderSystem::ColliderSystem() {
 
+}
+
+void Rain::ColliderSystem::Initialize() {
+	EngineLog::Log("Collision System is initialized successfully.");
 }
 #ifdef OCTREE
 
@@ -111,3 +116,4 @@ bool Rain::ColliderSystem::CheckCollision(const ColliderComponent* i_collider0, 
 
 	return false;
 }
+

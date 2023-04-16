@@ -177,7 +177,6 @@ std::vector<int> Rain::Player::CheckCollision() {
 
 void Rain::Player::ModifyVelocity(Math::Vector2 i_curPos, Math::Vector2 i_aimPos, float i_radius, const std::vector<int>& i_obstacles) {
     Math::Vector2 tangent0;
-    EngineLog::Log("ss", "Collider");
     Collision::SphereCollider* collider = ((Collision::SphereCollider*)(ColliderSystem::GetInstance()->GetComponent<ColliderComponent>(i_obstacles[0]))->collider);
     float radius = collider->radius;
     Math::Vector2 obstaclePos= Math::Vector2(collider->pos.x, collider->pos.z);

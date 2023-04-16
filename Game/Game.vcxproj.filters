@@ -24,6 +24,7 @@
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Soldier.h" />
+    <ClInclude Include="PlayerCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc">
@@ -44,5 +45,6 @@
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Soldier.cpp" />
+    <ClCompile Include="PlayerCamera.cpp" />
   </ItemGroup>
 </Project>

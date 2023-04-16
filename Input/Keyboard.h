@@ -39,6 +39,7 @@ namespace Rain {
 			void Initialize();
 			void Update();
 
+			bool IsKeyDown(int i_keyCode);
 			template<class Func>
 			void BindEvent(int i_keyCode, int eventType, Func func) {
 				if(eventType==KEYDOWN)

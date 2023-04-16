@@ -1,4 +1,5 @@
 #include "MeshRenderSystem.h"
+#include "EngineLog\EngineLog.h"
 Rain::MeshRender::MeshRenderSystem* Rain::MeshRender::MeshRenderSystem::instance;
 
 Rain::MeshRender::MeshRenderSystem* Rain::MeshRender::MeshRenderSystem::GetInstance() {
@@ -46,6 +47,7 @@ void Rain::MeshRender::MeshRenderSystem::Initialize() {
 	effects.find("skeletalDefault")->second->Initialize("SkeletalMeshVertex", "SkeletalMeshPixel", Render::ConstantLayout::skeletalMeshLayout, Render::ConstantLayout::skeletalMeshEleNum);
 	effects.insert(std::pair<std::string, std::shared_ptr<Render::Effect>>("skeletalNormal", new Render::Effect()));
 	effects.find("skeletalNormal")->second->Initialize("SkeletalColorWithNormalVertex", "SkeletalColorWithNormalPixel", Render::ConstantLayout::skeletalMeshLayout, Render::ConstantLayout::skeletalMeshEleNum);
+	EngineLog::Log("MeshRender System is initialized successfully.");
 }
 
 Rain::MeshRender::MeshRenderSystem::MeshRenderSystem() {

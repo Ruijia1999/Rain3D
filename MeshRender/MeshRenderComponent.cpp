@@ -1,6 +1,6 @@
 #include "MeshRenderComponent.h"
 Rain::MeshRender::MeshRenderComponent::MeshRenderComponent() {
-	id = 0;
+	id = -1;
 	meshType = -1;
 	mesh = nullptr;
 	effect = nullptr;

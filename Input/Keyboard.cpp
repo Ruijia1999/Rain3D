@@ -49,3 +49,12 @@ void Rain::Input::KeyBoard::OnKeyStay(int i_keyCode) {
 	}
 	
 }
+
+bool Rain::Input::KeyBoard::IsKeyDown(int i_keyCode) {
+	if (preKeyStates[i_keyCode] == KEYDOWN) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}

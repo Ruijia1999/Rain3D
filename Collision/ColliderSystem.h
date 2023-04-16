@@ -11,6 +11,7 @@ namespace Rain {
 	{
 	public:
 		static ColliderSystem* GetInstance();
+		void Initialize();
 		void Update(double i_timeSinceLastFrame);
 		bool CheckCollision(const ColliderComponent* i_collider0, const ColliderComponent* i_collider1, const double i_timeSinceLastFrame);
 

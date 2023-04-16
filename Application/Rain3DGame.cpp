@@ -22,6 +22,7 @@
 #include "Animation\AnimationSystem.h"
 #include "Render\RenderDataBase.h"
 #include "Render\SkeletonRenderData.h"
+#include "Camera\Camera.h"
 using namespace std::placeholders;
 using namespace Rain;
 namespace {
@@ -30,10 +31,9 @@ namespace {
     uint64_t timeLastFrame;
     uint64_t timeStart;
     bool stop;
-    Math::Vector3 cameraPos;
-    Math::Quaternion cameraRot;
     Math::Vector4 lightColor;
     Math::Vector3 lightDir;
+    Math::Vector4 backgroundColor;
 
     std::thread* mainGameThread;
     std::thread* renderThread;
@@ -70,24 +70,25 @@ void Rain::Rain3DGame::StartRenderThread() {
     Render::RenderSystem::CleanUp();
 
 }
-void Rain::Rain3DGame::InitializeSettings(Math::Vector4 i_lightColor, Math::Vector3 i_ligthDirection, Math::Quaternion i_cameraRot, Math::Vector3 i_cameraPos) {
-    cameraPos = i_cameraPos;
-    cameraRot = i_cameraRot;
+void Rain::Rain3DGame::InitializeSettings(Math::Vector4 i_lightColor, Math::Vector3 i_ligthDirection, Math::Vector4 i_backgroundColor) {
+
     lightColor = i_lightColor;
     i_ligthDirection.Normalize();
     lightDir = i_ligthDirection;
+    backgroundColor = i_backgroundColor;
 
 }
 void Rain::Rain3DGame::Initialize(HWND hWnd, int width, int height) {
 
-    Rain::EngineLog::CreateLogFile("log");
+    Rain::EngineLog::CreateLogFile();
     Rain::Semaphore::Initialize();
     Rain::Input::Initialize();
     Rain::Time::Initialize();
-    Rain::Render::RenderSystem::Initialize(hWnd,width, height);
+    Rain::Render::RenderSystem::Initialize(hWnd, width, height);
 
 
     GameObject::GameObjectSystem::GetInstance()->Initialize();
+    Camera::CameraSystem::GetInstance()->Initialize();
     Transform::TransformSystem::GetInstance()->Initialize();
     MeshRender::MeshRenderSystem::GetInstance()->Initialize();
     Animation::AnimationSystem::GetInstance()->Initialize();
@@ -96,24 +97,13 @@ void Rain::Rain3DGame::Initialize(HWND hWnd, int width, int height) {
 
     Rain::Asset::SceneLoader::RegisterComponentCreators();
     Rain::Asset::SceneLoader::LoadScene("test");
+    Rain::Render::RenderSystem::SetBackground(backgroundColor);
 
     for (auto entity : entities) {
         entity->Initialize();
     }
     timeLastFrame = 0;
-    //Move the camera.
-    Rain::Input::KeyBoard::BindEvent(0x25, KEYSTAY, [](Rain::Input::KeyBoard::KeyInfo info) {
-        cameraPos.x -= 1;
-        });
-    Rain::Input::KeyBoard::BindEvent(0x27, KEYSTAY, [](Rain::Input::KeyBoard::KeyInfo info) {
-        cameraPos.x +=1;
-        });
-    Rain::Input::KeyBoard::BindEvent(0x26, KEYSTAY, [](Rain::Input::KeyBoard::KeyInfo info) {
-        cameraPos.z += 1;
-        });
-    Rain::Input::KeyBoard::BindEvent(0x28, KEYSTAY, [](Rain::Input::KeyBoard::KeyInfo info) {
-        cameraPos.z -= 1;
-        });
+
     stop = false;
     mainGameThread = new std::thread( StartGameThread);
     renderThread = new std::thread(StartRenderThread);
@@ -142,19 +132,21 @@ void Rain::Rain3DGame::Update() {
     Animation::AnimationSystem::GetInstance()->Update(timeSinceLastFrame);
     ColliderSystem::GetInstance()->Update(timeSinceLastFrame);
 
+    std::shared_ptr<Camera::CameraComponent> mainCamera = Camera::CameraSystem::GetInstance()->mainCamera;
+    Transform::TransformComponent* cameraTrans = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(mainCamera->id);
     //Init Constant Buffer
     renderData.clear();
     std::vector<GameObject::GameObjectComponent*> gameobjects = GameObject::GameObjectSystem::GetInstance()->GetAllComponents<GameObject::GameObjectComponent>();
     for (int i = 0; i < entities.size(); i++) {
         GameObject::GameObjectComponent* go = gameobjects[i];
-        if (go->isActive) {
+        if (go->isActive&&go->isVisible) {
 
             Render::ConstantBufferFormats::VSConstantBuffer vsConstantBuffer;
             Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(go->id);
-            vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(1, 5000, 90*M_PI/180.0, 60 * M_PI / 180.0);
+            vsConstantBuffer.transform_cameraToProjected = Math::CreateCameraToProjectedTransform_perspective(mainCamera->nearPlane, mainCamera->farPlane, mainCamera->horizental*M_PI/180.0, mainCamera->vertical * M_PI / 180.0);
             vsConstantBuffer.transform_localToWorld = Math::CreateLocalToWorldTransform(transform->rotation, transform->position, transform->scale);
             vsConstantBuffer.transform_localToWorld.Invert();
-            vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(cameraRot, cameraPos);
+            vsConstantBuffer.transform_worldToCamera = Math::CreateWorldToCameraTransform(cameraTrans->rotation, cameraTrans->position);
             vsConstantBuffer.transform_worldToCamera.Invert();
 
             MeshRender::MeshRenderComponent* meshRender = MeshRender::MeshRenderSystem::GetInstance()->GetComponent<MeshRender::MeshRenderComponent>(go->id);
@@ -162,8 +154,9 @@ void Rain::Rain3DGame::Update() {
             
             Render::ConstantBufferFormats::FrameConstantBuffer frameConstantBuffer;
             frameConstantBuffer.time = Time::ConvertTicksToSeconds(Time::GetCurrentSystemTimeTickCount() - timeStart);
-            frameConstantBuffer.cameraForward = Math::Vector3(0, 0, 1);
-            frameConstantBuffer.cameraPos = cameraPos;
+            Math::Vector4 cameraForward = Math::Matrix(cameraTrans->rotation) * Math::Vector4(0, 0, 1,1);
+            frameConstantBuffer.cameraForward = Math::Vector3(cameraForward.x, cameraForward.y, cameraForward.z);
+            frameConstantBuffer.cameraPos = cameraTrans->position;
             frameConstantBuffer.lightColor = lightColor;
             frameConstantBuffer.lightDirection = lightDir;
             if (meshRender->meshType == 0) {

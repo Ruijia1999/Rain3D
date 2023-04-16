@@ -24,7 +24,7 @@ namespace Rain {
 			static DirectX::XMMATRIX m_projectionMatrix;
 			static DirectX::XMMATRIX m_worldMatrix;
 			static DirectX::XMMATRIX m_orthoMatrix;
-
+			static float bgColor[4];
 
 			static void Initialize(HWND hwnd, int width, int height);
 			static void DoFrame();

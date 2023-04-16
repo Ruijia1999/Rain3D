@@ -9,7 +9,8 @@ namespace Rain{
 		{
 		public:
 			static GameObjectSystem* GetInstance();
-
+			void Initialize();
+			int GetIDByName(const char* name);
 		private:
 			static GameObjectSystem* instance;
 			GameObjectSystem();

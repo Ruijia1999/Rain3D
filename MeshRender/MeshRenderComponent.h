@@ -1,5 +1,5 @@
-#ifndef RAIN_TRNASFORM_MeshRenderCOMPONENT
-#define RAIN_TRNASFORM_MeshRenderCOMPONENT
+#ifndef RAIN_TRNASFORM_MESHRENDERCOMPONENT
+#define RAIN_TRNASFORM_MESHRENDERCOMPONENT
 
 #include "Math/Math.h"
 #include "Render/Effect.h"

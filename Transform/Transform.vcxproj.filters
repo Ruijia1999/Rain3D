@@ -1,11 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="TransformSystem.h" />
-    <ClInclude Include="TransformComponent.h" />
+    <ClInclude Include="TransformSystem.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="TransformSystem.cpp" />
-    <ClCompile Include="TransformComponent.cpp" />
+    <ClCompile Include="TransformComponent.cpp">
+      <Filter>ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformSystem.cpp">
+      <Filter>ECS</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="ECS">
+      <UniqueIdentifier>{3038dd46-3f53-41ba-87c4-cd97a0d6c546}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

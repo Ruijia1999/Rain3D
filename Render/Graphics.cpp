@@ -19,6 +19,7 @@ ID3D11DepthStencilView* Rain::Render::Graphics::pDSV;
 ID3D11DepthStencilState* Rain::Render::Graphics::pDSState;
 ID3D11RasterizerState* Rain::Render::Graphics::pRasterState;
 ID3D11BlendState* Rain::Render::Graphics::pBlendState;
+float Rain::Render::Graphics::bgColor[4];
 
 void Rain::Render::Graphics::Initialize(HWND hWnd, int width, int height) {
 	InitializeGraphics(hWnd, width, height);
@@ -26,11 +27,12 @@ void Rain::Render::Graphics::Initialize(HWND hWnd, int width, int height) {
 	objectBuffer->Initialize();
 	gameSceneBuffer = new Rain::Render::ConstantBuffer(Rain::Render::ConstantBufferTypes::GameScene);
 	gameSceneBuffer->Initialize();
+
 }
 void Rain::Render::Graphics::DoFrame() {
 	Semaphore::Wait(NEW_RENDERDATA_PREPARED);
 
-	const float bgColor[] = { 179.0f /255, 168.0f /255, 150.0f/255, 1.0f };
+	
 	if (pTarget != nullptr) {
 		pContext->ClearRenderTargetView(pTarget, bgColor);
 	}

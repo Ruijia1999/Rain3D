@@ -2,6 +2,7 @@
 #include "GeneralAnimationClip.h"
 #include "SklAnimClip.h"
 #include "AnimationImporter.h"
+#include "EngineLog\EngineLog.h"
 Rain::Animation::AnimationSystem* Rain::Animation::AnimationSystem::instance;
 Rain::Animation::AnimationSystem * Rain::Animation::AnimationSystem::GetInstance() {
 	if (instance == nullptr) {
@@ -23,6 +24,7 @@ void Rain::Animation::AnimationSystem::Initialize() {
 	InitializeClip("Attacked", AnimType::Skeletal);
 	InitializeClip("Run", AnimType::Skeletal);
 	InitializeClip("Idle", AnimType::Skeletal);
+	EngineLog::Log("Animation System is initialized successfully.");
 }
 
 void Rain::Animation::AnimationSystem::InitializeClip(const char* name, AnimType type) {
