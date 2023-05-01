@@ -8,23 +8,11 @@ void Rain::Animation::GeneralAnimationClip::Initialize() {
 }
 
 
-float Rain::Animation::GeneralAnimationClip::GetValue(bool loop, int i_frame, double i_time, AnimPipelineType i_type) {
+float Rain::Animation::GeneralAnimationClip::GetValue(bool loop, int i_frame, AnimPipelineType i_type) {
 
 	int j = GetPipeline(i_type);
 
-	float value = pipelines[j].keyFrames[i_frame].value;
-	if (i_frame >= pipelines[j].frameCount - 1) {
-		return value;
-	}
-	float slope = GetSlope(loop, i_frame, i_type);
-	float rslt = value + slope * (i_time - pipelines[GetPipeline(i_type)].keyFrames[i_frame].time * SECOND_PER_FRAME);
-	return rslt;
-}
-float Rain::Animation::GeneralAnimationClip::GetSlope(bool loop, int i_frame, AnimPipelineType i_type) {
-	KeyFramePipeline& pipeline = pipelines[GetPipeline(i_type)];
-	
-	return (pipeline.keyFrames[i_frame + 1].value - pipeline.keyFrames[i_frame].value) / (pipeline.keyFrames[i_frame + 1].time - pipeline.keyFrames[i_frame].time) / SECOND_PER_FRAME;
-
+	return pipelines[j].keyFrames[i_frame].value;
 }
 
 int Rain::Animation::GeneralAnimationClip::GetPipeline(AnimPipelineType i_type) {
@@ -35,6 +23,12 @@ int Rain::Animation::GeneralAnimationClip::GetPipeline(AnimPipelineType i_type) 
 		return 1;
 	case AnimPipelineType::TranslationZ:
 		return 2;
+	case AnimPipelineType::RotationX:
+		return 3;
+	case AnimPipelineType::RotationY:
+		return 4;
+	case AnimPipelineType::RotationZ:
+		return 5;
 	case AnimPipelineType::ScaleX:
 		return 6;
 	case AnimPipelineType::ScaleY:
@@ -42,11 +36,12 @@ int Rain::Animation::GeneralAnimationClip::GetPipeline(AnimPipelineType i_type) 
 	case AnimPipelineType::ScaleZ:
 		return 8;
 
+
 	}
 }
 
 
-bool Rain::Animation::GeneralAnimationClip::Update(bool loop, int& i_frame, double& i_time, double i_timeSinceLastFrame, Math::Vector3& velTranslate, Math::Quaternion& velRotate, Math::Vector3& velScale, Transform::TransformComponent* transform) {
+bool Rain::Animation::GeneralAnimationClip::Update(bool loop, bool isRelative, int& i_frame, double& i_time, double i_timeSinceLastFrame,  Math::Vector3& animPos, Transform::TransformComponent* transform) {
 	i_time += i_timeSinceLastFrame;
 	if (i_time >= pipelines[0].keyFrames[i_frame + 1].time * SECOND_PER_FRAME) {
 		i_frame++;
@@ -59,44 +54,62 @@ bool Rain::Animation::GeneralAnimationClip::Update(bool loop, int& i_frame, doub
 		}
 		else {
 			if (i_frame >= pipelines[0].frameCount - 1) {
-				float posX = GetValue(loop, i_frame, i_time, AnimPipelineType::TranslationX);
-				float posY = GetValue(loop, i_frame, i_time, AnimPipelineType::TranslationY);
-				float posZ = GetValue(loop, i_frame, i_time, AnimPipelineType::TranslationZ);
-				transform->position = Math::Vector3(posX, posY, posZ);
+				
+				float posX = GetValue(loop, i_frame, AnimPipelineType::TranslationX);
+				float posY = GetValue(loop, i_frame, AnimPipelineType::TranslationY);
+				float posZ = GetValue(loop, i_frame, AnimPipelineType::TranslationZ);
+		
 
-				float scaleX = GetValue(loop, i_frame, i_time, AnimPipelineType::ScaleX);
-				float scaleY = GetValue(loop, i_frame, i_time, AnimPipelineType::ScaleY);
-				float scaleZ = GetValue(loop, i_frame, i_time, AnimPipelineType::ScaleZ);
-				transform->scale = Math::Vector3(scaleX, scaleY, scaleZ);
+				float scaleX = GetValue(loop, i_frame, AnimPipelineType::ScaleX);
+				float scaleY = GetValue(loop, i_frame, AnimPipelineType::ScaleY);
+				float scaleZ = GetValue(loop, i_frame, AnimPipelineType::ScaleZ);
+	
+
+				float rotateX = GetValue(loop, i_frame, AnimPipelineType::RotationX);
+				float rotateY = GetValue(loop, i_frame, AnimPipelineType::RotationY);
+				float rotateZ = GetValue(loop, i_frame, AnimPipelineType::RotationZ);
+				
+				if (isRelative) {
+					animPos = Math::Vector3(posX, posY, posZ);
+					transform->scale = Math::Vector3(scaleX, scaleY, scaleZ);
+					transform->rotation = Math::Quaternion(rotateX, rotateY, rotateZ);
+				}
+				else {
+					transform->position = Math::Vector3(posX, posY, posZ);
+					transform->scale = Math::Vector3(scaleX, scaleY, scaleZ);
+					transform->rotation = Math::Quaternion(rotateX, rotateY, rotateZ);
+				}
 				return false;
 			}
 		}
-		Math::Quaternion rotate;
-		UpdateTransform(loop, i_frame, i_time, velTranslate, rotate, velScale, transform);
+
+		float posX = GetValue(loop, i_frame, AnimPipelineType::TranslationX);
+		float posY = GetValue(loop, i_frame, AnimPipelineType::TranslationY);
+		float posZ = GetValue(loop, i_frame, AnimPipelineType::TranslationZ);
+
+
+		float scaleX = GetValue(loop, i_frame, AnimPipelineType::ScaleX);
+		float scaleY = GetValue(loop, i_frame, AnimPipelineType::ScaleY);
+		float scaleZ = GetValue(loop, i_frame, AnimPipelineType::ScaleZ);
+
+
+		float rotateX = GetValue(loop, i_frame, AnimPipelineType::RotationX);
+		float rotateY = GetValue(loop, i_frame, AnimPipelineType::RotationY);
+		float rotateZ = GetValue(loop, i_frame, AnimPipelineType::RotationZ);
+
+		if (isRelative) {
+			animPos = Math::Vector3(posX, posY, posZ);
+			transform->scale = Math::Vector3(scaleX, scaleY, scaleZ);
+			transform->rotation = Math::Quaternion(rotateX, rotateY, rotateZ);
+		}
+		else {
+			transform->position = Math::Vector3(posX, posY, posZ);
+			transform->scale = Math::Vector3(scaleX, scaleY, scaleZ);
+			transform->rotation = Math::Quaternion(rotateX, rotateY, rotateZ);
+		}
+		
 	}
-	else {
-		transform->position = transform->position + velTranslate * i_timeSinceLastFrame;
-		transform->scale = transform->scale + velScale * i_timeSinceLastFrame;
-	}
+
 	return true;
 }
 
-
-void Rain::Animation::GeneralAnimationClip::UpdateTransform(bool loop, int i_frame, double i_time, Math::Vector3& velTranslate, Math::Quaternion& velRotate, Math::Vector3& velScale, Transform::TransformComponent* transform) {
-	float slopePosX = GetSlope(loop, i_frame, AnimPipelineType::TranslationX);
-	float slopePosY = GetSlope(loop, i_frame, AnimPipelineType::TranslationY);
-	float slopePosZ = GetSlope(loop, i_frame, AnimPipelineType::TranslationZ);
-	float posX = GetValue(loop, i_frame, i_time, AnimPipelineType::TranslationX);
-	float posY = GetValue(loop, i_frame, i_time, AnimPipelineType::TranslationY);
-	float posZ = GetValue(loop, i_frame, i_time, AnimPipelineType::TranslationZ);
-	transform->position = Math::Vector3(posX, posY, posZ);
-	velTranslate = Math::Vector3(slopePosX, slopePosY, slopePosZ);
-	float slopeScaleX = GetSlope(loop, i_frame, AnimPipelineType::ScaleX);
-	float slopeScaleY = GetSlope(loop, i_frame, AnimPipelineType::ScaleY);
-	float slopeScaleZ = GetSlope(loop, i_frame, AnimPipelineType::ScaleZ);
-	float scaleX = GetValue(loop, i_frame, i_time, AnimPipelineType::ScaleX);
-	float scaleY = GetValue(loop, i_frame, i_time, AnimPipelineType::ScaleY);
-	float scaleZ = GetValue(loop, i_frame, i_time, AnimPipelineType::ScaleZ);
-	transform->scale = Math::Vector3(scaleX, scaleY, scaleZ);
-	velScale = Math::Vector3(slopeScaleX, slopeScaleY, slopeScaleZ);
-}

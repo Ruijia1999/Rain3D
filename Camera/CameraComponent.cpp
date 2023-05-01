@@ -18,8 +18,8 @@ Rain::Camera::CameraComponent::CameraComponent() {
 	vertical = 0;
 }
 
-Rain::Camera::CameraComponent::CameraComponent(int i_id, bool i_isMain, float i_near, float i_far, float i_horz, float i_vert){
-	id = i_id;
+Rain::Camera::CameraComponent::CameraComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, bool i_isMain, float i_near, float i_far, float i_horz, float i_vert):ComponentBase(i_id,i_entity){
+
 	isMain = i_isMain;
 	if (isMain) {
 		Camera::CameraSystem::GetInstance()->mainCamera = std::shared_ptr<CameraComponent>(this);

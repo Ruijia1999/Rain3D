@@ -13,12 +13,11 @@ Rain::Math::Quaternion::Quaternion(float i_x, float i_y, float i_z, float i_w) {
 	w = i_w;
 }
 Rain::Math::Quaternion::Quaternion(float angleX, float angleY, float angleZ) {
-	x = sin(angleY / 2) * sin(angleZ / 2) * cos(angleX / 2) + cos(angleY / 2) * cos(angleZ / 2) * sin(angleX / 2);
-	y = sin(angleY / 2) * cos(angleZ / 2) * cos(angleX / 2) + cos(angleY / 2) * sin(angleZ / 2) * sin(angleX / 2);
-	z = cos(angleY / 2) * sin(angleZ / 2) * cos(angleX / 2) - sin(angleY / 2) * cos(angleZ / 2) * sin(angleX / 2);
-	w = cos(angleY / 2) * cos(angleZ / 2) * cos(angleX / 2) - sin(angleY / 2) * sin(angleZ / 2) * sin(angleX / 2);
-	float i = 1 - x*x - y*y - z*z;
-	int l = 1;
+	w = cos(angleX / 2) * cos(angleY / 2) * cos(angleZ / 2) + sin(angleX / 2) * sin(angleY / 2) * sin(angleZ / 2);
+	x = sin(angleX / 2) * cos(angleY / 2) * cos(angleZ / 2) - cos(angleX / 2) * sin(angleY / 2) * sin(angleZ / 2);
+	y = cos(angleX / 2) * sin(angleY / 2) * cos(angleZ / 2) + sin(angleX / 2) * cos(angleY / 2) * sin(angleZ / 2);
+	z = cos(angleX / 2) * cos(angleY / 2) * sin(angleZ / 2) - sin(angleX / 2) * sin(angleY / 2) * cos(angleZ / 2);
+
 }
 Rain::Math::Vector3 Rain::Math::Quaternion::operator*(const Vector3& i_vec3) const {
 	const auto factor_quaternion = 2.0f * ((x * i_vec3.x) + (y * i_vec3.y) + (z * i_vec3.z));

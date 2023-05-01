@@ -22,7 +22,7 @@ namespace Rain {
 			void Stop();
 			void SetClip(std::string i_name);
 			SklAnimationComponent();
-			SklAnimationComponent(int i_id, std::shared_ptr<SklAnimClip> i_clip, bool i_autoPlay, bool i_loop);
+			SklAnimationComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, std::shared_ptr<SklAnimClip> i_clip, bool i_autoPlay, bool i_loop);
 			~SklAnimationComponent();
 			SklAnimationComponent& operator=(const SklAnimationComponent& i) {
 

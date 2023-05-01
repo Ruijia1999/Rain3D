@@ -155,21 +155,23 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Boss.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="Game.h" />
     <ClInclude Include="PlayerCamera.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Soldier.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Enemy.cpp" />
-    <ClCompile Include="Game.cpp" />
     <ClCompile Include="PlayerCamera.cpp" />
     <ClCompile Include="Soldier.cpp" />
   </ItemGroup>
@@ -219,9 +221,6 @@
     </ProjectReference>
     <ProjectReference Include="..\Render\Render.vcxproj">
       <Project>{d3a01780-35f7-4b01-b2ac-241d5245687e}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Task\Task.vcxproj">
-      <Project>{7d62198a-5889-49b3-bd94-4100c0ac6cd8}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Time\Time.vcxproj">
       <Project>{d2a78e7f-6fcc-4c30-8610-e3868e86c87c}</Project>

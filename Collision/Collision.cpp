@@ -154,7 +154,7 @@ bool Rain::Collision::BoxSphereOBB(const OBBCollider* i_collider0, const SphereC
 	}
 	return true;
 }
-void Rain::Collision::GetSize(const int vertexCount, const Render::StaticVertexFormat* vertexData, float& outX, float& outY, float& outZ) {
+void Rain::Collision::GetSize(Math::Vector3 scale, const int vertexCount, const Render::StaticVertexFormat* vertexData, float& outX, float& outY, float& outZ) {
 	float minX = FLT_MAX;
 	float minY = FLT_MAX;
 	float minZ = FLT_MAX;
@@ -170,12 +170,12 @@ void Rain::Collision::GetSize(const int vertexCount, const Render::StaticVertexF
 		maxY = max(vertexData[i].y, maxY);
 		maxZ = max(vertexData[i].z, maxZ);
 	}
-	outX = max(abs(minX), abs(maxX));
-	outY = max(abs(minY), abs(maxY));
-	outZ = max(abs(minZ), abs(maxZ));
+	outX = max(abs(minX), abs(maxX))*scale.x;
+	outY = max(abs(minY), abs(maxY)) * scale.y;
+	outZ = max(abs(minZ), abs(maxZ)) * scale.z;
 }
 
-void Rain::Collision::GetSize(const int vertexCount, const Render::StaticVertexFormat* vertexData, float& outRadius) {
+void Rain::Collision::GetSize(Math::Vector3 scale, const int vertexCount, const Render::StaticVertexFormat* vertexData, float& outRadius) {
 
 	float maxRadius = FLT_MIN;
 	float radius = 0;
@@ -183,6 +183,6 @@ void Rain::Collision::GetSize(const int vertexCount, const Render::StaticVertexF
 		radius = vertexData[i].x * vertexData[i].x  +vertexData[i].y * vertexData[i].y  +vertexData[i].z * vertexData[i].z;
 		maxRadius = max(radius, maxRadius);
 	}
-	outRadius = sqrtf(maxRadius);
+	outRadius = sqrtf(maxRadius)* scale.x;
 
 }

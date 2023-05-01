@@ -147,16 +147,35 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ActionNode.h" />
     <ClInclude Include="AStar.h" />
-    <ClInclude Include="framework.h" />
+    <ClInclude Include="BehaviorTree.h" />
+    <ClInclude Include="Blackboard.h" />
+    <ClInclude Include="BTLoad.h" />
+    <ClInclude Include="ConditionNode.h" />
+    <ClInclude Include="DecoratorNode.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="NavMesh.h" />
+    <ClInclude Include="ParallelNode.h" />
+    <ClInclude Include="SelectionNode.h" />
+    <ClInclude Include="SequenceNode.h" />
+    <ClInclude Include="TreeNode.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AI.cpp" />
+    <ClCompile Include="ActionNode.cpp" />
+    <ClCompile Include="AI.h" />
     <ClCompile Include="AStar.cpp" />
+    <ClCompile Include="BehaviorTree.cpp" />
+    <ClCompile Include="Blackboard.cpp" />
+    <ClCompile Include="BTLoad.cpp" />
+    <ClCompile Include="ConditionNode.cpp" />
+    <ClCompile Include="DecoratorNode.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="NavMesh.cpp" />
+    <ClCompile Include="ParallelNode.cpp" />
+    <ClCompile Include="SelectionNode.cpp" />
+    <ClCompile Include="SequenceNode.cpp" />
+    <ClCompile Include="TreeNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Math\Math.vcxproj">

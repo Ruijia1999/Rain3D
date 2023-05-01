@@ -23,7 +23,7 @@ namespace Rain {
 			void Stop();
 
 			GeneralAnimationComponent();
-			GeneralAnimationComponent(int i_id, std::shared_ptr<GeneralAnimationClip> i_clip, bool i_autoPlay, bool i_loop);
+			GeneralAnimationComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, std::shared_ptr<GeneralAnimationClip> i_clip, bool i_autoPlay, bool i_loop, bool i_relative);
 			~GeneralAnimationComponent();
 			GeneralAnimationComponent& operator=(const GeneralAnimationComponent& i) {
 
@@ -37,8 +37,10 @@ namespace Rain {
 			Math::Vector3 velTranslate;
 			Math::Vector3 velScale;
 			Math::Vector3 orgTranslate;
-			Math::Vector3 orgScale;
+			Math::Vector3 prevAnimTranslate;
+			Math::Vector3 animTranslate;
 
+			bool isRelative;
 			
 		};
 

@@ -20,7 +20,7 @@ namespace Rain {
 			virtual void Stop() = 0;
 
 			AnimationComponent();
-			AnimationComponent(int i_id, bool i_autoPlay, bool i_loop);
+			AnimationComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity,bool i_autoPlay, bool i_loop);
 			~AnimationComponent();
 			AnimationComponent& operator=(const AnimationComponent& i) {
 

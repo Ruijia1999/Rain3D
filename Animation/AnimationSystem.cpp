@@ -20,10 +20,15 @@ void Rain::Animation::AnimationSystem::Initialize() {
 	InitializeClip("Bounce", AnimType::General);
 	InitializeClip("Scale", AnimType::General);
 	InitializeClip("BounceLoop", AnimType::General);
+	InitializeClip("Attack", AnimType::General);
+	InitializeClip("Boss_Attack", AnimType::General);
+	InitializeClip("Boss_Idle", AnimType::General);
+	InitializeClip("Player_Idle", AnimType::General);
 	InitializeClip("Squat", AnimType::Skeletal);
 	InitializeClip("Attacked", AnimType::Skeletal);
 	InitializeClip("Run", AnimType::Skeletal);
 	InitializeClip("Idle", AnimType::Skeletal);
+	InitializeClip("Backward",AnimType::Skeletal);
 	EngineLog::Log("Animation System is initialized successfully.");
 }
 

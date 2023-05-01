@@ -7,11 +7,11 @@ Rain::Collision::SphereCollider::SphereCollider(Math::Quaternion i_rot, Math::Ve
 	pos = i_pos;
 	rot = i_rot;
 }
-Rain::Collision::SphereCollider::SphereCollider(Math::Quaternion i_rot, Math::Vector3 i_pos, const Rain::Render::Mesh* i_mesh): ColliderBase() {
+Rain::Collision::SphereCollider::SphereCollider(Math::Quaternion i_rot, Math::Vector3 i_pos, Math::Vector3 scale, const Rain::Render::Mesh* i_mesh): ColliderBase() {
 	pos = i_pos;
 	rot = i_rot;
 
-	Collision::GetSize(i_mesh->vertexCount, i_mesh->vertexData, radius);
+	Collision::GetSize(scale,i_mesh->vertexCount, i_mesh->vertexData, radius);
 }
 void Rain::Collision::SphereCollider::SetSize(float r) {
 	radius = r;

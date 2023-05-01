@@ -25,13 +25,11 @@ namespace Rain {
 				pipelines = i_pipelines;
 			}
 			void Initialize();
-			bool Update(bool loop, int& i_frame, double& i_time, double i_timeSinceLastFrame, Math::Vector3& velTranslate, Math::Quaternion& velRotate, Math::Vector3& velScale, Transform::TransformComponent* transform);
-			float GetValue(bool loop, int i_frame, double i_time, AnimPipelineType i_type);
-			float GetSlope(bool loop, int i_frame, AnimPipelineType i_type);
+			bool Update(bool loop, bool isRelative, int& i_frame, double& i_time, double i_timeSinceLastFrame, Math::Vector3& animPos, Transform::TransformComponent* transform);
+			float GetValue(bool loop, int i_frame, AnimPipelineType i_type);
 
 			//Helper----
 			int GetPipeline(AnimPipelineType i_type);
-			void UpdateTransform(bool loop, int i_frame, double i_time, Math::Vector3& velTranslate, Math::Quaternion& velRotate, Math::Vector3& velScale, Transform::TransformComponent* transform);
 
 		};
 	}

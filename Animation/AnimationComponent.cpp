@@ -8,8 +8,7 @@ Rain::Animation::AnimationComponent::AnimationComponent() {
 	loop = false;
 }
 
-Rain::Animation::AnimationComponent::AnimationComponent(int i_id, bool i_autoPlay, bool i_loop) {
-	id = i_id;
+Rain::Animation::AnimationComponent::AnimationComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, bool i_autoPlay, bool i_loop):ComponentBase(i_id, i_entity) {
 	autoPlay = i_autoPlay;
 	loop = i_loop;
 }

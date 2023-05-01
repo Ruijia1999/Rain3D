@@ -13,6 +13,7 @@
 #include <list>
 #include "Application\Rain3DGame.h"
 #include "EngineLog\EngineLog.h"
+
 namespace {
     std::list < Rain::Math::Vector2 > path;
     std::list < Rain::Math::Vector2 >::iterator curPathNode;
@@ -31,9 +32,6 @@ void Rain::Player::Initialize() {
     //Click and the object will move forward.
     Rain::Input::Mouse::BindEvent(MOUSE_LEFT_DOWN, [this](Rain::Input::MouseInfo info) {
         //this->StartPathFinding();
-        /*Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
-        transform->position = transform->position + Math::Vector3(0.0f, 0, 0.49f);
-        int o = 1;*/
         });
 
     ColliderComponent* collider = ColliderSystem::GetInstance()->GetComponent<ColliderComponent>(id);
@@ -46,22 +44,22 @@ void Rain::Player::Initialize() {
     //Press A and the object will move to the left.
     Rain::Input::KeyBoard::BindEvent(0x41, KEYSTAY, [this](Rain::Input::KeyBoard::KeyInfo info) {
         Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
-        transform->position = transform->position - Math::Vector3(0.001f, 0, 0);
+        transform->position = transform->position - Math::Vector3(1, 0, 0);
         });
     //w
     Rain::Input::KeyBoard::BindEvent(0x57, KEYSTAY, [this](Rain::Input::KeyBoard::KeyInfo info) {
         Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
-        transform->position = transform->position + Math::Vector3(0, 0, 0.001f);
+        transform->position = transform->position + Math::Vector3(0, 0, 1);
         });
     //S
     Rain::Input::KeyBoard::BindEvent(0x53, KEYSTAY, [this](Rain::Input::KeyBoard::KeyInfo info) {
         Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
-        transform->position = transform->position - Math::Vector3(0, 0, 0.001f);
+        transform->position = transform->position - Math::Vector3(0, 0, 1);
         });
     //D
     Rain::Input::KeyBoard::BindEvent(0x44, KEYSTAY, [this](Rain::Input::KeyBoard::KeyInfo info) {
         Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
-        transform->position = transform->position + Math::Vector3(0.001f, 0, 0);
+        transform->position = transform->position + Math::Vector3(1, 0, 0);
         });
 
 
@@ -99,11 +97,6 @@ void Rain::Player::Initialize() {
 void Rain::Player::Update(double i_timeSinceLastFrame) {
     Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
    
-    //if (curPathNode == 0) {
-    //   curPathNode++;
-    //   direction = Math::Vector3(path[curPathNode].x, 0, path[curPathNode].y) - transform->position;
-    //   direction.Normalize();
-    //}
     if (path.size()>0&&curPathNode!= path.end()) {
         CheckCollision();
         Math::Vector3 tempDirection = Math::Vector3(curPathNode->x, 0, curPathNode->y) - transform->position;
@@ -152,7 +145,7 @@ std::vector<int> Rain::Player::CheckCollision() {
         int j = 0;
     }
     for (auto collider : ColliderSystem::GetInstance()->GetAllComponents<ColliderComponent>()) {
-        const ECS::Entity* e = Rain3DGame::GetEntity(collider->id);
+ 
         std::string tag = Rain3DGame::GetEntity(collider->id)->tag;
         if (tag.compare("obstacle") == 0) {
             collider1 = (Collision::SphereCollider*)(collider->collider);

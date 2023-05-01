@@ -4,21 +4,55 @@
     <Filter Include="PathFinding">
       <UniqueIdentifier>{ff396af4-593d-494b-b5c4-e437b34dfc0b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BehaviorTree">
+      <UniqueIdentifier>{6ed72ca5-d6ea-479a-8822-7d82c8549744}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BehaviorTree\TreeNode">
+      <UniqueIdentifier>{69bed0a0-d9fb-4083-91ce-7bd9d73cb643}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BehaviorTree\ECS">
+      <UniqueIdentifier>{59a68dd0-b7c1-4f8a-8d75-80ff91e9761c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NavMesh.h">
       <Filter>PathFinding</Filter>
     </ClInclude>
-    <ClInclude Include="framework.h" />
     <ClInclude Include="Map.h">
       <Filter>PathFinding</Filter>
     </ClInclude>
     <ClInclude Include="AStar.h">
       <Filter>PathFinding</Filter>
     </ClInclude>
+    <ClInclude Include="BehaviorTree.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeNode.h">
+      <Filter>BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="SequenceNode.h">
+      <Filter>BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="ConditionNode.h">
+      <Filter>BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="DecoratorNode.h">
+      <Filter>BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="ParallelNode.h">
+      <Filter>BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionNode.h">
+      <Filter>BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionNode.h">
+      <Filter>BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="Blackboard.h" />
+    <ClInclude Include="BTLoad.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AI.cpp" />
+    <ClCompile Include="AI.h" />
     <ClCompile Include="NavMesh.cpp">
       <Filter>PathFinding</Filter>
     </ClCompile>
@@ -28,5 +62,31 @@
     <ClCompile Include="AStar.cpp">
       <Filter>PathFinding</Filter>
     </ClCompile>
+    <ClCompile Include="BehaviorTree.cpp">
+      <Filter>BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeNode.cpp">
+      <Filter>BehaviorTree\TreeNode</Filter>
+    </ClCompile>
+    <ClCompile Include="ConditionNode.cpp">
+      <Filter>BehaviorTree\TreeNode</Filter>
+    </ClCompile>
+    <ClCompile Include="DecoratorNode.cpp">
+      <Filter>BehaviorTree\TreeNode</Filter>
+    </ClCompile>
+    <ClCompile Include="ParallelNode.cpp">
+      <Filter>BehaviorTree\TreeNode</Filter>
+    </ClCompile>
+    <ClCompile Include="SequenceNode.cpp">
+      <Filter>BehaviorTree\TreeNode</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionNode.cpp">
+      <Filter>BehaviorTree\TreeNode</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectionNode.cpp">
+      <Filter>BehaviorTree\TreeNode</Filter>
+    </ClCompile>
+    <ClCompile Include="Blackboard.cpp" />
+    <ClCompile Include="BTLoad.cpp" />
   </ItemGroup>
 </Project>

@@ -41,10 +41,18 @@ namespace Rain {
 			KeyFrame* keyFrames;
 
 		public:
+			KeyFramePipeline() {
+
+			}
 			KeyFramePipeline(AnimPipelineType i_type, int i_frameCount, KeyFrame* i_keyFrames) {
 				type = i_type;
 				frameCount = i_frameCount;
 				keyFrames = i_keyFrames;
+			}
+			void operator=(const KeyFramePipeline& i_pipeline) {
+				type = i_pipeline.type;
+				frameCount = i_pipeline.frameCount;
+				keyFrames = i_pipeline.keyFrames;
 			}
 		};
 

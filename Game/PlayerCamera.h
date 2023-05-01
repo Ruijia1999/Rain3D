@@ -12,7 +12,7 @@ namespace Rain {
 		PlayerCamera(int i_id, std::string i_tag, std::string i_name);
 		void Initialize();
 		void Update(double i_timeSinceLastFrame);
-
+		//static float angle;
 	private:
 		float mouseSensitivity;
 	
@@ -21,6 +21,7 @@ namespace Rain {
 		Math::Vector3 orgDiversity;
 		Rain::Transform::TransformComponent* camera;
 		Rain::Transform::TransformComponent* player;
+	
 	};
 	REGIST(PlayerCamera)
 }

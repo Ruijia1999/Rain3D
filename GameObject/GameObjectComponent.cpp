@@ -1,18 +1,17 @@
 #include "GameObjectComponent.h"
 
-Rain::GameObject::GameObjectComponent::GameObjectComponent():ComponentBase(0) {
+Rain::GameObject::GameObjectComponent::GameObjectComponent():ComponentBase(0,nullptr) {
 	isActive = true;
 	isVisible = true;
 	parent = nullptr;
 }
 
-Rain::GameObject::GameObjectComponent::GameObjectComponent(int i_id) :ComponentBase(i_id) {
+Rain::GameObject::GameObjectComponent::GameObjectComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity) :ComponentBase(i_id, i_entity) {
 	isActive = true;
 	isVisible = true;
 	parent = nullptr;
 }
-Rain::GameObject::GameObjectComponent::GameObjectComponent(int i_id, bool i_isActive, bool i_isVisible, const char* i_name, const char* i_tag) {
-	id = i_id;
+Rain::GameObject::GameObjectComponent::GameObjectComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, bool i_isActive, bool i_isVisible, const char* i_name, const char* i_tag) : ComponentBase(i_id, i_entity) {
 	isActive = i_isActive;
 	isVisible = i_isVisible;
 	name = i_name;

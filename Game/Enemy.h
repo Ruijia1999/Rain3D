@@ -3,6 +3,7 @@
 #include "ECS/Entity.h"
 #include "Reflect/Reflect.h"
 
+
 namespace Rain {
 	class Enemy : public ECS::Entity
 	{
@@ -18,6 +19,7 @@ namespace Rain {
 		bool isAttacked;
 		void StartRun();
 		void Stand();
+		void Back();
 		void Attacked();
 	};
 	REGIST(Enemy)

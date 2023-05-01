@@ -18,7 +18,7 @@
 #include "Animation\AnimationSystem.h"
 #include "Camera\Camera.h"
 namespace {
-	std::map<std::string, std::function<void(int, lua_State*)>> m_componentCreators;
+	std::map<std::string, std::function<void(int, std::shared_ptr <Rain::ECS::Entity> i_entity, lua_State*)>> m_componentCreators;
 }
 
 void Rain::Asset::SceneLoader::LoadScene(const char* i_filePath) {
@@ -112,23 +112,37 @@ void Rain::Asset::SceneLoader::LoadEntity(lua_State* i_luaState) {
 	lua_gettable(i_luaState, -2);
 	int n = luaL_len(i_luaState, -1);
 	
-	for (int i = 1; i <= n; ++i) {
-		lua_rawgeti(i_luaState, -1, i);
-		LoadComponent(id, i_luaState);
+	ECS::Entity* entity = Rain::Reflect::GetClass(script, id, tag, name);
+
+	if (entity != nullptr) {
+		std::shared_ptr<ECS::Entity> entityPtr(entity);
+		Rain::Rain3DGame::AddEntity(entityPtr);
+
+		for (int i = 1; i <= n; ++i) {
+			lua_rawgeti(i_luaState, -1, i);
+			LoadComponent(id, i_luaState,entityPtr );
+			lua_pop(i_luaState, 1);
+		}
 		lua_pop(i_luaState, 1);
 	}
-	lua_pop(i_luaState, 1);
-
-	ECS::Entity* entity = Rain::Reflect::GetClass(script, id, tag, name);
-	if (entity != nullptr) {
-		Rain::Rain3DGame::AddEntity(entity);
+	else {
+		for (int i = 1; i <= n; ++i) {
+			lua_rawgeti(i_luaState, -1, i);
+			LoadComponent(id, i_luaState, nullptr);
+			lua_pop(i_luaState, 1);
+		}
+		lua_pop(i_luaState, 1);
 	}
+
+
+
+
 
 
 
 }
 
-void Rain::Asset::SceneLoader::LoadComponent(int i_id, lua_State* i_luaState) {
+void Rain::Asset::SceneLoader::LoadComponent(int i_id, lua_State* i_luaState, std::shared_ptr <ECS::Entity> i_entity) {
 	
 	
 	lua_pushstring(i_luaState, "component");
@@ -143,11 +157,11 @@ void Rain::Asset::SceneLoader::LoadComponent(int i_id, lua_State* i_luaState) {
 		EngineLog::LogWarning(msg.c_str());
 		return;
 	}
-	m_componentCreators.find(component)->second(i_id, i_luaState);
+	m_componentCreators.find(component)->second(i_id, i_entity, i_luaState);
 }
 void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 #pragma region Animation
-	RegisterComponentCreator("Animation", [](int i_id, lua_State* i_luaState) {
+	RegisterComponentCreator("Animation", [](int i_id, std::shared_ptr <ECS::Entity> i_entity, lua_State* i_luaState) {
 
 		Animation::AnimationSystem* system = Animation::AnimationSystem::GetInstance();
 
@@ -174,11 +188,16 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 
 		if (type == "Skeletal") {
 			std::shared_ptr< Animation::SklAnimClip> clip = system->GetSkeletalClip(currentClip);
-			system->AddComponent(new Animation::SklAnimationComponent(i_id, clip, autoPlay, loop));
+			system->AddComponent(new Animation::SklAnimationComponent(i_id, i_entity, clip, autoPlay, loop));
 		}
 		else if (type == "General") {
+			lua_pushstring(i_luaState, "relative");
+			lua_gettable(i_luaState, -2);
+			bool relative = lua_toboolean(i_luaState, -1);
+			lua_pop(i_luaState, 1);
+
 			std::shared_ptr< Animation::GeneralAnimationClip> clip = system->GetGeneralClip(currentClip);
-			system->AddComponent(new Animation::GeneralAnimationComponent(i_id, clip, autoPlay, loop));
+			system->AddComponent(new Animation::GeneralAnimationComponent(i_id, i_entity, clip, autoPlay, loop, relative));
 
 		}
 
@@ -186,7 +205,7 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 	);
 #pragma endregion
 #pragma region GameObjectComponent
-	RegisterComponentCreator("GameObject", [](int i_id, lua_State* i_luaState) {
+	RegisterComponentCreator("GameObject", [](int i_id, std::shared_ptr <ECS::Entity> i_entity, lua_State* i_luaState) {
 
 		lua_pushstring(i_luaState, "isActive");
 		lua_gettable(i_luaState, -2);
@@ -198,14 +217,14 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		bool isVisible = lua_toboolean(i_luaState, -1);
 		lua_pop(i_luaState, 1);
 
-		GameObject::GameObjectSystem::GetInstance()->AddComponent(new GameObject::GameObjectComponent(i_id,isActive,isVisible,"name","tag"));
+		GameObject::GameObjectSystem::GetInstance()->AddComponent(new GameObject::GameObjectComponent(i_id, i_entity, isActive,isVisible,"name","tag"));
 
 		}
 	);
 #pragma endregion
 
 #pragma region TransformComponent
-	RegisterComponentCreator("Transform", [](int i_id, lua_State* i_luaState) {
+	RegisterComponentCreator("Transform", [](int i_id, std::shared_ptr <ECS::Entity> i_entity, lua_State* i_luaState) {
 		Math::Vector3 position;
 		lua_pushstring(i_luaState, "position");
 		lua_gettable(i_luaState, -2);
@@ -236,13 +255,13 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		}
 		lua_pop(i_luaState, 1);
 
-		Transform::TransformSystem::GetInstance()->AddComponent(new Transform::TransformComponent(i_id,position,scale,rotation));
+		Transform::TransformSystem::GetInstance()->AddComponent(new Transform::TransformComponent(i_id, i_entity, position,scale,rotation));
 		}
 	);
 #pragma endregion
 
 #pragma region MeshRender
-	RegisterComponentCreator("MeshRender", [](int i_id, lua_State* i_luaState) {
+	RegisterComponentCreator("MeshRender", [](int i_id, std::shared_ptr <ECS::Entity> i_entity, lua_State* i_luaState) {
 		std::shared_ptr< Render::Mesh> mesh;
 		lua_pushstring(i_luaState, "mesh");
 		lua_gettable(i_luaState, -2);
@@ -298,12 +317,12 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		}
 		lua_pop(i_luaState, 1);
 
-		MeshRender::MeshRenderSystem::GetInstance()->AddComponent(new MeshRender::MeshRenderComponent(i_id, mesh, effect,texture,normalMap,color));
+		MeshRender::MeshRenderSystem::GetInstance()->AddComponent(new MeshRender::MeshRenderComponent(i_id, i_entity, mesh, effect,texture,normalMap,color));
 		}
 	);
 #pragma endregion
 #pragma region SkeletalMesh
-	RegisterComponentCreator("SkeletalMesh", [](int i_id, lua_State* i_luaState) {
+	RegisterComponentCreator("SkeletalMesh", [](int i_id, std::shared_ptr <ECS::Entity> i_entity, lua_State* i_luaState) {
 		std::shared_ptr< Render::SkeletalMesh> mesh;
 		lua_pushstring(i_luaState, "mesh");
 		lua_gettable(i_luaState, -2);
@@ -359,32 +378,32 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		}
 		lua_pop(i_luaState, 1);
 
-		MeshRender::MeshRenderSystem::GetInstance()->AddComponent(new MeshRender::MeshRenderComponent(i_id, mesh, effect, texture, normalMap, color));
+		MeshRender::MeshRenderSystem::GetInstance()->AddComponent(new MeshRender::MeshRenderComponent(i_id, i_entity, mesh, effect, texture, normalMap, color));
 		}
 	);
 #pragma endregion
 #pragma region Collider
-	RegisterComponentCreator("Collider", [](int i_id, lua_State* i_luaState) {
+	RegisterComponentCreator("Collider", [](int i_id, std::shared_ptr <ECS::Entity> i_entity, lua_State* i_luaState) {
 		
 		lua_pushstring(i_luaState, "type");
 		lua_gettable(i_luaState, -2);
 		std::string type = lua_tostring(i_luaState, -1);
 		lua_pop(i_luaState, 1);
 
-		Math::Vector3 size;
+		Math::Vector3 size(0,0,0);
 		lua_pushstring(i_luaState, "size");
-		if (i_luaState != nullptr) {
-			lua_gettable(i_luaState, -2);
-			for (int i = 1; i <= 3; ++i) {
-				lua_rawgeti(i_luaState, -1, i);
-				size[i - 1] = lua_tonumber(i_luaState, -1);
-				lua_pop(i_luaState, 1);
-			}
+		lua_gettable(i_luaState, -2);
+		for (int i = 1; i <= 3; ++i) {
+			lua_rawgeti(i_luaState, -1, i);
+			size[i - 1] = lua_tonumber(i_luaState, -1);
 			lua_pop(i_luaState, 1);
-			ColliderSystem::GetInstance()->AddComponent(new ColliderComponent(i_id, type.c_str(),size));
+		}
+		lua_pop(i_luaState, 1);
+		if (size.x==0||size.y==0||size.z==0) {
+			ColliderSystem::GetInstance()->AddComponent(new ColliderComponent(i_id, i_entity, type.c_str()));
 		}
 		else {
-			ColliderSystem::GetInstance()->AddComponent(new ColliderComponent(i_id, type.c_str()));
+			ColliderSystem::GetInstance()->AddComponent(new ColliderComponent(i_id, i_entity, type.c_str(), size));
 		}
 
 		
@@ -392,7 +411,7 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 	);
 #pragma endregion
 #pragma region Camera
-	RegisterComponentCreator("Camera", [](int i_id, lua_State* i_luaState) {
+	RegisterComponentCreator("Camera", [](int i_id, std::shared_ptr <ECS::Entity> i_entity, lua_State* i_luaState) {
 
 		Camera::CameraSystem* system = Camera::CameraSystem::GetInstance();
 
@@ -424,13 +443,13 @@ void Rain::Asset::SceneLoader::RegisterComponentCreators() {
 		float cvertical = lua_tonumber(i_luaState, -1);
 		lua_pop(i_luaState, 1);
 
-		system->AddComponent(new Camera::CameraComponent(i_id,isMain, cnear, cfar, chorizental, cvertical));
+		system->AddComponent(new Camera::CameraComponent(i_id, i_entity,isMain, cnear, cfar, chorizental, cvertical));
 			
 		}
 	);
 #pragma endregion
 }
 
-void Rain::Asset::SceneLoader::RegisterComponentCreator(const std::string& i_ComponentName, std::function<void(int, lua_State*)> i_ComponentCreator) {
-	m_componentCreators.insert(std::pair<std::string, std::function<void(int, lua_State*)>>(i_ComponentName, i_ComponentCreator));
+void Rain::Asset::SceneLoader::RegisterComponentCreator(const std::string& i_ComponentName, std::function<void(int, std::shared_ptr <ECS::Entity> i_entity, lua_State*)> i_ComponentCreator) {
+	m_componentCreators.insert(std::pair<std::string, std::function<void(int, std::shared_ptr <Rain::ECS::Entity> i_entity, lua_State*)>>(i_ComponentName, i_ComponentCreator));
 }

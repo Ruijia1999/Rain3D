@@ -19,12 +19,13 @@
     <ClInclude Include="Resource.h">
       <Filter>windows</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Soldier.h" />
     <ClInclude Include="PlayerCamera.h" />
+    <ClInclude Include="Boss.h" />
+    <ClInclude Include="Game.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc">
@@ -40,11 +41,12 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Soldier.cpp" />
     <ClCompile Include="PlayerCamera.cpp" />
+    <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="Game.cpp" />
   </ItemGroup>
 </Project>

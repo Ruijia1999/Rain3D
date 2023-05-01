@@ -8,8 +8,8 @@ namespace Rain {
 		{
 		public:
 			GameObjectComponent();
-			GameObjectComponent(int i_id, bool i_isActive, bool i_isVisible, const char* name, const char* tag);
-			GameObjectComponent(int i_id);
+			GameObjectComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, bool i_isActive, bool i_isVisible, const char* name, const char* tag);
+			GameObjectComponent(int i_id,std::shared_ptr <ECS::Entity> i_entity );
 			void Initialize();
 			void Update(double i_timeSinceLastFrame);
 			void Destroy();

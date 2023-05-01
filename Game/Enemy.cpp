@@ -8,9 +8,10 @@
 #include "Animation\AnimationSystem.h"
 #include "EngineLog\EngineLog.h"
 #include "Animation\SklAnimationComponent.h"
+
 void Rain::Enemy::Initialize() {
     isAttacked = false;
-    speed = 5;
+    speed = 3;
 #pragma region Movement
     //A
     Rain::Input::KeyBoard::BindEvent(0x41, KEYDOWN, [this](Rain::Input::KeyBoard::KeyInfo info) {
@@ -26,10 +27,8 @@ void Rain::Enemy::Initialize() {
             StartRun();
             Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
             
-            Math::Vector4 newPos = Math::Matrix(Math::Quaternion(transform->rotation.x, -transform->rotation.y, transform->rotation.z, transform->rotation.w)) * Math::Vector4(-1,0,0,1);
-            Math::Vector3 direction(newPos.x,newPos.y, newPos.z);
-            direction.Normalize();
-            transform->position = transform->position + direction*speed;
+            transform->position = transform->position + Math::Vector3(-1,0,0)*speed;
+            transform->rotation = Math::Quaternion(0, -1.5707963, 0);
         }
         });
 
@@ -54,10 +53,9 @@ void Rain::Enemy::Initialize() {
         if (!isAttacked) {
             StartRun();
             Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
-            Math::Vector4 newPos = Math::Matrix(Math::Quaternion(transform->rotation.x, -transform->rotation.y, transform->rotation.z, transform->rotation.w)) * Math::Vector4(1, 0, 0, 1);
-            Math::Vector3 direction(newPos.x, newPos.y, newPos.z);
-            direction.Normalize();
-            transform->position = transform->position + direction * speed;
+          
+            transform->position = transform->position + Math::Vector3(1,0,0) * speed;
+            transform->rotation = Math::Quaternion(0, 1.5707963, 0);
         }
         });
 
@@ -79,10 +77,9 @@ void Rain::Enemy::Initialize() {
         if (!isAttacked) {
             StartRun();
             Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
-            Math::Vector4 newPos = Math::Matrix(Math::Quaternion(transform->rotation.x, -transform->rotation.y, transform->rotation.z, transform->rotation.w)) * Math::Vector4(0, 0,1, 1);
-            Math::Vector3 direction(newPos.x, newPos.y, newPos.z);
-            direction.Normalize();
-            transform->position = transform->position + direction * speed;
+
+            transform->position = transform->position + Math::Vector3(0, 0, 1) * speed;
+            transform->rotation = Math::Quaternion(0, 0, 0);
         }
         });
 
@@ -96,7 +93,6 @@ void Rain::Enemy::Initialize() {
     //S
     Rain::Input::KeyBoard::BindEvent(0x53, KEYDOWN, [this](Rain::Input::KeyBoard::KeyInfo info) {
         StartRun();
-
         });
 
 
@@ -105,10 +101,9 @@ void Rain::Enemy::Initialize() {
         if (!isAttacked) {
             StartRun();
             Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(this->id);
-            Math::Vector4 newPos = Math::Matrix(Math::Quaternion(transform->rotation.x, -transform->rotation.y, transform->rotation.z, transform->rotation.w)) * Math::Vector4(0, 0, -1, 1);
-            Math::Vector3 direction(newPos.x, newPos.y, newPos.z);
-            direction.Normalize();
-            transform->position = transform->position + direction * speed;
+
+            transform->position = transform->position + Math::Vector3(0, 0, -1) * speed;
+            transform->rotation = Math::Quaternion(0, 3.1415927, 0);
  }
         });
 
@@ -148,7 +143,6 @@ Rain::Enemy::Enemy() : Entity() {
 }
 
 void Rain::Enemy::Update(double i_timeSinceLastFrame) {
- 
 }
 
 void Rain::Enemy::StartRun() {
@@ -157,6 +151,17 @@ void Rain::Enemy::StartRun() {
     if (animation != nullptr) {
         if (((Animation::SklAnimationComponent*)animation)->currentClip->name != "Run") {
             ((Animation::SklAnimationComponent*)animation)->SetClip("Run");
+        }
+    }
+}
+
+void Rain::Enemy::Back() {
+
+    Animation::AnimationComponent* animation = Animation::AnimationSystem::GetInstance()->GetComponent<Animation::AnimationComponent>(this->id);
+
+    if (animation != nullptr) {
+        if (((Animation::SklAnimationComponent*)animation)->currentClip->name != "Backward") {
+            ((Animation::SklAnimationComponent*)animation)->SetClip("Backward");
         }
     }
 }

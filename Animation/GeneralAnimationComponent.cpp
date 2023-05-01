@@ -5,8 +5,9 @@ Rain::Animation::GeneralAnimationComponent::GeneralAnimationComponent():Animatio
 	currentClip = nullptr;
 
 }
-Rain::Animation::GeneralAnimationComponent::GeneralAnimationComponent(int i_id, std::shared_ptr<GeneralAnimationClip> i_clip, bool i_autoPlay, bool i_loop) : AnimationComponent(i_id, i_autoPlay,i_loop) {
+Rain::Animation::GeneralAnimationComponent::GeneralAnimationComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, std::shared_ptr<GeneralAnimationClip> i_clip, bool i_autoPlay, bool i_loop, bool i_relative) : AnimationComponent(i_id, i_entity,i_autoPlay,i_loop) {
 	currentClip = i_clip;
+	isRelative = i_relative;
 	Initialize();
 }
 Rain::Animation::GeneralAnimationComponent::~GeneralAnimationComponent() {
@@ -36,8 +37,14 @@ void Rain::Animation::GeneralAnimationComponent::Update(double i_timeSinceLastFr
 
 	Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(id);
 	Math::Quaternion rotate;
-	if (!currentClip->Update(loop, currentFrame, currentTime, secondTime, velTranslate, rotate, velScale, transform)) {
+	if (!currentClip->Update(loop, isRelative, currentFrame, currentTime, secondTime, animTranslate, transform)) {
 		Stop();
+	}
+	else {
+		if (isRelative) {
+			transform->position = transform->position + animTranslate - prevAnimTranslate;
+			prevAnimTranslate = animTranslate;
+		}
 	}
 }
 void Rain::Animation::GeneralAnimationComponent::Destroy() {
@@ -49,8 +56,12 @@ void Rain::Animation::GeneralAnimationComponent::Play() {
 	}
 	isPlaying = true;
 	Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(id);
-	orgTranslate = transform->position;
-	orgScale = transform->scale;
+	if (isRelative) {
+		orgTranslate = transform->position;
+		prevAnimTranslate = Math::Vector3(0, 0, 0);
+	}
+
+
 	
 }
 void Rain::Animation::GeneralAnimationComponent::Pause() {
@@ -63,7 +74,12 @@ void Rain::Animation::GeneralAnimationComponent::Stop() {
 	velTranslate = Math::Vector3(0, 0, 0);
 	velScale = Math::Vector3(0, 0, 0);
 	Transform::TransformComponent* transform = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(id);
-	transform->position = orgTranslate;
-	transform->scale = orgScale;
+	if (isRelative) {
+	
+	}
+	else {
+		transform->position = orgTranslate;
+	}
+
 	
 }

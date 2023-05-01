@@ -9,7 +9,7 @@ namespace Rain {
 		{
 		public:
 			SphereCollider(Math::Quaternion rot, Math::Vector3 pos, float r = 0.5f);
-			SphereCollider(Math::Quaternion rot, Math::Vector3 pos, const Render::Mesh* i_mesh);
+			SphereCollider(Math::Quaternion rot, Math::Vector3 pos, Math::Vector3 scale, const Render::Mesh* i_mesh);
 			void SetSize(float r);
 			void Update(Math::Quaternion rot, Math::Vector3 pos);
 			float radius;

@@ -21,7 +21,7 @@ namespace Rain {
 			void Destroy();
 
 			CameraComponent();
-			CameraComponent(int i_id, bool i_isMain, float i_near, float i_far, float i_horz, float i_vert);
+			CameraComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, bool i_isMain, float i_near, float i_far, float i_horz, float i_vert);
 			~CameraComponent();
 			CameraComponent& operator=(const CameraComponent& i) {
 

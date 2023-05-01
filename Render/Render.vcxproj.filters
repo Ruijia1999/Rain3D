@@ -134,10 +134,10 @@
     <FxCompile Include="SkeletalMeshVertex.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="SkeletalColorWithNormalPixel.hlsl">
+    <FxCompile Include="defaultWithNormalPixel.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="SkeletalColorWithNormalVertex.hlsl">
+    <FxCompile Include="defaultWithNormalVertex.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

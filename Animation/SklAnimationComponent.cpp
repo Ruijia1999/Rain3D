@@ -10,8 +10,7 @@ Rain::Animation::SklAnimationComponent::SklAnimationComponent() {
 	loop = false;
 }
 
-Rain::Animation::SklAnimationComponent::SklAnimationComponent(int i_id, std::shared_ptr<SklAnimClip> i_clip, bool i_autoPlay, bool i_loop) {
-	id = i_id;
+Rain::Animation::SklAnimationComponent::SklAnimationComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, std::shared_ptr<SklAnimClip> i_clip, bool i_autoPlay, bool i_loop):AnimationComponent(i_id, i_entity, i_autoPlay, i_loop) {
 	currentClip = i_clip;
 	autoPlay = i_autoPlay;
 	loop = i_loop;

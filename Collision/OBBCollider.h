@@ -11,7 +11,7 @@ namespace Rain {
 			float size[3];
 
 			OBBCollider(Math::Quaternion rot, Math::Vector3 pos, float hX = 0.5f, float hY = 0.5f, float hZ = 0.5f);
-			OBBCollider(Math::Quaternion rot, Math::Vector3 pos, const Render::Mesh* i_mesh);
+			OBBCollider(Math::Quaternion rot, Math::Vector3 pos, Math::Vector3 scale, const Render::Mesh* i_mesh);
 			void SetSize(float hX, float hY, float hZ);
 			Math::Vector3 GetSize();
 			void Update(Math::Quaternion rot, Math::Vector3 pos);

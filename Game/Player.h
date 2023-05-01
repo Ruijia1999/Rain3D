@@ -4,6 +4,7 @@
 #include "Reflect/Reflect.h"
 #include <vector>
 #include "Math\Math.h"
+
 namespace Rain {
 	class Player : public ECS::Entity
 	{

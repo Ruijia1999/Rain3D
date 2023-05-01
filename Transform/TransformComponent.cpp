@@ -4,8 +4,7 @@ Rain::Transform::TransformComponent::TransformComponent() {
 	scale = Math::Vector3(1, 1, 1);
 	rotation = Math::Quaternion();
 }
-Rain::Transform::TransformComponent::TransformComponent(int i_id, Math::Vector3 i_Position, Math::Vector3 i_Scale, Math::Quaternion i_Rotation){
-	id = i_id;
+Rain::Transform::TransformComponent::TransformComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, Math::Vector3 i_Position, Math::Vector3 i_Scale, Math::Quaternion i_Rotation) :ComponentBase(i_id, i_entity) {
 	position = i_Position;
 	scale = i_Scale;
 	rotation = i_Rotation;

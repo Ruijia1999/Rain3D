@@ -31,10 +31,10 @@ namespace Rain {
 			std::shared_ptr < Render::Texture> normalMap;
 			Math::Vector4 color;
 			MeshRenderComponent();
-			MeshRenderComponent(int i_id,  const std::shared_ptr <Render::Mesh>& i_mesh, const std::shared_ptr < Render::Effect>& i_effect, Math::Vector4 i_color = Math::Vector4(1, 1, 1, 1));
-			MeshRenderComponent(int i_id, const std::shared_ptr <Render::Mesh>& i_mesh, const std::shared_ptr < Render::Effect>& i_effect, std::shared_ptr<Render::Texture> i_texture, std::shared_ptr<Render::Texture> i_normalMap, Math::Vector4 i_color = Math::Vector4(1, 1, 1, 1));
-			MeshRenderComponent(int i_id, const std::shared_ptr <Render::SkeletalMesh>& i_mesh, const std::shared_ptr < Render::Effect>& i_effect, Math::Vector4 i_color = Math::Vector4(1, 1, 1, 1));
-			MeshRenderComponent(int i_id, const std::shared_ptr <Render::SkeletalMesh>& i_mesh, const std::shared_ptr < Render::Effect>& i_effect, std::shared_ptr<Render::Texture> i_texture, std::shared_ptr<Render::Texture> i_normalMap, Math::Vector4 i_color);
+			MeshRenderComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, const std::shared_ptr <Render::Mesh>& i_mesh, const std::shared_ptr < Render::Effect>& i_effect, Math::Vector4 i_color = Math::Vector4(1, 1, 1, 1));
+			MeshRenderComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, const std::shared_ptr <Render::Mesh>& i_mesh, const std::shared_ptr < Render::Effect>& i_effect, std::shared_ptr<Render::Texture> i_texture, std::shared_ptr<Render::Texture> i_normalMap, Math::Vector4 i_color = Math::Vector4(1, 1, 1, 1));
+			MeshRenderComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, const std::shared_ptr <Render::SkeletalMesh>& i_mesh, const std::shared_ptr < Render::Effect>& i_effect, Math::Vector4 i_color = Math::Vector4(1, 1, 1, 1));
+			MeshRenderComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, const std::shared_ptr <Render::SkeletalMesh>& i_mesh, const std::shared_ptr < Render::Effect>& i_effect, std::shared_ptr<Render::Texture> i_texture, std::shared_ptr<Render::Texture> i_normalMap, Math::Vector4 i_color);
 			~MeshRenderComponent() {
 				int j = 0;
 			}

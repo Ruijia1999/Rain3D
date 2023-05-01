@@ -7,7 +7,7 @@ Rain::MeshRender::MeshRenderComponent::MeshRenderComponent() {
 	texture = nullptr;
 	normalMap = nullptr;
 }
-Rain::MeshRender::MeshRenderComponent::MeshRenderComponent(int i_id, const std::shared_ptr <Render::Mesh>& i_mesh, const std::shared_ptr < Render::Effect>& i_effect, Math::Vector4 i_color){
+Rain::MeshRender::MeshRenderComponent::MeshRenderComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, const std::shared_ptr <Render::Mesh>& i_mesh, const std::shared_ptr < Render::Effect>& i_effect, Math::Vector4 i_color) :ComponentBase(i_id, i_entity) {
 	id = i_id;
 	mesh = i_mesh;
 	effect = i_effect;
@@ -16,7 +16,7 @@ Rain::MeshRender::MeshRenderComponent::MeshRenderComponent(int i_id, const std::
 	normalMap = nullptr;
 	meshType = 0;
 }
-Rain::MeshRender::MeshRenderComponent::MeshRenderComponent(int i_id, const std::shared_ptr <Render::Mesh>& i_mesh, const std::shared_ptr < Render::Effect>& i_effect, std::shared_ptr<Render::Texture> i_texture, std::shared_ptr<Render::Texture> i_normalMap, Math::Vector4 i_color) {
+Rain::MeshRender::MeshRenderComponent::MeshRenderComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, const std::shared_ptr <Render::Mesh>& i_mesh, const std::shared_ptr < Render::Effect>& i_effect, std::shared_ptr<Render::Texture> i_texture, std::shared_ptr<Render::Texture> i_normalMap, Math::Vector4 i_color) :ComponentBase(i_id, i_entity) {
 	id = i_id;
 	mesh = i_mesh;
 	effect = i_effect;
@@ -25,14 +25,14 @@ Rain::MeshRender::MeshRenderComponent::MeshRenderComponent(int i_id, const std::
 	normalMap = i_normalMap;
 	meshType = 0;
 }
-Rain::MeshRender::MeshRenderComponent::MeshRenderComponent(int i_id, const std::shared_ptr <Render::SkeletalMesh>& i_mesh, const std::shared_ptr < Render::Effect>& i_effect, Math::Vector4 i_color) {
+Rain::MeshRender::MeshRenderComponent::MeshRenderComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, const std::shared_ptr <Render::SkeletalMesh>& i_mesh, const std::shared_ptr < Render::Effect>& i_effect, Math::Vector4 i_color) :ComponentBase(i_id, i_entity) {
 	id = i_id;
 	skeletalMesh = i_mesh;
 	color = i_color;
 	effect = i_effect;
 	meshType = 1;
 }
-Rain::MeshRender::MeshRenderComponent::MeshRenderComponent(int i_id, const std::shared_ptr <Render::SkeletalMesh>& i_mesh, const std::shared_ptr < Render::Effect>& i_effect, std::shared_ptr<Render::Texture> i_texture, std::shared_ptr<Render::Texture> i_normalMap, Math::Vector4 i_color) {
+Rain::MeshRender::MeshRenderComponent::MeshRenderComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, const std::shared_ptr <Render::SkeletalMesh>& i_mesh, const std::shared_ptr < Render::Effect>& i_effect, std::shared_ptr<Render::Texture> i_texture, std::shared_ptr<Render::Texture> i_normalMap, Math::Vector4 i_color) :ComponentBase(i_id, i_entity) {
 	id = i_id;
 	skeletalMesh = i_mesh;
 	color = i_color;

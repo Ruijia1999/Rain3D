@@ -43,10 +43,8 @@ void Rain::MeshRender::MeshRenderSystem::Initialize() {
 	effects.find("textureWithNormal")->second->Initialize("textureWithNormalVertex", "textureWithNormalPixel", Render::ConstantLayout::staticMeshLayout, Render::ConstantLayout::staticMeshEleNum);
 	effects.insert(std::pair<std::string, std::shared_ptr<Render::Effect>>("water", new Render::Effect()));
 	effects.find("water")->second->Initialize("waterVertex", "waterPixel", Render::ConstantLayout::staticMeshLayout, Render::ConstantLayout::staticMeshEleNum);
-	effects.insert(std::pair<std::string, std::shared_ptr<Render::Effect>>("skeletalDefault", new Render::Effect()));
-	effects.find("skeletalDefault")->second->Initialize("SkeletalMeshVertex", "SkeletalMeshPixel", Render::ConstantLayout::skeletalMeshLayout, Render::ConstantLayout::skeletalMeshEleNum);
-	effects.insert(std::pair<std::string, std::shared_ptr<Render::Effect>>("skeletalNormal", new Render::Effect()));
-	effects.find("skeletalNormal")->second->Initialize("SkeletalColorWithNormalVertex", "SkeletalColorWithNormalPixel", Render::ConstantLayout::skeletalMeshLayout, Render::ConstantLayout::skeletalMeshEleNum);
+	effects.insert(std::pair<std::string, std::shared_ptr<Render::Effect>>("defaultWithNormal", new Render::Effect()));
+	effects.find("defaultWithNormal")->second->Initialize("defaultWithNormalVertex", "defaultWithNormalPixel", Render::ConstantLayout::skeletalMeshLayout, Render::ConstantLayout::skeletalMeshEleNum);
 	EngineLog::Log("MeshRender System is initialized successfully.");
 }
 

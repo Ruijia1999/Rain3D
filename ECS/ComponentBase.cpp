@@ -2,11 +2,10 @@
 
 Rain::ECS::ComponentBase::ComponentBase() {
 	id = 0;
-	active = true;
 }
 
-Rain::ECS::ComponentBase::ComponentBase(int i_id) {
+Rain::ECS::ComponentBase::ComponentBase(int i_id,std::shared_ptr <Entity> i_entity) {
 	id = i_id;
-	active = true;
+	entity = i_entity;
 }
 

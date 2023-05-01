@@ -14,8 +14,8 @@ namespace Rain {
         static void StartGameThread();
         static void StartRenderThread();
         static void Update();
-        static void AddEntity(Rain::ECS::Entity* i_entity);
-        static ECS::Entity* GetEntity(int i_id);
+        static void AddEntity(std::shared_ptr<ECS::Entity> i_entity);
+        static std::shared_ptr<ECS::Entity> GetEntity(int i_id);
         static void InitializeSettings(Math::Vector4 lightColor = Math::Vector4(255,255,255,255), Math::Vector3 ligthDirection = Math::Vector3(0,0,1), Math::Vector4 i_backgroundColor = Math::Vector4(0,0,0,255));
         void ExitGame();
         static void ClearUp();

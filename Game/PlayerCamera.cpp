@@ -8,10 +8,11 @@
 #include "Animation\AnimationSystem.h"
 #include "EngineLog\EngineLog.h"
 #include "GameObject\GameObjectSystem.h"
+
 void Rain::PlayerCamera::Initialize() {
     camera = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(id);
     int playerID = GameObject::GameObjectSystem::GetInstance()->GetIDByName("player");
-    player = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(2);
+    player = Transform::TransformSystem::GetInstance()->GetComponent<Transform::TransformComponent>(0);
     orgCameraPos = camera->position;
     orgDiversity =orgCameraPos- player->position ;
     mouseSensitivity = 100000;
@@ -24,7 +25,7 @@ void Rain::PlayerCamera::Update(double i_timeSinceLastFrame) {
     
     camera->rotation = Math::Quaternion(0, -hor * 90, 0);
     player->rotation = Math::Quaternion(0, hor * 90, 0);
-
+  
     Math::Vector4 pos(orgDiversity.x, 0, orgDiversity.z,1);
     Math::Vector4 newPos = Math::Matrix(Math::Quaternion(0, -hor * 90, 0)) * pos;
 

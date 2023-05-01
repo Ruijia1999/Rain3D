@@ -22,8 +22,8 @@ namespace Rain {
 		std::function<void(const ColliderComponent*)> OnColliderExit;
 		void Intersect(const ColliderComponent* i_collider);
 
-		ColliderComponent(int i_id, const char* i_type);
-		ColliderComponent(int i_id, const char* i_type, Math::Vector3 size);
+		ColliderComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, const char* i_type);
+		ColliderComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, const char* i_type, Math::Vector3 size);
 	private:
 		//The colliders that were intersected with this collider in the last frame
 		std::unordered_set<const ColliderComponent*> prvIntersections;

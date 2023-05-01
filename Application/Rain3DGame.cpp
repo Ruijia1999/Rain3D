@@ -3,6 +3,7 @@
 #include "Input/Input.h"
 #include <functional>
 #include <map>
+#include <memory>
 #include <string>
 #include <thread>
 #include <mutex>
@@ -27,7 +28,7 @@ using namespace std::placeholders;
 using namespace Rain;
 namespace {
     std::vector<Rain::Render::RenderDataBase*> renderData;
-    std::vector<Rain::ECS::Entity*> entities;
+    std::vector<std::shared_ptr<Rain::ECS::Entity>> entities;
     uint64_t timeLastFrame;
     uint64_t timeStart;
     bool stop;
@@ -38,11 +39,11 @@ namespace {
     std::thread* mainGameThread;
     std::thread* renderThread;
 }
-void Rain::Rain3DGame::AddEntity(Rain::ECS::Entity* i_entity) {
+void Rain::Rain3DGame::AddEntity(std::shared_ptr<ECS::Entity> i_entity) {
     entities.push_back(i_entity);
 }
 
-Rain::ECS::Entity* Rain::Rain3DGame::GetEntity(int i_id) {
+std::shared_ptr<ECS::Entity> Rain::Rain3DGame::GetEntity(int i_id) {
     for (auto entity : entities) {
         if (entity->id == i_id) {
             return entity;
@@ -137,8 +138,8 @@ void Rain::Rain3DGame::Update() {
     //Init Constant Buffer
     renderData.clear();
     std::vector<GameObject::GameObjectComponent*> gameobjects = GameObject::GameObjectSystem::GetInstance()->GetAllComponents<GameObject::GameObjectComponent>();
-    for (int i = 0; i < entities.size(); i++) {
-        GameObject::GameObjectComponent* go = gameobjects[i];
+    for (auto go: gameobjects) {
+   
         if (go->isActive&&go->isVisible) {
 
             Render::ConstantBufferFormats::VSConstantBuffer vsConstantBuffer;

@@ -17,7 +17,7 @@ namespace Rain {
 			void Destroy();
 
 			TransformComponent();
-			TransformComponent(int i_id, Math::Vector3 i_Position, Math::Vector3 i_Scale, Math::Quaternion i_Rotation);
+			TransformComponent(int i_id, std::shared_ptr <ECS::Entity> i_entity, Math::Vector3 i_Position, Math::Vector3 i_Scale, Math::Quaternion i_Rotation);
 		};
 
 	}

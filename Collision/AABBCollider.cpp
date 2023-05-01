@@ -1,9 +1,9 @@
 #include "AABBCollider.h"
 #include "Collision.h"
-Rain::Collision::AABBCollider::AABBCollider(Math::Quaternion rot, Math::Vector3 pos, const Render::Mesh* i_mesh) :ColliderBase() {
+Rain::Collision::AABBCollider::AABBCollider(Math::Quaternion rot, Math::Vector3 pos, Math::Vector3 scale, const Render::Mesh* i_mesh) :ColliderBase() {
 
 
-	Collision::GetSize(i_mesh->vertexCount, i_mesh->vertexData, size[0], size[1], size[2]);
+	Collision::GetSize(scale, i_mesh->vertexCount, i_mesh->vertexData, size[0], size[1], size[2]);
 	this->rot = rot;
 	this->pos = pos;
 
